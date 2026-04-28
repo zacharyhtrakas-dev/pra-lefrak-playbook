@@ -604,7 +604,33 @@ body{
   .more-panel{display:none!important}
 }
 
-/* ── SEARCH ── */
+/* ── PROCESS LIBRARY ── */
+.proc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.proc-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .13s;touch-action:manipulation}
+.proc-header:hover{background:var(--surface2)}
+.proc-icon{font-size:20px;flex-shrink:0}
+.proc-title{font-size:14px;font-weight:700;color:var(--navy);flex:1}
+.proc-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:'DM Mono',monospace;flex-shrink:0}
+.proc-toggle{color:var(--text3);font-size:13px;transition:transform .2s;flex-shrink:0}
+.proc-toggle.open{transform:rotate(180deg)}
+.proc-body{display:none;padding:0 18px 18px}
+.proc-body.open{display:block}
+.proc-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;padding-top:10px;border-top:1px solid var(--border)}
+.proc-steps{display:flex;flex-direction:column;gap:0}
+.proc-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.proc-step:last-child{border-bottom:none}
+.proc-step-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.proc-step-body{flex:1}
+.proc-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.proc-step-detail{font-size:12px;color:var(--text2);line-height:1.6}
+.proc-step-owner{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:4px;padding:2px 8px;border-radius:10px;background:var(--surface2);color:var(--text2)}
+.proc-note{margin-top:12px;padding:10px 12px;background:var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;font-size:12px;color:var(--text2);line-height:1.6}
+.proc-note.info{background:var(--blue-dim);border-left-color:var(--blue)}
+.proc-note.success{background:var(--green-dim);border-left-color:var(--green)}
+.proc-note.danger{background:var(--red-bg);border-left-color:var(--red)}
+.proc-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin:16px 0 8px;font-family:'DM Mono',monospace}
+.proc-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--navy);cursor:pointer;margin-top:8px;font-weight:500}
+.proc-link:hover{text-decoration:underline}
 .search-bar-wrap{position:relative;margin-bottom:16px}
 .search-bar{width:100%;padding:11px 14px 11px 42px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text);transition:border-color .15s}
 .search-bar:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(22,34,54,.06)}
@@ -735,6 +761,7 @@ body{
     <div class="more-item" onclick="mobileGoto('search','');toggleMorePanel()"><span class="mi-icon">🔍</span>Search</div>
     <div class="more-item" onclick="mobileGoto('hhe','');toggleMorePanel()"><span class="mi-icon">🏢</span>HHE</div>
     <div class="more-item" onclick="mobileGoto('jb','');toggleMorePanel()"><span class="mi-icon">🏗</span>JB</div>
+    <div class="more-item" onclick="mobileGoto('processes','');toggleMorePanel()"><span class="mi-icon">📖</span>Processes</div>
     <div class="more-item" onclick="mobileGoto('meetings','');toggleMorePanel()"><span class="mi-icon">📅</span>Meetings</div>
     <div class="more-item" onclick="mobileGoto('closeout','');toggleMorePanel()"><span class="mi-icon">✅</span>Closeout</div>
     <div class="more-item" onclick="mobileGoto('contacts','');toggleMorePanel()"><span class="mi-icon">👥</span>Contacts</div>
@@ -774,6 +801,7 @@ body{
     <div class="nav-item" onclick="goto('search',this)"><span class="nav-icon">🔍</span>Search / Filter</div>
 
     <div class="nav-lbl" style="margin-top:8px">Tools</div>
+    <div class="nav-item" onclick="goto('processes',this)"><span class="nav-icon">📖</span>Process Library</div>
     <div class="nav-item" onclick="goto('meetings',this)"><span class="nav-icon">📅</span>Meetings</div>
     <div class="nav-item" onclick="goto('closeout',this)"><span class="nav-icon">✅</span>Closeout</div>
     <div class="nav-item" onclick="goto('contacts',this)"><span class="nav-icon">👥</span>Contacts</div>
@@ -1072,6 +1100,339 @@ body{
     </div>
     <div id="ai-resp-area"></div>
   </div>
+</div>
+
+<!-- PROCESS LIBRARY -->
+<div id="page-processes" class="page">
+  <div class="ph">
+    <div class="ph-title">📖 Process Library</div>
+    <div class="ph-sub">Step-by-step guides for every major process · Tap any step to search related items · Updated as you learn more</div>
+  </div>
+
+  <!-- Search within processes -->
+  <div class="search-bar-wrap" style="margin-bottom:12px">
+    <span class="search-icon">🔍</span>
+    <input class="search-bar" id="proc-search" type="search" placeholder="Search processes e.g. FDNY, PAA, as-built, LOC..." oninput="filterProcesses(this.value)" autocomplete="off">
+  </div>
+  <div class="keyword-chips" style="margin-bottom:16px">
+    <span class="keyword-chip" onclick="filterProcesses('FDNY');document.getElementById('proc-search').value='FDNY'">FDNY</span>
+    <span class="keyword-chip" onclick="filterProcesses('ARTS');document.getElementById('proc-search').value='ARTS'">ARTS</span>
+    <span class="keyword-chip" onclick="filterProcesses('LOC');document.getElementById('proc-search').value='LOC'">LOC</span>
+    <span class="keyword-chip" onclick="filterProcesses('PAA');document.getElementById('proc-search').value='PAA'">PAA</span>
+    <span class="keyword-chip" onclick="filterProcesses('permit');document.getElementById('proc-search').value='permit'">Permit Renewal</span>
+    <span class="keyword-chip" onclick="filterProcesses('design');document.getElementById('proc-search').value='design'">Design Change</span>
+    <span class="keyword-chip" onclick="filterProcesses('abatement');document.getElementById('proc-search').value='abatement'">Abatement</span>
+  </div>
+
+  <div id="proc-list">
+
+  <!-- FDNY INSPECTION -->
+  <div class="proc-card" data-tags="fdny inspection as-built riser diagram fire alarm paa b1 b2 a3 a4 hhe">
+    <div class="proc-header" onclick="toggleProc('proc-fdny')">
+      <span class="proc-icon">🚒</span>
+      <div>
+        <div class="proc-title">FDNY Fire Alarm Inspection + As-Built Submission</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: B1, B2, A3, A4 — 96-05 HHE</div>
+      </div>
+      <span class="proc-tag" style="background:var(--amber-dim);color:var(--amber)">In Progress</span>
+      <span class="proc-toggle" id="toggle-proc-fdny">▼</span>
+    </div>
+    <div class="proc-body" id="proc-fdny">
+      <div class="proc-desc">FDNY must inspect and approve the fire alarm system before a Letter of Approval (LOA) can be issued, which is required for the DOB Letter of Completion (LOC). The as-built riser diagram must be submitted to the Fire Alarm Inspection Unit before or at the time of inspection. <strong>Key insight for B2/A3/A4:</strong> because the drawing changes were minor (under 10 devices/floor), a PAA is NOT required — the as-built can reflect the changes and the inspector accepts or rejects at their discretion.</div>
+
+      <div class="proc-section-lbl">Chain of custody — current situation (B2, A3, A4)</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">MEP engineers prepare as-built riser diagram</div>
+            <div class="proc-step-detail">MGE (MEP engineers) must draft, sign, and seal the as-built riser diagram reflecting actual installation. Must be 11"x17", include I/O matrix, functionality statement, title block with all job numbers (PW-1, FPIMS, Record ID). Signed and sealed by the licensed design professional who is applicant of record.</div>
+            <span class="proc-step-owner">👤 MGE</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Electrical/FA contractor reviews and signs off</div>
+            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews the as-built for accuracy against actual installation. The functionality statement can also be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Current status:</strong> Alex (Foremost) said as of last meeting drawings are in Troon's hands — confirm exact status.</div>
+            <span class="proc-step-owner">👤 Troon (elec/FA contractor)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">As-built sent to Hi Rise for inspection scheduling</div>
+            <div class="proc-step-detail">Once as-built is signed and sealed, it goes to Hi Rise (GC / expeditor). Hi Rise calls for the FDNY inspection and submits the as-built to the Fire Alarm Inspection Unit. Confirm Hi Rise has everything they need before the call is placed.</div>
+            <span class="proc-step-owner">👤 Hi Rise</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">4</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">FDNY inspection scheduled — PAA question resolved</div>
+            <div class="proc-step-detail">Per FDNY Fire Alarm Unit Bulletin 12-11-2023: minor additions (up to 10 devices/appliances per floor) may be accepted WITHOUT a PAA. Other minor modifications may be accepted with an affidavit. A PAA IS required only for: relocation of control panels, changes affecting system type, changes affecting work floors, or addition/exclusion of more than 10 devices. PRA confirmed PAA not needed for B2/A3/A4 — as-built + affidavit if needed suffices.</div>
+            <span class="proc-step-owner">👤 Hi Rise → FDNY</span>
+            <div class="proc-note success" style="margin-top:8px">✓ PAA NOT required for B2/A3/A4 — minor device changes only. As-built on hand at inspection is sufficient. Inspector accepts or rejects at their discretion.</div>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">5</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">FDNY inspection occurs — inspector reviews as-built on-site</div>
+            <div class="proc-step-detail">Inspector reviews as-built riser diagram on-site. Tests system. Has discretion to accept minor deviations from approved plans if reflected in as-built. If rejected, inspector will note specific deficiencies — Hi Rise / MGE must resolve and reschedule.</div>
+            <span class="proc-step-owner">👤 FDNY Inspector</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">6</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">FDNY issues Letter of Approval (LOA)</div>
+            <div class="proc-step-detail">Upon passing inspection, FDNY issues LOA. As-built and LOA are electronically transmitted to DOB. Copy of as-built must be kept at fire command center.</div>
+            <span class="proc-step-owner">👤 FDNY → DOB</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">7</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DOB LOC can now be issued</div>
+            <div class="proc-step-detail">With FDNY LOA received, all other sign-offs complete (MEP, arch as-builts, BEC/electrical, air balancing, plumbing), DOB issues Letter of Completion (LOC). This is the final step before Substantial Completion.</div>
+            <span class="proc-step-owner">👤 Muhammad (MBC) → DOB</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proc-note danger">⚠ Current blocker: PAA was filed 4/9/26 (Hi Rise filed it) — but this may have been unnecessary per the bulletin. Confirm with Hi Rise whether the PAA filing was required or precautionary. Either way, FDNY has not yet scheduled an inspection date.</div>
+      <div class="proc-note">📋 To corner Alex: ask specifically — are the as-builts signed and sealed by MGE? Has Troon signed the functionality statement? Has Hi Rise submitted to FDNY and called for inspection? What is the exact hold-up?</div>
+      <span class="proc-link" onclick="searchKeyword('FDNY')">🔍 Search all FDNY items in this project →</span>
+    </div>
+  </div>
+
+  <!-- ARTS / ABATEMENT FILING -->
+  <div class="proc-card" data-tags="arts abatement acm filing dob dep variance tru jb 11th 10th 3rd asbestos">
+    <div class="proc-header" onclick="toggleProc('proc-arts')">
+      <span class="proc-icon">🧪</span>
+      <div>
+        <div class="proc-title">ARTS Filing — ACM Abatement Authorization</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: 59-17 JB — all floors</div>
+      </div>
+      <span class="proc-tag" style="background:var(--blue-dim);color:var(--blue)">Active — 11th fl done, 10th+3rd in progress</span>
+      <span class="proc-toggle" id="toggle-proc-arts">▼</span>
+    </div>
+    <div class="proc-body" id="proc-arts">
+      <div class="proc-desc">ARTS (Asbestos Reporting and Tracking System) is the DOB/DEP filing required before any ACM (asbestos-containing material) abatement work can begin. ECC prepares the drawings and files. ESG executes the abatement. Both must work in close coordination. The process can involve objections, variance requests, and re-submissions before approval.</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">ACM testing + scope confirmation</div>
+            <div class="proc-step-detail">Bulk sampling / testing to identify all ACM in the scope area. DEP tenant confirms scope. Additional testing may be required if new materials are identified during demo prep (e.g. corridor columns on 10th fl).</div>
+            <span class="proc-step-owner">👤 ECC (Clayton Long) + DEP</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">ECC prepares ARTS drawings</div>
+            <div class="proc-step-detail">ECC drafts abatement scope drawings showing all ACM locations, quantities, and removal methods. Must match confirmed scope. PRA reviews and submits to DEP for review before DOB filing.</div>
+            <span class="proc-step-owner">👤 ECC (Clayton Long)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DEP reviews drawings</div>
+            <div class="proc-step-detail">DEP tenant reviews and approves the ARTS drawings before filing. They may request changes or additional scope. This step can take weeks. Currently active for 10th + 3rd floors (drawings submitted 4/21/26, under DEP review).</div>
+            <span class="proc-step-owner">👤 DEP / DCAS</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">4</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">ARTS filing submitted to DOB</div>
+            <div class="proc-step-detail">ECC files ARTS application with DOB via the ARTS portal. Felix Urena is the listed ARTS applicant. Filing includes drawings, scope, contractor info (ESG), air monitoring plan. DOB assigns a TRU number (e.g. TRU1110QN25).</div>
+            <span class="proc-step-owner">👤 ECC + Felix Urena (ARTS applicant)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">5</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DOB/DEP review — objections possible</div>
+            <div class="proc-step-detail">DOB ATRU (Asbestos Technical Review Unit) reviews the filing. DEP may also object. Objections require a written response from ECC/ESG. Multiple rounds possible. Variance requests (V1–V5) may be required for contested items. 11th floor required V5 variance (approved 4/23/26 as VAR# 2487QN25).</div>
+            <span class="proc-step-owner">👤 ECC → DOB/DEP</span>
+            <div class="proc-note">Variance requests add 2–8+ weeks. Track objection deadlines closely — missed deadlines can restart the clock.</div>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">6</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">ARTS approval issued — pre-construction notification required</div>
+            <div class="proc-step-detail">Once approved, ESG must send pre-construction notification to DEP. Zach posts notice in building lobby and on affected floor. Proof of posting sent to Sheranne (DEP). DEP then issues 4-week employee notice — abatement cannot start until 4 weeks after this notice.</div>
+            <span class="proc-step-owner">👤 ESG (Javier Catalan) + Zach (PRA)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">7</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">ESG performs abatement</div>
+            <div class="proc-step-detail">ESG executes abatement per approved means & methods. Air monitoring throughout. ACP-20/ACP-21 forms must be posted on site. 1 ACP-21 must be submitted to DOB prior to sign-off. ESG provides air clearance after completion.</div>
+            <span class="proc-step-owner">👤 ESG (Javier Catalan)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">8</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Air clearance + ARTS closeout</div>
+            <div class="proc-step-detail">ECC performs air clearance testing. Results must pass before reconstruction begins. ARTS filing is then closed out with DOB.</div>
+            <span class="proc-step-owner">👤 ECC (Clayton Long)</span>
+          </div>
+        </div>
+      </div>
+      <span class="proc-link" onclick="searchKeyword('ARTS')">🔍 Search all ARTS items →</span>
+    </div>
+  </div>
+
+  <!-- DESIGN CHANGE / DRAWING REVISION -->
+  <div class="proc-card" data-tags="design change drawing revision paa affidavit minor amendment dob">
+    <div class="proc-header" onclick="toggleProc('proc-design')">
+      <span class="proc-icon">✏️</span>
+      <div>
+        <div class="proc-title">Design Change / Drawing Revision Process</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: all DOB-filed work — HHE + JB</div>
+      </div>
+      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
+      <span class="proc-toggle" id="toggle-proc-design">▼</span>
+    </div>
+    <div class="proc-body" id="proc-design">
+      <div class="proc-desc">When the actual construction deviates from approved plans, the deviation must be documented and handled correctly. The route depends on the severity of the change. Getting this wrong (e.g. filing a PAA unnecessarily) wastes weeks. Understanding the threshold is critical.</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Identify the change and assess severity</div>
+            <div class="proc-step-detail">Document exactly what changed from approved plans. Key questions: How many devices added/removed per floor? Did any control panels move? Did work floors change? Did system type change? Does it require further review (partial coverage, new floor layouts)?</div>
+            <span class="proc-step-owner">👤 MEP engineer / GC + PRA</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Route A: Minor change → As-built only (no PAA)</div>
+            <div class="proc-step-detail">Per FDNY Bulletin 12-11-2023: up to 10 devices/appliances added per floor = as-built only, no further documentation needed. Inspector accepts at discretion. Other minor changes (up to 10 devices not installed, DGPs inconsistent with plans, system performance not downgraded) = affidavit from applicant of record, may appear on signed/sealed as-built.</div>
+            <span class="proc-step-owner">👤 Design professional (applicant of record)</span>
+            <div class="proc-note success">✓ This is the route for B2, A3, A4. No PAA needed.</div>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Route B: Major change → Post-Approval Amendment (PAA)</div>
+            <div class="proc-step-detail">A PAA IS required for: (a) relocation of fire alarm control panels / Fire Command Centers, (b) changes affecting system type or job description, (c) changes affecting work floors, (d) changes requiring further review, (e) addition/exclusion of MORE than 10 devices per floor. PAA adds weeks to the process and must be filed and approved before inspection.</div>
+            <span class="proc-step-owner">👤 Design professional → DOB</span>
+            <div class="proc-note danger">⚠ ARCS (auxiliary radio communication) modifications always require a PAA — no exceptions.</div>
+          </div>
+        </div>
+      </div>
+      <span class="proc-link" onclick="searchKeyword('PAA')">🔍 Search PAA-related items →</span>
+    </div>
+  </div>
+
+  <!-- PERMIT RENEWAL -->
+  <div class="proc-card" data-tags="permit renewal expiry extension dob gc q00940195 q00919587 blackbull">
+    <div class="proc-header" onclick="toggleProc('proc-permit')">
+      <span class="proc-icon">📋</span>
+      <div>
+        <div class="proc-title">Permit Renewal / Extension Process</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: B1/B2/A4 GC (exp 5/20/26) · A3 GC (exp 5/20/26)</div>
+      </div>
+      <span class="proc-tag" style="background:var(--red-bg);color:var(--red)">⚠ 22 days remaining</span>
+      <span class="proc-toggle" id="toggle-proc-permit">▼</span>
+    </div>
+    <div class="proc-body" id="proc-permit">
+      <div class="proc-desc">DOB permits expire if work is not completed or extended in time. For HHE, two GC permits expire 5/20/26. If work is still ongoing, permits must be renewed BEFORE expiration. If work is complete and just awaiting sign-offs, the permit can often stay expired while closeout proceeds — but confirm with Muhammad (MBC).</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Confirm if renewal is needed</div>
+            <div class="proc-step-detail">If all physical work under the permit is complete, renewal may not be required — closeout can proceed on an expired permit in some cases. If work is still ongoing, renewal is mandatory before expiration. Confirm with Muhammad (MBC expeditor) and Foremost immediately.</div>
+            <span class="proc-step-owner">👤 Muhammad (MBC) + Foremost</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">File renewal application with DOB</div>
+            <div class="proc-step-detail">Muhammad (MBC) files the permit renewal via DOB NOW. Requires updated insurance, worker's comp, and sometimes updated drawings if scope changed. GC (Blackbull for B1/B2/A3/A4) must provide updated documentation.</div>
+            <span class="proc-step-owner">👤 Muhammad (MBC) + Blackbull</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DOB issues renewed permit</div>
+            <div class="proc-step-detail">Typically takes a few days to 2 weeks. Renewed permit must be posted on site. Confirm new expiration date and calendar a reminder 60 days before next expiration.</div>
+            <span class="proc-step-owner">👤 DOB → Muhammad (MBC)</span>
+          </div>
+        </div>
+      </div>
+      <div class="proc-note danger">🚨 Q00940195-L1-GC (B1/B2/A4) and Q00919587-I1-GC (A3) both expire 5/20/26 — 22 days away. Confirm renewal plan with Foremost and Muhammad this week.</div>
+      <span class="proc-link" onclick="searchKeyword('Permit')">🔍 Search permit items →</span>
+    </div>
+  </div>
+
+  <!-- SUBSTANTIAL COMPLETION / LOC -->
+  <div class="proc-card" data-tags="substantial completion loc letter of completion dob closeout sign-off mep as-builts punchlist">
+    <div class="proc-header" onclick="toggleProc('proc-sc')">
+      <span class="proc-icon">✅</span>
+      <div>
+        <div class="proc-title">Substantial Completion + DOB Letter of Completion (LOC)</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: all HHE phases + JB floors at completion</div>
+      </div>
+      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
+      <span class="proc-toggle" id="toggle-proc-sc">▼</span>
+    </div>
+    <div class="proc-body" id="proc-sc">
+      <div class="proc-desc">The DOB Letter of Completion (LOC) is the official DOB sign-off that closes out a construction permit. Substantial Completion (SC) is a contractual milestone between Lefrak and DEP/DCAS that the space is ready for occupancy. Both are required at the end of each phase. Getting to LOC requires all sign-offs to be in hand.</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">All physical work complete — punchlist issued</div>
+            <div class="proc-step-detail">GC declares substantial completion. DEP/DCAS and PRA do a formal walkthrough and issue a punchlist. All punchlist items must be resolved before sign-offs can be collected.</div>
+            <span class="proc-step-owner">👤 GC + DEP/DCAS + PRA</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Collect all required sign-offs</div>
+            <div class="proc-step-detail">All of the following must be in hand before LOC can be filed: (1) MEP as-builts signed by MGE, (2) Arch as-builts signed by AJA, (3) FDNY Letter of Approval, (4) BEC/Electrical sign-off, (5) Certified air balancing report, (6) DOB plumbing sign-off (plumber signature), (7) FA pretest certification, (8) Emergency lighting test.</div>
+            <span class="proc-step-owner">👤 MGE + AJA + FDNY + BEC + Testing labs</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Muhammad (MBC) files for LOC with DOB</div>
+            <div class="proc-step-detail">Once all sign-offs are collected, Muhammad files the LOC application via DOB NOW. DOB reviews and issues the letter. This is the official DOB record that the project is complete.</div>
+            <span class="proc-step-owner">👤 Muhammad (MBC) → DOB</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">4</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Substantial Completion letter executed with Lefrak/DEP</div>
+            <div class="proc-step-detail">Anita Jhamb (Lefrak) issues the Substantial Completion notice. DEP/DCAS signs off. This triggers the contractual start of the warranty period and allows DEP to re-occupy the space.</div>
+            <span class="proc-step-owner">👤 Anita Jhamb (Lefrak) + DEP/DCAS</span>
+          </div>
+        </div>
+      </div>
+      <span class="proc-link" onclick="searchKeyword('Substantial Completion')">🔍 Search SC items →</span>
+    </div>
+  </div>
+
+  </div><!-- end proc-list -->
+  <div style="height:40px"></div>
 </div>
 
 <!-- SCHEDULE PAGE -->
@@ -2970,7 +3331,38 @@ async function confirmReset() {
   }
 }
 
-// ── SCHEDULE DATA ─────────────────────────────────────────
+function toggleProc(id) {
+  const body = document.getElementById(id);
+  const tog = document.getElementById('toggle-' + id);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (tog) tog.classList.toggle('open');
+}
+
+function filterProcesses(query) {
+  const q = (query||'').toLowerCase().trim();
+  document.querySelectorAll('#proc-list .proc-card').forEach(card => {
+    if (!q) { card.style.display = ''; return; }
+    const tags = (card.dataset.tags||'').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    card.style.display = (tags.includes(q) || text.includes(q)) ? '' : 'none';
+  });
+  document.querySelectorAll('#proc-list .keyword-chip, .keyword-chips .keyword-chip').forEach(c => {
+    c.classList.toggle('active', c.textContent.toLowerCase().includes(q) && q);
+  });
+}
+
+// Wire process links into timeline steps
+function addProcessLinksToTimeline() {
+  // Add "📖 See process guide" links to relevant timeline steps
+  const links = {
+    'fdny': 'proc-fdny',
+    'arts': 'proc-arts',
+    'loc': 'proc-sc',
+    'permit': 'proc-permit',
+  };
+  // This runs after timeline renders — future enhancement
+}
 // Mirrors TIMELINE_DEFS but with editable fields stored in Firebase
 // schedule_tasks/{phaseKey} = [{id, name, start, finish, pct, notes}]
 

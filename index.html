@@ -2318,7 +2318,7 @@ KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby p
 CRITICAL: Return ONLY valid JSON. No preamble.
 {"headline":"one sentence","urgent":["item1","item2"],"push_today":["who + what to say"],"watch":["item"],"meetings_today":["prep note if meetings"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one good thing"}`;
 
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
     const raw = data.content.map(c=>c.text||'').join('');

@@ -621,6 +621,14 @@ body{
 .search-count{font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace}
 .kw{cursor:pointer;border-bottom:1px dashed var(--border2);transition:color .1s}
 .kw:hover{color:var(--navy);border-bottom-color:var(--navy)}
+.lk{
+  display:inline-block;cursor:pointer;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:4px;padding:1px 6px;font-size:11px;font-weight:600;
+  color:var(--navy);transition:all .12s;white-space:nowrap;
+  font-family:'DM Mono',monospace;
+}
+.lk:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 
 /* ── SCHEDULE EDITOR ── */
 .schedule-phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
@@ -898,6 +906,7 @@ body{
     <div id="hhe-a3" class="sub"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Phase</th><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody id="tbl-hhe-a3"></tbody></table></div></div>
     <div id="hhe-a5" class="sub"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Phase</th><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody id="tbl-hhe-a5"></tbody></table></div></div>
   </div>
+  <div id="related-hhe"></div>
 </div>
 
 <!-- JB PAGE -->
@@ -934,6 +943,7 @@ body{
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Notes</th></tr></thead><tbody id="tbl-jb-3"></tbody></table></div>
     </div>
   </div>
+  <div id="related-jb"></div>
 </div>
 
 <!-- MEETINGS -->
@@ -1309,11 +1319,11 @@ function renderLog(entries) {
     <div class="log-entry">
       <div class="log-hdr">
         <span class="badge bi">${escH(d.date||'')}</span>
-        ${d.area?`<span class="badge bm">${escH(d.area)}</span>`:''}
-        <span style="font-weight:600">${escH(d.headline||'')}</span>
-        ${d.person?`<span style="color:var(--text3);font-size:11px">— ${escH(d.person)}</span>`:''}
+        ${d.area?`<span class="badge bm" style="cursor:pointer" onclick="searchKeyword('${escH(d.area)}');goto('search',null)">${escH(d.area)}</span>`:''}
+        <span style="font-weight:600">${linkify(d.headline||'')}</span>
+        ${d.person?`<span style="color:var(--text3);font-size:11px">— ${linkify(d.person)}</span>`:''}
       </div>
-      ${d.detail?`<div class="log-body">${escH(d.detail)}</div>`:''}
+      ${d.detail?`<div class="log-body">${linkify(d.detail)}</div>`:''}
     </div>`).join('');
 }
 
@@ -1517,17 +1527,19 @@ function renderAllTables() {
     const rows = (liveStatuses[key] || []).map((r, rowIdx) =>
       `<tr>
         <td style="color:var(--text3);font-size:11px;font-weight:500">${phaseLabel}</td>
-        <td>${escH(r.item)}</td>
+        <td>${linkify(r.item)}</td>
         <td>
-          <span class="badge ${r.cls}" style="cursor:pointer;white-space:normal;word-break:break-word" title="Click to edit" onclick="openEditModal('${key}',${rowIdx})">${escH(r.status)}</span>
+          <span class="badge ${r.cls}" style="cursor:pointer;white-space:normal;word-break:break-word" title="Click to edit" onclick="openEditModal('${key}',${rowIdx})">${linkifyRaw(escH(r.status))}</span>
         </td>
-        <td style="font-size:11.5px;color:var(--text2)">${escH(r.owner||'')}</td>
+        <td style="font-size:11.5px;color:var(--text2)">${linkify(r.owner||'')}</td>
       </tr>`
     ).join('');
     tb.innerHTML = rows;
   });
   buildLiveStatusGrid();
   buildTimelines();
+  renderRelatedPanel('hhe', ['FDNY','Blackbull','Muhammad','LOC','MEP','Substantial Completion','HHE','B1','B2','A3','A4','A5']);
+  renderRelatedPanel('jb', ['ARTS','ESG','ECC','Abatement','ACM','Clayton','Javier','11th','10th','3rd','Variance']);
 }
 
 async function updateStatuses(changes) {
@@ -1578,6 +1590,63 @@ const statusData = [
   {name:'10th fl',badge:'bm',badgeText:'ARTS prep',items:[{dot:'dot-s',t:'ARTS drawings submitted 4/21'},{dot:'dot-w',t:'Awaiting DEP review'},{dot:'dot-m',t:'Concurrent with 3rd fl'}]},
   {name:'3rd fl',badge:'bm',badgeText:'Planning',items:[{dot:'dot-m',t:'New ARTS filing needed'},{dot:'dot-m',t:'Concurrent with 10th fl'},{dot:'dot-m',t:'Phase 1 planned ~9/4/26'}]}
 ];
+
+// ── RELATED PANELS ─────────────────────────────────────────
+function renderRelatedPanel(pageId, keywords) {
+  const el = document.getElementById('related-' + pageId);
+  if (!el) return;
+
+  // Find related contacts
+  const relatedContacts = liveContacts.filter(c => {
+    const text = `${c.name} ${c.role} ${c.org} ${c.notes||''}`.toLowerCase();
+    return keywords.some(k => text.includes(k.toLowerCase()));
+  }).slice(0, 6);
+
+  // Find related timeline steps across all phases
+  const relatedSteps = [];
+  Object.entries(TIMELINE_DEFS).forEach(([key, def]) => {
+    const overrides = liveTimelineStates[key] || {};
+    def.steps.forEach(step => {
+      const state = overrides[step.id] || step.state;
+      if ((state === 'active' || state === 'warn' || state === 'blocked') &&
+          keywords.some(k => `${step.title} ${step.detail||''}`.toLowerCase().includes(k.toLowerCase()))) {
+        relatedSteps.push({title: step.title, state, phase: def.label, key});
+      }
+    });
+  });
+
+  if (!relatedContacts.length && !relatedSteps.length) { el.innerHTML = ''; return; }
+
+  let html = `<div class="card" style="margin-top:14px;border-color:var(--blue-border);background:var(--blue-dim)">
+    <div class="card-title" style="color:var(--blue)">🔗 Related</div>`;
+
+  if (relatedContacts.length) {
+    html += `<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Key contacts</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">`;
+    relatedContacts.forEach(c => {
+      html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px;cursor:pointer;min-width:120px" onclick="goto('contacts',null)">
+        <div style="font-size:12px;font-weight:600;color:var(--navy)">${escH(c.name)}</div>
+        <div style="font-size:11px;color:var(--text3)">${escH(c.role.split('—')[0].trim())}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (relatedSteps.length) {
+    html += `<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Active steps</div>`;
+    relatedSteps.slice(0, 4).forEach(s => {
+      const cls = s.state==='active'?'bi':s.state==='warn'?'bw':'bd';
+      html += `<div style="display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="goto('timeline',null)">
+        <span class="badge ${cls}" style="font-size:10px;flex-shrink:0">${s.state}</span>
+        <div style="font-size:12px;flex:1">${linkify(s.title)}<div style="font-size:10px;color:var(--text3)">${escH(s.phase)}</div></div>
+      </div>`;
+    });
+  }
+
+  html += `<div style="margin-top:10px"><span class="lk" onclick="searchKeyword('${keywords[0]}');goto('search',null)">Search all "${keywords[0]}" items →</span></div>
+  </div>`;
+  el.innerHTML = html;
+}
 
 function buildLiveStatusGrid() {
   const g = document.getElementById('status-grid');
@@ -1977,12 +2046,12 @@ function renderTimelineCard(def) {
         ${!isLast ? '<div class="tl-step-line"></div>' : ''}
       </div>
       <div class="tl-step-right">
-        <div class="tl-step-title">${escH(step.title)}
+        <div class="tl-step-title">${linkify(step.title)}
           <span class="badge" style="font-size:10px;${step.state==='done'?'background:var(--green-bg);color:var(--green);border-color:var(--green-border)':step.state==='active'?'background:var(--navy);color:#fff;border:none':step.state==='blocked'?'background:var(--red-bg);color:var(--red);border-color:var(--red-border)':step.state==='warn'?'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)':'background:var(--gray-bg);color:var(--gray);border-color:var(--gray-border)'}">${step.state==='done'?'Done':step.state==='active'?'Active':step.state==='blocked'?'Blocked':step.state==='warn'?'At-risk':'Upcoming'}</span>
           ${stateSelector}
         </div>
         ${step.date?`<div class="tl-step-date">📅 ${escH(step.date)}</div>`:''}
-        ${step.detail?`<div class="tl-step-detail">${escH(step.detail)}</div>`:''}
+        ${step.detail?`<div class="tl-step-detail">${linkify(step.detail)}</div>`:''}
         ${rejHtml}
       </div>
     </div>`;
@@ -2256,22 +2325,22 @@ function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateSt
   let html = '';
   html+=`<div class="card" style="background:var(--navy);color:#fff;border-color:var(--navy)"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px">${escH(dateStr)}</div><div style="font-size:16px;font-weight:500;line-height:1.4">${escH(b.headline||'')}</div>${b.positive?`<div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.08);border-radius:6px;font-size:13px;color:rgba(255,255,255,.8)">✓ ${escH(b.positive)}</div>`:''}</div>`;
   if (permitWarnings.length) {
-    html+=`<div class="card" style="border-color:var(--red-border);background:var(--red-bg)"><div class="card-title" style="color:var(--red)">🚨 Permit Expiry Warnings</div>${permitWarnings.map(p=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--red-border)"><strong style="color:var(--red)">${escH(p.permit)}</strong> — expires ${new Date(p.expires).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} <strong style="color:var(--red)">(${p.daysLeft} days left)</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">→ Confirm with Foremost/Muhammad whether closeout or renewal is planned immediately</div></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--red-border);background:var(--red-bg)"><div class="card-title" style="color:var(--red)">🚨 Permit Expiry Warnings</div>${permitWarnings.map(p=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--red-border)"><strong style="color:var(--red)">${escH(p.permit)}</strong> — expires ${new Date(p.expires).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} <strong style="color:var(--red)">(${p.daysLeft} days left)</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">→ Confirm with <span class="lk" onclick="searchKeyword('Foremost');goto('search',null)">Foremost</span> / <span class="lk" onclick="searchKeyword('Muhammad');goto('search',null)">Muhammad</span> whether closeout or renewal is planned immediately</div></div>`).join('')}</div>`;
   }
   if (b.urgent?.length) {
-    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:600">!</span>${escH(u)}</div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:600">!</span><span>${linkify(u)}</span></div>`).join('')}</div>`;
   }
   if (overdueActions.length) {
-    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1">${escH(a.action)}<div style="font-size:11px;color:var(--text3)">👤 ${escH(a.owner||'')} · ${escH(a.area||'')}</div></div><button class="btn btn-g" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1">${linkify(a.action)}<div style="font-size:11px;color:var(--text3)">👤 ${linkify(a.owner||'')} · ${linkify(a.area||'')}</div></div><button class="btn btn-g" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
   }
   if (b.push_today?.length) {
-    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--gold);flex-shrink:0;font-weight:600">→</span>${escH(p)}</div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--gold);flex-shrink:0;font-weight:600">→</span><span>${linkify(p)}</span></div>`).join('')}</div>`;
   }
   if (todayMeetings.length || b.meetings_today?.length) {
-    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><strong>${escH(m.time)}</strong> — ${escH(m.name)}</div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ ${escH(n)}</div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><strong>${escH(m.time)}</strong> — ${linkify(m.name)}</div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ ${linkify(n)}</div>`).join('')}</div>`;
   }
   if (b.watch?.length) {
-    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text3)">○</span>${escH(w)}</div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text3)">○</span><span>${linkify(w)}</span></div>`).join('')}</div>`;
   }
   if (b.donna_draft) {
     html+=`<div class="card"><div class="card-title">📧 Donna Cappa weekly update — ready to send</div><div style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--bg2);padding:12px;border-radius:6px;line-height:1.7;margin-bottom:10px;max-height:300px;overflow-y:auto">${escH(b.donna_draft)}</div><button class="btn btn-a" style="font-size:12px" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);showToast('Donna draft copied!')">📋 Copy to clipboard</button></div>`;
@@ -2354,8 +2423,9 @@ function renderContacts() {
         ${isMatLeave?'<div style="font-size:10px;color:var(--amber);margin-bottom:4px">🤱 On maternity leave</div>':''}
         <div class="cn">${escH(c.name||'')}</div>
         <div class="cr">${escH(c.role||'')}</div>
-        ${c.email?`<div class="ce">${escH(c.email)}</div>`:''}
-        ${c.notes?`<div class="cn2">${escH(c.notes)}</div>`:''}
+        ${c.email?`<div class="ce" onclick="event.stopPropagation();navigator.clipboard.writeText('${escH(c.email)}');showToast('Email copied!')" style="cursor:pointer" title="Click to copy">${escH(c.email)}</div>`:''}
+        ${c.notes?`<div class="cn2">${linkify(c.notes)}</div>`:''}
+        <div style="margin-top:6px"><span class="lk" onclick="event.stopPropagation();searchKeyword('${escH(c.name.split(' ')[0])}');goto('search',null)">See all related items →</span></div>
       </div>`;
     });
     html += `</div>`;
@@ -2661,21 +2731,33 @@ RESPONSE JSON STRUCTURE:
       "newCls": "bs"
     }
   ],
-  "new_contacts": [
-    {
-      "name": "Full name as mentioned",
-      "role": "their role based on context",
-      "org": "PRA or DCAS / DEP or Lefrak / Foremost or Consultants / GCs or Other",
-      "email": "email if mentioned",
-      "notes": "any context about them"
-    }
-  ],
+  "timeline_updates": [
     {
       "phaseKey": "jb-11",
       "stepId": "dep_notice",
       "state": "done",
       "detail": "DEP issued 4-week notice 4/24/26",
       "date": "4/24/26"
+    }
+  ],
+  "schedule_updates": [
+    {
+      "phaseKey": "jb-11",
+      "taskId": "t_11_demo_lobby",
+      "taskName": "Soft Demo — Lobbies + Corridor",
+      "field": "start",
+      "oldValue": "5/15/26",
+      "newValue": "5/22/26",
+      "reason": "why this date changed"
+    }
+  ],
+  "new_contacts": [
+    {
+      "name": "Full name as mentioned",
+      "role": "their role based on context",
+      "org": "PRA or DCAS / DEP or Lefrak or Foremost or ECC or ESG or Consultants / GCs or Other",
+      "email": "email if mentioned",
+      "notes": "any context about them"
     }
   ],
   "next_steps": ["implied next step 1", "implied next step 2"],
@@ -2688,6 +2770,12 @@ RESPONSE JSON STRUCTURE:
   },
   "ready_to_apply": true
 }
+
+SCHEDULE TASK IDs for schedule_updates (use exact values):
+Floor 11: t_11_vacate, t_11_boxes, t_11_condition, t_11_furniture, t_11_3notice, t_11_arts_scope, t_11_arts_file, t_11_demo_lobby, t_11_demo_carpet, t_11_demo_restroom, t_11_recon_lobby, t_11_recon_restroom, t_11_recon_ceiling1, t_11_recon_ceiling2, t_11_carpet, t_11_inspect, t_11_punchlist, t_11_sc, t_11_reinstall, t_11_occupy
+Floor 3: t_3_corridor_demo, t_3_corridor_acm, t_3_corridor_build, t_3_lobby_demo, t_3_lobby_acm, t_3_lobby_build, t_3_men_build, t_3_women_build, t_3_lobby_complete, t_3_restroom_open, t_3_sc
+Floor 10: t_10_pack, t_10_vacate, t_10_boxes, t_10_condition, t_10_furniture, t_10_demo_corridor, t_10_demo_carpet, t_10_demo_restroom, t_10_recon_restroom, t_10_ceiling1, t_10_ceiling2, t_10_carpet, t_10_inspect, t_10_punchlist, t_10_reinstall, t_10_sc, t_10_occupy
+Fields: "start", "finish", or "pct" (percent complete 0-100)
 Set ready_to_apply false only if you have unanswered questions. Otherwise always true.`;
 
 let pendingResult = null;
@@ -2739,6 +2827,19 @@ function renderAIResponse(parsed) {
     html+=`<div style="margin-bottom:10px"><strong style="font-size:12px;color:var(--navy)">Proposed status updates:</strong><div style="margin-top:7px">`;
     parsed.proposed_changes.forEach(c=>{
       html+=`<div class="chg-item"><span style="font-size:14px">✏️</span><div style="flex:1"><strong>${escH(c.area)}</strong><br><span class="chg-from">${escH(c.from||'')}</span>${c.from?' → ':''}<span class="chg-to">${escH(c.to||'')}</span><br><span style="font-size:11.5px;color:var(--text3)">${escH(c.reason||'')}</span></div></div>`;
+    });
+    html+=`</div></div>`;
+  }
+  if(parsed.schedule_updates?.length){
+    html+=`<div style="margin-bottom:10px"><strong style="font-size:12px;color:var(--navy)">📅 Proposed schedule updates:</strong><div style="margin-top:7px">`;
+    parsed.schedule_updates.forEach(u=>{
+      const fieldLabel = u.field==='pct' ? '% complete' : u.field;
+      html+=`<div class="chg-item"><span style="font-size:14px">📅</span><div style="flex:1">
+        <strong>${escH(u.taskName||u.taskId)}</strong>
+        <span style="font-size:11px;color:var(--text3);margin-left:4px">(${escH(u.phaseKey)})</span><br>
+        <span class="chg-from">${escH(fieldLabel)}: ${escH(String(u.oldValue||''))}</span> → <span class="chg-to">${escH(String(u.newValue))}</span><br>
+        <span style="font-size:11.5px;color:var(--text3)">${escH(u.reason||'')}</span>
+      </div></div>`;
     });
     html+=`</div></div>`;
   }
@@ -2822,10 +2923,21 @@ async function applyChanges() {
   // Update timeline step states in Firebase
   if(timelineUpdates.length>0) await updateTimelineStates(timelineUpdates);
 
+  // Apply schedule updates
+  const scheduleUpdates = pendingResult.schedule_updates || [];
+  if (scheduleUpdates.length > 0) {
+    scheduleUpdates.forEach(u => {
+      if (u.phaseKey && u.taskId && u.field && u.newValue !== undefined) {
+        saveScheduleTask(u.phaseKey, u.taskId, {[u.field]: u.newValue});
+      }
+    });
+  }
+
   if(logSaved){
     document.getElementById('ai-resp-area').innerHTML=`<div class="ai-resp"><div class="ai-resp-lbl">✓ Saved & synced</div>
-      Update logged. ${statusUpdates.length>0?`${statusUpdates.length} status field(s) updated.`:''} 
-      ${timelineUpdates.length>0?`${timelineUpdates.length} timeline step(s) updated.`:''}
+      Update logged.${statusUpdates.length>0?` ${statusUpdates.length} status field(s) updated.`:''}
+      ${timelineUpdates.length>0?` ${timelineUpdates.length} timeline step(s) updated.`:''}
+      ${scheduleUpdates.length>0?` ${scheduleUpdates.length} schedule task(s) updated.`:''}
       All changes synced to every device instantly.</div>`;
     document.getElementById('ai-input').value='';
     removeFile(); pendingResult=null;
@@ -3226,12 +3338,67 @@ async function applyScheduleUpdate() {
   showToast('✓ Schedule updated from MS Project PDF');
 }
 
-// ── SEARCH / FILTER ────────────────────────────────────────
+// ── LINKIFY ────────────────────────────────────────────────
+// Wraps known keywords in tappable chips that trigger search
+const LINK_TERMS = [
+  // People
+  'Zach Trakas','Zachary Trakas','KK Maurya','KK','Matthew Barlow','Cynthia Poulton',
+  'Melissa Rivera-Ferguson','David Jenkins','Alejandro Orellana','Alex Orellana',
+  'Kyle Josefson','Anita Jhamb','Donna Cappa','Mike Leary','Meredith Jackness',
+  'Clayton Long','Javier Catalan','Lisa Javier','Felix Urena','Muhammad','Sheranne',
+  // Companies
+  'Blackbull','Foremost','Lefrak','PRA','ECC','ESG','MBC','AJA','MGE','Hi Rise',
+  'Astor & Stone','DCAS','DEP','DOB','FDNY',
+  // Permit/process
+  'ARTS','LOC','FA Pretest','FA pretest','As-Builts','as-builts','Punchlist','punchlist',
+  'Substantial Completion','Abatement','abatement','ACM','Variance','variance',
+  'MEP','Plumbing','plumbing',
+  // Phases/floors
+  'B1','B2','A3','A4','A5','11th floor','11th fl','10th floor','10th fl',
+  '12th floor','12th fl','3rd floor','3rd fl',
+  // Permit numbers
+  'TRU1110QN25','TRU1253QN24','VAR# 2487QN25','Q00940195','Q00919587',
+  'Q01225051','Q01286750','Q00940285'
+].sort((a,b) => b.length - a.length); // longest first to avoid partial matches
+
+function linkify(text) {
+  if (!text) return '';
+  let result = escH(text);
+  LINK_TERMS.forEach(term => {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?<![\\w>])(${escaped})(?![\\w<])`, 'gi');
+    result = result.replace(regex, (match) =>
+      `<span class="lk" onclick="searchKeyword('${match.replace(/'/g,"\\'")}');goto('search',null)">${match}</span>`
+    );
+  });
+  return result;
+}
+
+// Lighter version — just wraps without escaping (for already-escaped content)
+function linkifyRaw(text) {
+  if (!text) return '';
+  let result = text;
+  LINK_TERMS.forEach(term => {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?<![\\w>])(${escaped})(?![\\w<])`, 'gi');
+    result = result.replace(regex, (match) =>
+      `<span class="lk" onclick="searchKeyword('${match.replace(/'/g,"\\'")}');goto('search',null)">${match}</span>`
+    );
+  });
+  return result;
+}
 const SEARCH_KEYWORDS = [
+  // Permit/process types
   'FDNY','DOB','LOC','ARTS','Plumbing','MEP','As-Builts','Punchlist',
   'Abatement','ACM','DCAS','Substantial Completion','FA Pretest',
-  'Permit','Inspection','Variance','ECC','ESG','AJA','MGE',
-  'B1','B2','A3','A4','A5','11th fl','10th fl','12th fl','3rd fl'
+  'Permit','Inspection','Variance','AJA','MGE',
+  // Floors/phases
+  'B1','B2','A3','A4','A5','11th fl','10th fl','12th fl','3rd fl',
+  // Companies
+  'ECC','ESG','Blackbull','Foremost','Lefrak','PRA','MBC','DCAS',
+  // People
+  'Clayton','Javier','Donna','Anita','KK','Zach','Muhammad','Ary',
+  'David Jenkins','Mike Leary','Meredith','Cynthia','Melissa','Felix'
 ];
 
 function initSearch() {
@@ -3266,6 +3433,21 @@ function runSearch(query) {
   }
 
   const results = [];
+
+  // Search contacts
+  liveContacts.forEach(c => {
+    const searchable = `${c.name} ${c.role} ${c.org} ${c.notes||''} ${c.email||''}`.toLowerCase();
+    if (searchable.includes(q)) {
+      results.push({
+        building: c.org || 'Contacts',
+        item: c.name,
+        status: c.role,
+        cls: 'bi',
+        owner: c.email || '',
+        type: 'contact'
+      });
+    }
+  });
 
   // Search status items
   const sectionLabels = {

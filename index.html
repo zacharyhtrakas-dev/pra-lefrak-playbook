@@ -1867,6 +1867,12 @@ function subShow(prefix,id,btn) {
   btn.classList.add('on');
 }
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function safeParseJSON(raw) {
+  const clean = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+  const f = clean.indexOf('{'), l = clean.lastIndexOf('}');
+  if (f===-1||l===-1) throw new Error('No JSON found: ' + clean.substring(0,200));
+  return JSON.parse(clean.substring(f,l+1));
+}
 
 // ── TIMELINES ─────────────────────────────────────────────
 const REJECTIONS = {

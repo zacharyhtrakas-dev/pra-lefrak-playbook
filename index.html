@@ -2315,9 +2315,7 @@ CRITICAL: Return ONLY valid JSON. No preamble.
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data)}`);
     const raw = data.content.map(c=>c.text||'').join('');
-    const f=raw.indexOf('{'),l=raw.lastIndexOf('}');
-    if (f===-1) throw new Error('No JSON in response: ' + raw.substring(0,200));
-    const briefing = JSON.parse(raw.substring(f,l+1));
+    const briefing = safeParseJSON(raw);
     renderBriefing(briefing, permitWarnings, overdueActions, todayMeetings, todayStr);
   } catch(e) {
     container.innerHTML=`<div class="card"><div style="color:var(--red)">${escH(e.message)}</div></div>`;
@@ -2805,10 +2803,8 @@ async function submitToAI() {
     if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'API error '+resp.status);}
     const data=await resp.json();
     const raw=data.content.map(c=>c.text||'').join('');
-    const f=raw.indexOf('{'),l=raw.lastIndexOf('}');
-    if(f===-1||l===-1) throw new Error('No JSON in response. Raw: '+raw.substring(0,200));
-    let parsed;
-    try{parsed=JSON.parse(raw.substring(f,l+1));}
+        let parsed;
+    try{parsed=safeParseJSON(raw);}
     catch(e){throw new Error('JSON parse failed. Raw snippet: '+raw.substring(f,Math.min(f+300,l+1)));}
     pendingResult=parsed;
     renderAIResponse(parsed);
@@ -3285,8 +3281,7 @@ Floor 10: t_10_pack, t_10_vacate, t_10_demo_corridor, t_10_demo_carpet, t_10_dem
     });
     const data = await resp.json();
     const raw = data.content.map(c => c.text||'').join('');
-    const f = raw.indexOf('{'), l = raw.lastIndexOf('}');
-    const parsed = JSON.parse(raw.substring(f, l+1));
+    const parsed = safeParseJSON(raw);
     pendingScheduleResult = parsed;
     renderScheduleUploadPreview(parsed);
   } catch(e) {

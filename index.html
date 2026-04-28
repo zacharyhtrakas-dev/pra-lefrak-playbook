@@ -621,14 +621,15 @@ body{
 .search-count{font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace}
 .kw{cursor:pointer;border-bottom:1px dashed var(--border2);transition:color .1s}
 .kw:hover{color:var(--navy);border-bottom-color:var(--navy)}
-.lk{
-  cursor:pointer;
-  color:inherit;
-  border-bottom:1px solid var(--navy);
-  opacity:.75;
-  transition:opacity .1s;
-}
-.lk:hover{opacity:1;color:var(--navy)}
+.lk{display:inline-block;border-radius:4px;padding:1px 6px;font-size:12px;font-weight:500;cursor:pointer;transition:background .1s;line-height:1.6}
+.lk-person{background:#f0f5ff;color:#2b5be8}
+.lk-person:hover{background:#e0e8ff}
+.lk-company{background:#f5f0ff;color:#7c3aed}
+.lk-company:hover{background:#ede9fe}
+.lk-permit{background:#fff7ed;color:#c2540a}
+.lk-permit:hover{background:#ffedd5}
+.lk-phase{background:#f0fdf4;color:#166534}
+.lk-phase:hover{background:#dcfce7}
 
 /* ── SCHEDULE EDITOR ── */
 .schedule-phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
@@ -3339,53 +3340,65 @@ async function applyScheduleUpdate() {
 
 // ── LINKIFY ────────────────────────────────────────────────
 // Wraps known keywords in tappable chips that trigger search
-const LINK_TERMS = [
-  // People
-  'Zach Trakas','Zachary Trakas','KK Maurya','KK','Matthew Barlow','Cynthia Poulton',
-  'Melissa Rivera-Ferguson','David Jenkins','Alejandro Orellana','Alex Orellana',
-  'Kyle Josefson','Anita Jhamb','Donna Cappa','Mike Leary','Meredith Jackness',
-  'Clayton Long','Javier Catalan','Lisa Javier','Felix Urena','Muhammad','Sheranne',
-  // Companies
-  'Blackbull','Foremost','Lefrak','PRA','ECC','ESG','MBC','AJA','MGE','Hi Rise',
-  'Astor & Stone','DCAS','DEP','DOB','FDNY',
-  // Permit/process
-  'ARTS','LOC','FA Pretest','FA pretest','As-Builts','as-builts','Punchlist','punchlist',
-  'Substantial Completion','Abatement','abatement','ACM','Variance','variance',
-  'MEP','Plumbing','plumbing',
-  // Phases/floors
-  'B1','B2','A3','A4','A5','11th floor','11th fl','10th floor','10th fl',
-  '12th floor','12th fl','3rd floor','3rd fl',
-  // Permit numbers
-  'TRU1110QN25','TRU1253QN24','VAR# 2487QN25','Q00940195','Q00919587',
-  'Q01225051','Q01286750','Q00940285'
-].sort((a,b) => b.length - a.length); // longest first to avoid partial matches
+const LINK_TERMS_TYPED = [
+  {term:'Zach Trakas',type:'person'},{term:'Zachary Trakas',type:'person'},
+  {term:'KK Maurya',type:'person'},{term:'KK',type:'person'},
+  {term:'Matthew Barlow',type:'person'},{term:'Cynthia Poulton',type:'person'},
+  {term:'Melissa Rivera-Ferguson',type:'person'},{term:'David Jenkins',type:'person'},
+  {term:'Alejandro Orellana',type:'person'},{term:'Alex Orellana',type:'person'},
+  {term:'Kyle Josefson',type:'person'},{term:'Anita Jhamb',type:'person'},
+  {term:'Donna Cappa',type:'person'},{term:'Mike Leary',type:'person'},
+  {term:'Meredith Jackness',type:'person'},{term:'Clayton Long',type:'person'},
+  {term:'Javier Catalan',type:'person'},{term:'Lisa Javier',type:'person'},
+  {term:'Felix Urena',type:'person'},{term:'Muhammad',type:'person'},
+  {term:'Sheranne',type:'person'},{term:'Ary',type:'person'},
+  {term:'Blackbull',type:'company'},{term:'Foremost',type:'company'},
+  {term:'Lefrak',type:'company'},{term:'PRA',type:'company'},
+  {term:'ECC',type:'company'},{term:'ESG',type:'company'},
+  {term:'MBC',type:'company'},{term:'AJA',type:'company'},
+  {term:'MGE',type:'company'},{term:'Hi Rise',type:'company'},
+  {term:'Astor & Stone',type:'company'},{term:'DCAS',type:'company'},
+  {term:'DEP',type:'company'},{term:'DOB',type:'company'},{term:'FDNY',type:'company'},
+  {term:'ARTS',type:'permit'},{term:'LOC',type:'permit'},
+  {term:'FA Pretest',type:'permit'},{term:'FA pretest',type:'permit'},
+  {term:'As-Builts',type:'permit'},{term:'as-builts',type:'permit'},
+  {term:'Punchlist',type:'permit'},{term:'punchlist',type:'permit'},
+  {term:'Substantial Completion',type:'permit'},
+  {term:'Abatement',type:'permit'},{term:'abatement',type:'permit'},
+  {term:'ACM',type:'permit'},{term:'Variance',type:'permit'},
+  {term:'MEP',type:'permit'},{term:'Plumbing',type:'permit'},
+  {term:'TRU1110QN25',type:'permit'},{term:'TRU1253QN24',type:'permit'},
+  {term:'VAR# 2487QN25',type:'permit'},{term:'Q00940195',type:'permit'},
+  {term:'Q00919587',type:'permit'},{term:'Q01225051',type:'permit'},
+  {term:'Q01286750',type:'permit'},{term:'Q00940285',type:'permit'},
+  {term:'B1',type:'phase'},{term:'B2',type:'phase'},
+  {term:'A3',type:'phase'},{term:'A4',type:'phase'},{term:'A5',type:'phase'},
+  {term:'11th floor',type:'phase'},{term:'11th fl',type:'phase'},
+  {term:'10th floor',type:'phase'},{term:'10th fl',type:'phase'},
+  {term:'12th floor',type:'phase'},{term:'12th fl',type:'phase'},
+  {term:'3rd floor',type:'phase'},{term:'3rd fl',type:'phase'},
+].sort((a,b) => b.term.length - a.term.length);
+
+const LINK_TERMS = LINK_TERMS_TYPED.map(t => t.term);
 
 function linkify(text) {
   if (!text) return '';
-  // Escape first, then inject link spans (no double-escaping)
   let result = escH(text);
-  LINK_TERMS.forEach(term => {
-    const escapedTerm = escH(term);
-    const regex = new RegExp(`(?<![\\w>])(${escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\w<])`, 'gi');
-    result = result.replace(regex, (match) => {
-      const searchTerm = match.replace(/'/g, "\\'");
-      return `<span class="lk" onclick="searchKeyword('${searchTerm}')">${match}</span>`;
-    });
+  LINK_TERMS_TYPED.forEach(({term, type}) => {
+    const et = escH(term);
+    const rx = new RegExp("(?<![\\w>])(" + et.replace(/[.*+?^${}()|[\]\\]/g,"\\&") + ")(?![\\w<])","gi");
+    result = result.replace(rx, m => `<span class="lk lk-${type}" onclick="searchKeyword('${m.replace(/'/g,"\\'")}')"> ${m}</span>`);
   });
   return result;
 }
 
 function linkifyRaw(text) {
   if (!text) return '';
-  // Already HTML - just inject spans around known terms
   let result = text;
-  LINK_TERMS.forEach(term => {
-    const escapedTerm = escH(term);
-    const regex = new RegExp(`(?<![\\w>])(${escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\w<])`, 'gi');
-    result = result.replace(regex, (match) => {
-      const searchTerm = match.replace(/'/g, "\\'");
-      return `<span class="lk" onclick="searchKeyword('${searchTerm}')">${match}</span>`;
-    });
+  LINK_TERMS_TYPED.forEach(({term, type}) => {
+    const et = escH(term);
+    const rx = new RegExp("(?<![\\w>])(" + et.replace(/[.*+?^${}()|[\]\\]/g,"\\&") + ")(?![\\w<])","gi");
+    result = result.replace(rx, m => `<span class="lk lk-${type}" onclick="searchKeyword('${m.replace(/'/g,"\\'")}')"> ${m}</span>`);
   });
   return result;
 }

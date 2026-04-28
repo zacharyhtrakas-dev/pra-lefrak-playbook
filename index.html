@@ -622,13 +622,13 @@ body{
 .kw{cursor:pointer;border-bottom:1px dashed var(--border2);transition:color .1s}
 .kw:hover{color:var(--navy);border-bottom-color:var(--navy)}
 .lk{
-  display:inline-block;cursor:pointer;
-  background:var(--surface2);border:1px solid var(--border2);
-  border-radius:4px;padding:1px 6px;font-size:11px;font-weight:600;
-  color:var(--navy);transition:all .12s;white-space:nowrap;
-  font-family:'DM Mono',monospace;
+  cursor:pointer;
+  color:inherit;
+  border-bottom:1px solid var(--navy);
+  opacity:.75;
+  transition:opacity .1s;
 }
-.lk:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.lk:hover{opacity:1;color:var(--navy)}
 
 /* ── SCHEDULE EDITOR ── */
 .schedule-phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
@@ -3367,27 +3367,30 @@ const LINK_TERMS = [
 
 function linkify(text) {
   if (!text) return '';
+  // Escape first, then inject link spans (no double-escaping)
   let result = escH(text);
   LINK_TERMS.forEach(term => {
-    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(?<![\\w>])(${escaped})(?![\\w<])`, 'gi');
-    result = result.replace(regex, (match) =>
-      `<span class="lk" onclick="searchKeyword('${match.replace(/'/g,"\\'")}');goto('search',null)">${match}</span>`
-    );
+    const escapedTerm = escH(term);
+    const regex = new RegExp(`(?<![\\w>])(${escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\w<])`, 'gi');
+    result = result.replace(regex, (match) => {
+      const searchTerm = match.replace(/'/g, "\\'");
+      return `<span class="lk" onclick="searchKeyword('${searchTerm}')">${match}</span>`;
+    });
   });
   return result;
 }
 
-// Lighter version — just wraps without escaping (for already-escaped content)
 function linkifyRaw(text) {
   if (!text) return '';
+  // Already HTML - just inject spans around known terms
   let result = text;
   LINK_TERMS.forEach(term => {
-    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(?<![\\w>])(${escaped})(?![\\w<])`, 'gi');
-    result = result.replace(regex, (match) =>
-      `<span class="lk" onclick="searchKeyword('${match.replace(/'/g,"\\'")}');goto('search',null)">${match}</span>`
-    );
+    const escapedTerm = escH(term);
+    const regex = new RegExp(`(?<![\\w>])(${escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\w<])`, 'gi');
+    result = result.replace(regex, (match) => {
+      const searchTerm = match.replace(/'/g, "\\'");
+      return `<span class="lk" onclick="searchKeyword('${searchTerm}')">${match}</span>`;
+    });
   });
   return result;
 }
@@ -3414,15 +3417,15 @@ function initSearch() {
 }
 
 function searchKeyword(kw) {
-  // Update search bar and chips
   const bar = document.getElementById('global-search');
   if (bar) bar.value = kw;
   document.querySelectorAll('.keyword-chip').forEach(c => {
     c.classList.toggle('active', c.textContent === kw);
   });
   runSearch(kw);
-  // Navigate to search page on mobile
-  goto('search', document.querySelector('[onclick*="search"]'));
+  // Navigate to search page
+  const searchNav = document.querySelector('[onclick*="goto(\'search\'"]');
+  goto('search', searchNav);
 }
 
 function runSearch(query) {

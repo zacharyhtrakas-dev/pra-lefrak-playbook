@@ -1,7 +1,11 @@
 <!DOCTYPE html>
+<!-- PRA Playbook v5.0 - 2026-04-28 14:24 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Lefrak / DEP — PRA PMO Playbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1145,34 +1149,60 @@ body{
         <div class="proc-step">
           <div class="proc-step-num">1</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">MEP engineers prepare as-built riser diagram</div>
-            <div class="proc-step-detail">MGE (MEP engineers) must draft, sign, and seal the as-built riser diagram reflecting actual installation. Must be 11"x17", include I/O matrix, functionality statement, title block with all job numbers (PW-1, FPIMS, Record ID). Signed and sealed by the licensed design professional who is applicant of record.</div>
-            <span class="proc-step-owner">👤 MGE</span>
+            <div class="proc-step-title">MEP/FA drawings signed by electrical contractor (Troon)</div>
+            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews the as-built riser diagram for accuracy against actual installation and signs the functionality statement. The functionality statement can be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Status as of 4/28/26:</strong> Troon has signed drawings for B2, A3, and A4.</div>
+            <span class="proc-step-owner">👤 Troon (elec/FA contractor)</span>
           </div>
         </div>
         <div class="proc-step">
           <div class="proc-step-num">2</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">Electrical/FA contractor reviews and signs off</div>
-            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews the as-built for accuracy against actual installation. The functionality statement can also be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Current status:</strong> Alex (Foremost) said as of last meeting drawings are in Troon's hands — confirm exact status.</div>
-            <span class="proc-step-owner">👤 Troon (elec/FA contractor)</span>
+            <div class="proc-step-title">MEP engineer (MGE) signs and seals as-built riser diagram</div>
+            <div class="proc-step-detail">MGE (MEP engineers, EOR) must draft, sign, and seal the as-built riser diagram reflecting actual installation. Must be 11"x17", include I/O matrix, functionality statement, title block with all job numbers (PW-1, FPIMS, Record ID). Signed and sealed by the licensed design professional who is applicant of record. <strong>Current status B2/A3/A4:</strong> Drawings now at MGE for EOR signature.</div>
+            <span class="proc-step-owner">👤 MGE (EOR)</span>
           </div>
         </div>
         <div class="proc-step">
           <div class="proc-step-num">3</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">As-built sent to Hi Rise for inspection scheduling</div>
-            <div class="proc-step-detail">Once as-built is signed and sealed, it goes to Hi Rise (GC / expeditor). Hi Rise calls for the FDNY inspection and submits the as-built to the Fire Alarm Inspection Unit. Confirm Hi Rise has everything they need before the call is placed.</div>
+            <div class="proc-step-title">As-built sent to Hi Rise — they call for FDNY inspection</div>
+            <div class="proc-step-detail">Once as-built is signed and sealed by MGE, it goes to Hi Rise (GC / expeditor). Hi Rise submits the as-built to the Fire Alarm Inspection Unit and calls for the FDNY inspection. Confirm Hi Rise has everything they need before the call is placed.</div>
             <span class="proc-step-owner">👤 Hi Rise</span>
           </div>
         </div>
         <div class="proc-step">
           <div class="proc-step-num">4</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">FDNY inspection scheduled — PAA question resolved</div>
-            <div class="proc-step-detail">Per FDNY Fire Alarm Unit Bulletin 12-11-2023: minor additions (up to 10 devices/appliances per floor) may be accepted WITHOUT a PAA. Other minor modifications may be accepted with an affidavit. A PAA IS required only for: relocation of control panels, changes affecting system type, changes affecting work floors, or addition/exclusion of more than 10 devices. PRA confirmed PAA not needed for B2/A3/A4 — as-built + affidavit if needed suffices.</div>
+            <div class="proc-step-title">PAA decision tree — do you need one?</div>
+            <div class="proc-step-detail">
+              <strong style="display:block;margin-bottom:8px">Ask: what changed from the approved plans?</strong>
+
+              <div style="background:var(--green-dim);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:8px">
+                <strong style="color:var(--green)">✓ NO PAA needed — as-built only</strong><br>
+                <span style="font-size:12px">• Added up to 10 devices/appliances per floor<br>
+                • Up to 10 devices shown on approved plans were NOT installed<br>
+                • DGPs installed inconsistent with approved plans<br>
+                • System performance not downgraded<br>
+                → Reflect changes in the signed/sealed as-built. Inspector accepts at their discretion. An affidavit from the applicant of record may be included on the as-built.</span>
+              </div>
+
+              <div style="background:var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:8px">
+                <strong style="color:var(--amber)">⚠ PAA optional — you have a choice</strong><br>
+                <span style="font-size:12px">When fewer than 10 devices were added, you can choose to file a PAA anyway for extra certainty — but it's not required. The as-built route is faster. <strong>B2/A3/A4 are in this category</strong> — we are taking the as-built route (no PAA).</span>
+              </div>
+
+              <div style="background:var(--red-bg);border-left:3px solid var(--red);border-radius:0 6px 6px 0;padding:8px 12px">
+                <strong style="color:var(--red)">✕ PAA REQUIRED — no exceptions</strong><br>
+                <span style="font-size:12px">• Added or removed MORE than 10 devices/appliances on a floor<br>
+                • Relocated fire alarm control panels or Fire Command Centers<br>
+                • Changes affecting system type or job description<br>
+                • Changes affecting work floors<br>
+                • Changes requiring further review (partial coverage, new floor layouts)<br>
+                • ANY modification to ARCS (auxiliary radio communication) — always requires PAA<br>
+                <strong>B1 is in this category</strong> — PAA filed 4/9/26, currently in FDNY system awaiting approval. Cannot request inspection until PAA is approved.</span>
+              </div>
+            </div>
             <span class="proc-step-owner">👤 Hi Rise → FDNY</span>
-            <div class="proc-note success" style="margin-top:8px">✓ PAA NOT required for B2/A3/A4 — minor device changes only. As-built on hand at inspection is sufficient. Inspector accepts or rejects at their discretion.</div>
           </div>
         </div>
         <div class="proc-step">
@@ -1288,6 +1318,49 @@ body{
         </div>
       </div>
       <span class="proc-link" onclick="searchKeyword('ARTS')">🔍 Search all ARTS items →</span>
+    </div>
+  </div>
+
+  <!-- DESIGN / MATERIAL CHANGE (DEP/DCAS) -->
+  <div class="proc-card" data-tags="design material change architect aja dep dcas approval drawing">
+    <div class="proc-header" onclick="toggleProc('proc-design-change')">
+      <span class="proc-icon">📐</span>
+      <div>
+        <div class="proc-title">Design or Material Change — DEP/DCAS Approval</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">AJA proposes → DEP approves → DCAS approves → proceed</div>
+      </div>
+      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
+      <span class="proc-toggle" id="toggle-proc-design-change">▼</span>
+    </div>
+    <div class="proc-body" id="proc-design-change">
+      <div class="proc-desc">When a design or material change is needed — whether during construction or requested by DEP/DCAS — the change must go through the architect of record (AJA) first, then receive DEP and DCAS approval before work proceeds.</div>
+      <div class="proc-steps">
+        <div class="proc-step">
+          <div class="proc-step-num">1</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">Architect (AJA) proposes the change</div>
+            <div class="proc-step-detail">All design or material changes must be proposed by AJA (Anthony Johnson, principal; Janki Patel, day-to-day). AJA documents the change, its justification, and impact on approved drawings. Nothing moves forward until AJA has formally proposed it.</div>
+            <span class="proc-step-owner">👤 AJA (Anthony Johnson / Janki Patel)</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">2</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DEP reviews and approves</div>
+            <div class="proc-step-detail">AJA's proposal goes to DEP (tenant) for formal approval. DEP may request modifications or additional documentation before approving.</div>
+            <span class="proc-step-owner">👤 DEP</span>
+          </div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-step-num">3</div>
+          <div class="proc-step-body">
+            <div class="proc-step-title">DCAS approves — work can proceed</div>
+            <div class="proc-step-detail">DCAS signs off. Once both DEP and DCAS have approved, the change is authorized. AJA issues updated drawings and files with DOB if required (PAA or amended filing depending on scope).</div>
+            <span class="proc-step-owner">👤 DCAS → AJA → Muhammad (MBC) if DOB filing needed</span>
+          </div>
+        </div>
+      </div>
+      <div class="proc-note">📋 PRA role: ensure no GC or Foremost proceeds on a verbal change without written DEP/DCAS approval on record.</div>
     </div>
   </div>
 
@@ -1730,7 +1803,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc_q01225051',item:'DOB Arch LOC — Q01225051', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q01286750',item:'DOB Mech LOC — Q01286750', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_loc',item:'DOB Plumbing LOC', status:'N/A', cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_letter_of_approval',item:'FDNY Letter of Approval', status:'PAA filed 4/9 — awaiting inspection date', cls:'bw', owner:'Hi Rise / Ary'},
+    {id:'fdny_letter_of_approval',item:'FDNY Letter of Approval', status:'B1: PAA in FDNY system awaiting approval — cannot request inspection until PAA is approved', cls:'bd', owner:'Hi Rise / Ary'},
     {id:'electrical_bec_bis_sign_off',item:'Electrical BEC BIS sign-off', status:'Passed — official signoff when all phases done', cls:'bi', owner:'Ary (Blackbull)'},
     {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
     {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
@@ -1746,7 +1819,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc_q00940195',item:'DOB Arch LOC — Q00940195', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q00940285',item:'DOB Mech LOC — Q00940285', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_q01342765_i1_pl',item:'DOB Plumbing — Q01342765-I1-PL', status:'Plumber needs to sign off', cls:'bw', owner:'Muhammad (MBC)'},
-    {id:'fdny_2025_tmfalm_00516',item:'FDNY — #2025-TMFALM-00516', status:'Pending inspection', cls:'bw', owner:'Hi Rise / Blackbull'},
+    {id:'fdny_2025_tmfalm_00516',item:'FDNY — #2025-TMFALM-00516', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'electrical_bec_bis_q01186589',item:'Electrical BEC BIS — Q01186589', status:'Passed — awaits all phases', cls:'bi', owner:'Ary (Blackbull)'},
     {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
     {id:'fa_pretest',item:'FA Pretest', status:'Additional devices required — re-pretest TBD', cls:'bd', owner:'Blackbull'},
@@ -1759,7 +1832,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc_q01286541',item:'DOB Arch LOC — Q01286541', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q01286552',item:'DOB Mech LOC — Q01286552', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing',item:'DOB Plumbing', status:'N/A', cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_20258_tmfalm_007621',item:'FDNY — #20258-TMFALM-007621', status:'Pending inspection', cls:'bw', owner:'Hi Rise / Blackbull'},
+    {id:'fdny_20258_tmfalm_007621',item:'FDNY — #20258-TMFALM-007621', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
     {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
     {id:'arch_as_builts_aja',item:'Arch As-Builts (AJA)', status:'Sent 3/27', cls:'bs', owner:'AJA'},
@@ -1768,12 +1841,13 @@ const DEFAULT_STATUSES = {
     {id:'notice_of_substantial_completion',item:'Notice of Substantial Completion', status:'Not yet issued', cls:'bd', owner:'A. Jhamb (Lefrak)'}
   ],
   'hhe-a3': [
-    {id:'reconstruction',item:'Reconstruction', status:'In progress — few more weeks', cls:'bi', owner:'Blackbull'},
+    {id:'reconstruction',item:'Reconstruction', status:'In progress. Glass scheduled May 6 (BB trying sooner). FA devices delivered 4/28. Furniture relocation by 5/1. Dropbox expected 5/15.', cls:'bi', owner:'Blackbull'},
     {id:'dob_arch_loc_q00919587',item:'DOB Arch LOC — Q00919587', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q00919605',item:'DOB Mech LOC — Q00919605', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'MGE to sign as-builts → Hi Rise', cls:'bw', owner:'Hi Rise / Blackbull'},
+    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
     {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'Arch to send updated layout to DFI', cls:'bw', owner:'AJA/DFI/Mason'},
+    {id:'a3_punchlist_walk',item:'AJA Punchlist Walk', status:'Confirmed 5/11/26 at 10:30am — AJA creates PL on walk and sends to team (Foremost confirmed 4/28)', cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
     {id:'acp_5_acp_21',item:'ACP-5 / ACP-21', status:'Foremost to provide ACP-21', cls:'bw', owner:'ECC/D.Jenkins'}
   ],
   'hhe-a5': [
@@ -1785,14 +1859,15 @@ const DEFAULT_STATUSES = {
   'jb-12': [
     {id:'dep_occupancy',item:'DEP occupancy', status:'Operational since 2/2/26', cls:'bs', owner:''},
     {id:'arts_tru1253qn24',item:'ARTS — TRU1253QN24', status:'Closed out 4/17/26', cls:'bs', owner:''},
-    {id:'aja_mep_punchlists',item:'AJA + MEP punchlists', status:'Issued + completed', cls:'bs', owner:''},
+    {id:'aja_mep_punchlists',item:'AJA + MEP punchlists', status:'AJA punchlist walk scheduled May 11, 2026 at 10:30am', cls:'bw', owner:'AJA'},
     {id:'fa_pretest_certification',item:'FA Pretest certification', status:'Completed 1/15/26', cls:'bs', owner:'Sent to DCAS'},
     {id:'dep_dcas_formal_punchlist',item:'DEP/DCAS formal punchlist', status:'Remaining items — Foremost working', cls:'bw', owner:''},
-    {id:'aja_restroom_saddle_slope',item:'AJA restroom saddle/slope', status:'Confirmation pending from AJA', cls:'bw', owner:''}
+    {id:'aja_restroom_saddle_slope',item:'AJA restroom saddle/slope', status:'Confirmation pending from AJA', cls:'bw', owner:''},
+    {id:'lock_replacement',item:'Lock replacement', status:'Locks on backorder with Cardona Key Lock Services — awaiting delivery', cls:'bw', owner:'Foremost / Cardona'}
   ],
   'jb-11': [
     {id:'arts_tru1110qn25',item:'ARTS — TRU1110QN25', status:'V5 Variance Approved 4/23/26 — VAR# 2487QN25', cls:'bs', owner:''},
-    {id:'dob_job_numbers',item:'DOB Job Numbers', status:'Q01319665, Q01356141, Q01287581, Q01287674, Q01287693, Q01287704', cls:'bi', owner:''},
+    {id:'dob_job_numbers',item:'DOB Job Numbers — ALL APPROVED 4/16/26', status:'Elev Lobby GC Q01356141 ✓ · Open Areas GC/MS/SP Q01319665 ✓ · Bathrooms GC/MS/PL/SP Q01287581-4 ✓ (per Muhammad 4/16)', cls:'bi', owner:''},
     {id:'acp_21_requirement',item:'ACP-21 requirement', status:'1 ACP-21 must be submitted to DOB prior to sign-off', cls:'bw', owner:'ECC/ESG'},
     {id:'pre_construction_notification',item:'Pre-construction notification', status:'Notice sent by ESG (Javier Catalan) 4/24/26', cls:'bs', owner:'Zach/ESG'},
     {id:'notice_posted_in_lobby_11th_fl',item:'Notice posted in lobby + 11th fl', status:'Posted by Zach 4/24/26 — proof sent to Sheranne (DEP)', cls:'bs', owner:'Zach Trakas'},
@@ -1801,8 +1876,9 @@ const DEFAULT_STATUSES = {
     {id:'scope_revision_4_14_call',item:'Scope revision (4/14 call)', status:'FMC/Copy/File/BEPA: walls out of scope; VCT + ceilings + lights + wallpaper added', cls:'bi', owner:''},
     {id:'dep_low_voltage_shutdown',item:'DEP low voltage shutdown', status:'Commenced', cls:'bs', owner:'Mason'},
     {id:'abatement',item:'Abatement', status:'Follows 4-week DEP employee notice period', cls:'bm', owner:'ESG/ECC'},
-    {id:'elevator_cross_over_reconstruction',item:'Elevator cross-over reconstruction', status:'Soft demo 5/15/26, reconstruction 6/18–8/21/26 per 4/23/26 schedule', cls:'bm', owner:''},
-    {id:'full_floor_re_occupancy',item:'Full floor re-occupancy (DEP occupies)', status:'DEP occupies floor 11: 9/28–9/29/26 per 4/23/26 schedule', cls:'bm', owner:''}
+    {id:'elevator_cross_over_reconstruction',item:'Elevator cross-over reconstruction', status:'Elevator lobby closed 5/15. Soft demo 5/18–5/20. ESG/ECC mobilize 5/28. Abatement 5/29–6/1. Reconstruction starts 6/4. Per Foremost 4/28 email.', cls:'bm', owner:''},
+    {id:'elevator_bypass',item:'Elevator bypass — TEI to bypass 11th fl + remove lanterns/call buttons', status:'Requested by Foremost (Alex) 4/28 — Donna Cappa to confirm with TEI. Required before 5/18 soft demo start', cls:'bd', owner:'Donna Cappa / TEI'},
+    {id:'full_floor_re_occupancy',item:'Full floor re-occupancy (DEP occupies)', status:'DEP occupies floor 11: 9/28–9/29/26 per 4/23/26 schedule. Building power shutdowns 5/16 and 5/23 at 6am.', cls:'bm', owner:''}
   ],
   'jb-10': [
     {id:'arts_drawings',item:'ARTS drawings', status:'Submitted to DEP 4/21/26', cls:'bs', owner:'PRA'},
@@ -2738,6 +2814,22 @@ const DEFAULT_CONTACTS = [
   {id:'c13', name:'Javier Catalan', role:'Project Manager — ESG (covering maternity leave)', org:'ESG', email:'', notes:'ESG performs the physical abatement work and writes the means & methods / abatement protocol. Javier is covering while Lisa Javier is on maternity leave. Runs the 1:30pm Monday ACM meeting. Also handles air monitoring and pre-construction notifications.'},
   {id:'c13b', name:'Lisa Javier', role:'Project Manager — ESG (on maternity leave)', org:'ESG', email:'', notes:'Usually leads ESG\'s work on this project. On maternity leave — Javier Catalan is covering. ESG is responsible for abatement execution, means & methods, air monitoring, and pre-construction notifications.'},
   {id:'c14', name:'Ary', role:'PM — Blackbull', org:'Consultants / GCs', email:'', notes:'Electrical, BEC sign-off, balancing reports. GC for HHE B1/B2/A3/A4.'},
+  {id:'c14b', name:'Anthony Johnson', role:'Principal Architect — AJA', org:'AJA', email:'', notes:'Lead architect on the project. AJA prepares and stamps arch drawings, as-builts, and responses to DOB/DEP objections. Design or material changes go through AJA first before DEP/DCAS approval.'},
+  {id:'c14c', name:'Janki Patel', role:'Architect — AJA', org:'AJA', email:'', notes:'Second in command at AJA. Day-to-day coordination on drawings, punchlist walks, and as-built preparation.'},
+  {id:'c17', name:'Cardona Key Lock Services', role:'Locksmith / Vendor', org:'Consultants / GCs', email:'', notes:'Lock replacement vendor for 59-17 JB 12th floor. Locks currently on backorder — awaiting delivery from vendor.'},
+  {id:'c18', name:'Paul Belec', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'pbelec@dep.nyc.gov', notes:'DEP contact on HHE and JB. Confirmed A3 paint colors as building standard going forward.'},
+  {id:'c19', name:'Awymarie Riollano', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'ariollano@dep.nyc.gov', notes:'On the DEP weekly Tuesday meeting.'},
+  {id:'c20', name:'Elisa Velazquez', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'EVelazquez@dep.nyc.gov', notes:'DEP contact on renovation project.'},
+  {id:'c21', name:'Clifton Oates', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'coates@dep.nyc.gov', notes:'DEP contact. Out of office returning 5/4/26.'},
+  {id:'c22', name:'Mary Lam', role:'Architect — NYC DEP Facilities', org:'DCAS / DEP', email:'MaryL@dep.nyc.gov', notes:'DEP architect. Flagged 11th fl paint standard as Vanilla Ice Cream BM2154-70 (different from what Foremost submitted).'},
+  {id:'c23', name:'Vitaly Tretyakov', role:'DCAS', org:'DCAS / DEP', email:'VTretyakov@dcas.nyc.gov', notes:'DCAS on DEP renovation project weekly meeting.'},
+  {id:'c24', name:'Brian Hopwood', role:'Project Manager — Foremost', org:'Foremost', email:'BHopwood@foremostconstructionny.com', notes:'Foremost PM on 11th floor coordination.'},
+  {id:'c25', name:'Nino Pjetri', role:'Superintendent — Blackbull', org:'Consultants / GCs', email:'npjetri@blackbullbuilders.com', notes:'Blackbull superintendent on 11th floor.'},
+  {id:'c26', name:'Frank Nikac', role:'Superintendent — Blackbull', org:'Consultants / GCs', email:'FNikac@blackbullbuilders.com', notes:'Blackbull superintendent on HHE and JB.'},
+  {id:'c27', name:'Costa Ioannou', role:'ESG — Air Monitoring', org:'ESG', email:'esgcosta@nyasbestos.com', notes:'ESG team member alongside Javier Catalan on abatement work.'},
+  {id:'c28', name:'Tomas Villegas', role:'ESG — Abatement', org:'ESG', email:'tomas@nyasbestos.com', notes:'ESG abatement team on 11th floor.'},
+  {id:'c29', name:'Aldo Ciccotelli', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'ACiccotelli@cosentini.com', notes:'Cosentini Associates MEP engineers. On 11th floor DOB filing thread.'},
+  {id:'c30', name:'Andre Camacho', role:'Lefrak Commercial Property Management', org:'Lefrak', email:'acamacho@lefrakcommercial.com', notes:'Lefrak property management. On 11th floor coordination thread.'},
   {id:'c15', name:'Muhammad', role:'Expeditor — MBC', org:'Consultants / GCs', email:'', notes:'DOB permit filings + LOCs for all HHE phases.'},
   {id:'c16', name:'Felix Urena', role:'ARTS Applicant — ESG', org:'ESG', email:'', notes:'Listed on TRU1110QN25 V5 Variance Approval · 1324 Lexington Ave NY 10128'}
 ];
@@ -2760,7 +2852,7 @@ function listenToContacts() {
 function renderContacts() {
   const container = document.getElementById('contacts-container');
   if (!container) return;
-  const orgs = ['PRA', 'DCAS / DEP', 'Lefrak', 'Foremost', 'ECC', 'ESG', 'Consultants / GCs', 'Other'];
+  const orgs = ['PRA', 'DCAS / DEP', 'Lefrak', 'Foremost', 'ECC', 'ESG', 'AJA', 'Consultants / GCs', 'Other'];
 
   let html = `<div class="card" style="background:var(--navy);border-color:var(--navy);margin-bottom:14px">
     <div class="card-title" style="color:rgba(255,255,255,.5)">Who does what — ACM abatement</div>
@@ -2796,7 +2888,7 @@ function renderContacts() {
         <div class="cr">${escH(c.role||'')}</div>
         ${c.email?`<div class="ce" onclick="event.stopPropagation();navigator.clipboard.writeText('${escH(c.email)}');showToast('Email copied!')" style="cursor:pointer" title="Click to copy">${escH(c.email)}</div>`:''}
         ${c.notes?`<div class="cn2">${linkify(c.notes)}</div>`:''}
-        <div style="margin-top:6px"><span class="lk" onclick="event.stopPropagation();searchKeyword('${escH(c.name.split(' ')[0])}');goto('search',null)">See all related items →</span></div>
+        <div style="margin-top:6px"><span class="lk" data-search="${escH(c.name.split(' ')[0])}" onclick="searchKeyword(this.dataset.search)">See all related items →</span></div>
       </div>`;
     });
     html += `</div>`;
@@ -3740,6 +3832,7 @@ async function applyScheduleUpdate() {
 // ── LINKIFY ────────────────────────────────────────────────
 // Wraps known keywords in tappable chips that trigger search
 const LINK_TERMS_TYPED = [
+  {term:'Anthony Johnson',type:'person'},{term:'Janki Patel',type:'person'},
   {term:'Zach Trakas',type:'person'},{term:'Zachary Trakas',type:'person'},
   {term:'KK Maurya',type:'person'},{term:'KK',type:'person'},
   {term:'Matthew Barlow',type:'person'},{term:'Cynthia Poulton',type:'person'},
@@ -3786,7 +3879,7 @@ function linkify(text) {
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
     const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
-    result = result.replace(rx, m => '<span class="lk lk-' + type + '" onclick="searchKeyword(\'' + m.replace(/'/g,"\\'") + '\')">' + m + '</span>');
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-search="' + m.replace(/"/g,'&quot;') + '" onclick="searchKeyword(this.dataset.search)">' + m + '</span>');
   });
   return result;
 }
@@ -3797,7 +3890,7 @@ function linkifyRaw(text) {
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
     const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
-    result = result.replace(rx, m => '<span class="lk lk-' + type + '" onclick="searchKeyword(\'' + m.replace(/'/g,"\\'") + '\')">' + m + '</span>');
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-search="' + m.replace(/"/g,'&quot;') + '" onclick="searchKeyword(this.dataset.search)">' + m + '</span>');
   });
   return result;
 }

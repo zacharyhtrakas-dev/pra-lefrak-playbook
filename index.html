@@ -2320,8 +2320,9 @@ CRITICAL: Return ONLY valid JSON. No preamble.
 
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
-    if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data)}`);
+    if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
     const raw = data.content.map(c=>c.text||'').join('');
+    if (!raw) throw new Error('Empty response from API');
     const briefing = safeParseJSON(raw);
     renderBriefing(briefing, permitWarnings, overdueActions, todayMeetings, todayStr);
   } catch(e) {

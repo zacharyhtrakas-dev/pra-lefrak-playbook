@@ -3393,8 +3393,8 @@ function linkify(text) {
   let result = escH(text);
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
-    const rx = new RegExp("(?<![\\w>])(" + et.replace(/[.*+?^${}()|[\]\\]/g,"\\&") + ")(?![\\w<])","gi");
-    result = result.replace(rx, m => `<span class="lk lk-${type}" onclick="searchKeyword('${m.replace(/'/g,"\\'")}')"> ${m}</span>`);
+    const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" onclick="searchKeyword(\'' + m.replace(/'/g,"\\'") + '\')">' + m + '</span>');
   });
   return result;
 }
@@ -3404,8 +3404,8 @@ function linkifyRaw(text) {
   let result = text;
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
-    const rx = new RegExp("(?<![\\w>])(" + et.replace(/[.*+?^${}()|[\]\\]/g,"\\&") + ")(?![\\w<])","gi");
-    result = result.replace(rx, m => `<span class="lk lk-${type}" onclick="searchKeyword('${m.replace(/'/g,"\\'")}')"> ${m}</span>`);
+    const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" onclick="searchKeyword(\'' + m.replace(/'/g,"\\'") + '\')">' + m + '</span>');
   });
   return result;
 }

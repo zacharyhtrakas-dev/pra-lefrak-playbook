@@ -1848,13 +1848,14 @@ const DEFAULT_STATUSES = {
     {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
     {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'Arch to send updated layout to DFI', cls:'bw', owner:'AJA/DFI/Mason'},
     {id:'a3_punchlist_walk',item:'AJA Punchlist Walk', status:'Confirmed 5/11/26 at 10:30am — AJA creates PL on walk and sends to team (Foremost confirmed 4/28)', cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
-    {id:'acp_5_acp_21',item:'ACP-5 / ACP-21', status:'Foremost to provide ACP-21', cls:'bw', owner:'ECC/D.Jenkins'}
+    {id:'acp_5_acp_21',item:'ACP-5 / ACP-21', status:'Foremost to provide ACP-21', cls:'bw', owner:'ECC/D.Jenkins'},
+    {id:'hhe_back_corridor',item:'HHE back corridor — ceiling/HVAC removal', status:'PAUSED 4/28 — Sheranne flagged ACM concern on ceiling grid removal. Donna had sampling done night of 4/28. Results pending few days. ECC involved.', cls:'bd', owner:'Donna Cappa / ECC'}
   ],
   'hhe-a5': [
     {id:'new_lobby_open_active',item:'New lobby open + active', status:'Open since 1/24/26', cls:'bs', owner:'Astor & Stone'},
     {id:'new_lobby_desk_plexiglass',item:'New lobby desk + plexiglass', status:'Complete 4/21/26', cls:'bs', owner:'Lefrak'},
     {id:'under_counter_storage',item:'Under-counter storage', status:'Pending — later date TBD', cls:'bw', owner:'Lefrak'},
-    {id:'green_wall_dep_signage',item:'Green wall + DEP signage', status:'Day 2 scope — outstanding', cls:'bw', owner:'Lefrak'}
+    {id:'green_wall_dep_signage',item:'Green wall + DEP signage', status:'Donna Cappa asking about installation timeline (email 4/27) — no response yet from Foremost', cls:'bw', owner:'Foremost / Lefrak'}
   ],
   'jb-12': [
     {id:'dep_occupancy',item:'DEP occupancy', status:'Operational since 2/2/26', cls:'bs', owner:''},
@@ -1870,10 +1871,11 @@ const DEFAULT_STATUSES = {
     {id:'dob_job_numbers',item:'DOB Job Numbers — ALL APPROVED 4/16/26', status:'Elev Lobby GC Q01356141 ✓ · Open Areas GC/MS/SP Q01319665 ✓ · Bathrooms GC/MS/PL/SP Q01287581-4 ✓ (per Muhammad 4/16)', cls:'bi', owner:''},
     {id:'acp_21_requirement',item:'ACP-21 requirement', status:'1 ACP-21 must be submitted to DOB prior to sign-off', cls:'bw', owner:'ECC/ESG'},
     {id:'pre_construction_notification',item:'Pre-construction notification', status:'Notice sent by ESG (Javier Catalan) 4/24/26', cls:'bs', owner:'Zach/ESG'},
-    {id:'notice_posted_in_lobby_11th_fl',item:'Notice posted in lobby + 11th fl', status:'Posted by Zach 4/24/26 — proof sent to Sheranne (DEP)', cls:'bs', owner:'Zach Trakas'},
+    {id:'notice_posted_in_lobby_11th_fl',item:'Notice posted in lobby + 11th fl', status:'Pre-construction notice posted 4/24/26. Updated lobby sign ready but KK instructed Donna to HOLD posting until 5/1 — DEP must enter in their system before sign goes up.', cls:'bw', owner:'KK / Donna Cappa'},
     {id:'4_week_employee_notice_by_dep',item:'4-week employee notice by DEP', status:'Pending — DEP issues upon receipt of pre-construction notice', cls:'bw', owner:'DEP'},
     {id:'soft_demo',item:'Soft demo', status:'Underway — bathrooms done, ceiling grid in progress', cls:'bi', owner:'Foremost'},
     {id:'scope_revision_4_14_call',item:'Scope revision (4/14 call)', status:'FMC/Copy/File/BEPA: walls out of scope; VCT + ceilings + lights + wallpaper added', cls:'bi', owner:''},
+    {id:'paint_confirmed',item:'11th fl paint colors', status:'CONFIRMED 4/28/26 by Paul Belec (DEP). Wall: BM Vanilla Ice Cream BM2154-70 Eggshell. Frame: BM Vanilla Ice Cream BM2154-70 Semi Gloss. Door: Brilliant Blue 2065-30 Semi Gloss. Now building standard going forward.', cls:'bs', owner:'Paul Belec / Foremost'},
     {id:'dep_low_voltage_shutdown',item:'DEP low voltage shutdown', status:'Commenced', cls:'bs', owner:'Mason'},
     {id:'abatement',item:'Abatement', status:'Follows 4-week DEP employee notice period', cls:'bm', owner:'ESG/ECC'},
     {id:'elevator_cross_over_reconstruction',item:'Elevator cross-over reconstruction', status:'Elevator lobby closed 5/15. Soft demo 5/18–5/20. ESG/ECC mobilize 5/28. Abatement 5/29–6/1. Reconstruction starts 6/4. Per Foremost 4/28 email.', cls:'bm', owner:''},
@@ -2806,7 +2808,7 @@ const DEFAULT_CONTACTS = [
   {id:'c3', name:'Matthew Barlow', role:'Director', org:'PRA', email:'mbarlow@pra-consulting.com', notes:'Go-to for rejection handling + process escalation'},
   {id:'c4', name:'Cynthia Poulton', role:'Exec Director D&PM Real Estate', org:'DCAS / DEP', email:'Cpoulton@dcas.nyc.gov', notes:'(212) 386-0317'},
   {id:'c5', name:'Melissa Rivera-Ferguson', role:'PM Real Estate Services', org:'DCAS / DEP', email:'Merferguson@dcas.nyc.gov', notes:''},
-  {id:'c6', name:'Sheranne (DEP)', role:'DEP tenant contact — 59-17 JB', org:'DCAS / DEP', email:'', notes:'Receives proof of pre-construction notice posting for 11th fl'},
+  {id:'c6', name:'Sheranne Wickham', role:'Director EHS / Asbestos Lead & Mold — DEP', org:'DCAS / DEP', email:'SheranneW@dep.nyc.gov', notes:'(C) 347-203-2058 | (O) 718-595-7241. Receives proof of pre-construction notice. Flagged ACM concern on HHE back corridor 4/28. Key ACM/environmental contact.'},
   {id:'c7', name:'David Jenkins', role:'Senior Managing Director', org:'Foremost', email:'DJenkins@foremostconstructionny.com', notes:'(212) 708-6228 · Foremost is Lefrak\'s internal commercial construction subsidiary'},
   {id:'c8', name:'Alejandro Orellana', role:'Project Manager', org:'Foremost', email:'AOrellana@foremostconstructionny.com', notes:'Foremost — Lefrak internal commercial construction'},
   {id:'c9', name:'Kyle Josefson', role:'Project Coordinator', org:'Foremost', email:'KJosefson@foremostconstructionny.com', notes:'Foremost — Lefrak internal commercial construction'},
@@ -2817,7 +2819,7 @@ const DEFAULT_CONTACTS = [
   {id:'c12', name:'Clayton Long', role:'Principal — ECC', org:'ECC', email:'', notes:'ECC prepares ACM drawings and ARTS filings, submits filings to DOB/DEP, and coordinates scope with ESG. Clayton is PRA\'s main ECC contact. Works hand-in-hand with ESG on every abatement project.'},
   {id:'c13', name:'Javier Catalan', role:'Project Manager — ESG (covering maternity leave)', org:'ESG', email:'', notes:'ESG performs the physical abatement work and writes the means & methods / abatement protocol. Javier is covering while Lisa Javier is on maternity leave. Runs the 1:30pm Monday ACM meeting. Also handles air monitoring and pre-construction notifications.'},
   {id:'c13b', name:'Lisa Javier', role:'Project Manager — ESG (on maternity leave)', org:'ESG', email:'', notes:'Usually leads ESG\'s work on this project. On maternity leave — Javier Catalan is covering. ESG is responsible for abatement execution, means & methods, air monitoring, and pre-construction notifications.'},
-  {id:'c14', name:'Ary', role:'PM — Blackbull', org:'Consultants / GCs', email:'', notes:'Electrical, BEC sign-off, balancing reports. GC for HHE B1/B2/A3/A4.'},
+  {id:'c14', name:'Ary Neto', role:'PM — Blackbull', org:'Consultants / GCs', email:'ary@blackbullbuilders.com', notes:'Blackbull PM. Electrical, BEC sign-off, balancing reports. GC for HHE B1/B2/A3/A4.'},
   {id:'c14b', name:'Anthony Johnson', role:'Principal Architect — AJA', org:'AJA', email:'', notes:'Lead architect on the project. AJA prepares and stamps arch drawings, as-builts, and responses to DOB/DEP objections. Design or material changes go through AJA first before DEP/DCAS approval.'},
   {id:'c14c', name:'Janki Patel', role:'Architect — AJA', org:'AJA', email:'', notes:'Second in command at AJA. Day-to-day coordination on drawings, punchlist walks, and as-built preparation.'},
   {id:'c17', name:'Cardona Key Lock Services', role:'Locksmith / Vendor', org:'Consultants / GCs', email:'', notes:'Lock replacement vendor for 59-17 JB 12th floor. Locks currently on backorder — awaiting delivery from vendor.'},
@@ -2834,6 +2836,19 @@ const DEFAULT_CONTACTS = [
   {id:'c28', name:'Tomas Villegas', role:'ESG — Abatement', org:'ESG', email:'tomas@nyasbestos.com', notes:'ESG abatement team on 11th floor.'},
   {id:'c29', name:'Aldo Ciccotelli', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'ACiccotelli@cosentini.com', notes:'Cosentini Associates MEP engineers. On 11th floor DOB filing thread.'},
   {id:'c30', name:'Andre Camacho', role:'Lefrak Commercial Property Management', org:'Lefrak', email:'acamacho@lefrakcommercial.com', notes:'Lefrak property management. On 11th floor coordination thread.'},
+  {id:'c31', name:'Sue Dennis', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'SueD@dep.nyc.gov', notes:'DEP contact. CC on paint confirmation thread.'},
+  {id:'c32', name:'Oscar Gonzalez', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'OscarG@dep.nyc.gov', notes:'DEP contact. CC on paint confirmation thread.'},
+  {id:'c33', name:'Tanvir Ahmed', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'TAhmed@dep.nyc.gov', notes:'DEP contact. Added Mary Lam to the paint thread.'},
+  {id:'c34', name:'Sheranne Wickham', role:'Director, EHS / Asbestos Lead & Mold', org:'DCAS / DEP', email:'SheranneW@dep.nyc.gov', notes:'(C) 347-203-2058 | (O) 718-595-7241. Key DEP contact for pre-construction notifications and ACM concerns. Flagged ACM risk on HHE back corridor ceiling removal 4/28.'},
+  {id:'c35', name:'Alex A', role:'Superintendent — Astor & Stone', org:'Consultants / GCs', email:'alex@astorstone.com', notes:'Astor & Stone. GC for HHE A5 and JB 11th floor open areas.'},
+  {id:'c36', name:'Jimmy T', role:'Astor & Stone', org:'Consultants / GCs', email:'jimmy@astorstone.com', notes:'Astor & Stone. On 11th floor coordination thread.'},
+  {id:'c37', name:'John Barbagiannis', role:'Astor & Stone', org:'Consultants / GCs', email:'john@astorstone.com', notes:'Astor & Stone. On 11th floor coordination thread.'},
+  {id:'c38', name:'Ary Neto', role:'PM — Blackbull', org:'Consultants / GCs', email:'ary@blackbullbuilders.com', notes:'Blackbull PM. Also goes by Ary. On HHE and JB coordination threads.'},
+  {id:'c39', name:'Traven Tong', role:'Architect — Bauer Dermel', org:'Consultants / GCs', email:'', notes:'Bauer Dermel Architects. Added to 11th floor paint thread by David Jenkins 4/29.'},
+  {id:'c40', name:'Debbie Cepeda', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'', notes:'Cosentini Associates MEP engineers. On 11th floor filing threads.'},
+  {id:'c41', name:'Chris Angi', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'', notes:'Cosentini Associates MEP engineers. On 11th floor filing threads.'},
+  {id:'c42', name:'Joe Mazzarelli', role:'DEP — Maintenance', org:'DCAS / DEP', email:'', notes:'DEP maintenance contact (per Clifton Oates out-of-office).'},
+  {id:'c43', name:'Gonzalez, Oscar', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'OscarG@dep.nyc.gov', notes:'DEP facilities contact.'},
   {id:'c15', name:'Muhammad', role:'Expeditor — MBC', org:'Consultants / GCs', email:'', notes:'DOB permit filings + LOCs for all HHE phases.'},
   {id:'c16', name:'Felix Urena', role:'ARTS Applicant — ESG', org:'ESG', email:'', notes:'Listed on TRU1110QN25 V5 Variance Approval · 1324 Lexington Ave NY 10128'}
 ];
@@ -3836,6 +3851,16 @@ async function applyScheduleUpdate() {
 // ── LINKIFY ────────────────────────────────────────────────
 // Wraps known keywords in tappable chips that trigger search
 const LINK_TERMS_TYPED = [
+  {term:'Sheranne Wickham',type:'person'},{term:'Sheranne',type:'person'},
+  {term:'Ary Neto',type:'person'},{term:'Tanvir Ahmed',type:'person'},
+  {term:'Sue Dennis',type:'person'},{term:'Oscar Gonzalez',type:'person'},
+  {term:'Paul Belec',type:'person'},{term:'Awymarie Riollano',type:'person'},
+  {term:'Elisa Velazquez',type:'person'},{term:'Brian Hopwood',type:'person'},
+  {term:'Nino Pjetri',type:'person'},{term:'Frank Nikac',type:'person'},
+  {term:'Costa Ioannou',type:'person'},{term:'Andre Camacho',type:'person'},
+  {term:'Traven Tong',type:'person'},{term:'Mary Lam',type:'person'},
+  {term:'Astor & Stone',type:'company'},{term:'Cosentini',type:'company'},
+  {term:'Bauer Dermel',type:'company'},{term:'TEI',type:'company'},
   {term:'Anthony Johnson',type:'person'},{term:'Janki Patel',type:'person'},
   {term:'Zach Trakas',type:'person'},{term:'Zachary Trakas',type:'person'},
   {term:'KK Maurya',type:'person'},{term:'KK',type:'person'},

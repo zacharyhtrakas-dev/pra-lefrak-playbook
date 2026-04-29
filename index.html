@@ -996,7 +996,7 @@ body{
   <div class="card">
     <div class="prep-h">Before Mon 12:30 sign-off</div>
     <div class="prep-item"><span style="color:var(--text3)">→</span><span>Review Foremost permit matrix — flag status discrepancies vs DOB/BIS</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Check FDNY PAA status for B1/B2/A4 — inspection date assigned?</span></div>
+    <div class="prep-item"><span style="color:var(--text3)">→</span><span>FDNY status: B2/A3/A4 — has MGE signed as-builts yet? B1 — has FDNY approved the PAA yet?</span></div>
     <div class="prep-item"><span style="color:var(--text3)">→</span><span>Update HHE closeout spreadsheet with anything closed since last week</span></div>
     <div class="prep-h">Before Tue 10:30 GC call</div>
     <div class="prep-item"><span style="color:var(--text3)">→</span><span>Know 11th fl pre-construction notice status — posted in lobby + floor?</span></div>
@@ -1015,7 +1015,7 @@ body{
   <div class="ph"><div class="ph-title">Closeout Tracker</div><div class="ph-sub">Critical path + substantial completion rules</div></div>
   <div class="sec-lbl">Critical blockers — ranked by urgency</div>
   <div class="card">
-    <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 FDNY inspection B1/B2/A4</span><span class="rv">PAA filed 4/9/26. No inspection date. THE main blocker. Push Hi Rise + Blackbull weekly.</span></div>
+    <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 FDNY inspection B1/B2/A4</span><span class="rv">B2/A3/A4: Drawings signed by Troon 4/28, now at MGE for EOR signature. B1: PAA filed 4/9/26 awaiting FDNY approval. Current action: push MGE to sign and send as-builts to Hi Rise.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 B2 FA pretest</span><span class="rv">Extra devices needed. Schedule re-pretest once in hand. 30-day clock restarts.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 B2 plumbing LOC</span><span class="rv">Plumber needs to sign off permit Q01342765-I1-PL.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 MEP as-builts (all phases)</span><span class="rv">MGE still WIP for B1, B2, A4. Required before SC package.</span></div>
@@ -1058,7 +1058,7 @@ body{
   </div>
   <div class="card" style="margin-top:12px">
     <div class="card-title">Always Remember</div>
-    <div class="row"><span class="rl">FDNY = main blocker</span><span class="rv">B1/B2/A4 PAA filed 4/9. Follow up with Hi Rise weekly until inspection scheduled.</span></div>
+    <div class="row"><span class="rl">FDNY = main blocker</span><span class="rv">B2/A3/A4: push MGE to sign as-builts → then Hi Rise calls for inspection. B1: awaiting FDNY PAA approval before inspection can even be requested.</span></div>
     <div class="row"><span class="rl">11th fl notice</span><span class="rv">V5 approved 4/23. ESG sending pre-construction notice. Once DEP issues 4-week employee notice, clock starts — track that date.</span></div>
     <div class="row"><span class="rl">Foremost ≠ reliable</span><span class="rv">Permit matrix has accurate numbers but statuses can be wrong. Verify critical items directly against DOB/BIS/FDNY.</span></div>
     <div class="row"><span class="rl">Rent clock logic</span><span class="rv">DEP doesn't pay rent on phases not yet turned over. Each day = lost revenue for Lefrak. Use this to create urgency.</span></div>
@@ -1231,8 +1231,8 @@ body{
         </div>
       </div>
 
-      <div class="proc-note danger">⚠ Current blocker: PAA was filed 4/9/26 (Hi Rise filed it) — but this may have been unnecessary per the bulletin. Confirm with Hi Rise whether the PAA filing was required or precautionary. Either way, FDNY has not yet scheduled an inspection date.</div>
-      <div class="proc-note">📋 To corner Alex: ask specifically — are the as-builts signed and sealed by MGE? Has Troon signed the functionality statement? Has Hi Rise submitted to FDNY and called for inspection? What is the exact hold-up?</div>
+      <div class="proc-note danger">⚠ Current blocker: B2/A3/A4: as-builts signed by Troon 4/28, now at MGE for EOR signature. Once MGE signs → Hi Rise → FDNY inspection. B1: PAA filed 4/9/26, awaiting FDNY approval before inspection can even be requested — Hi Rise has no control until PAA is approved.</div>
+      <div class="proc-note">📋 Current status as of 4/28: Troon signed drawings and FedExed back. MGE should have received today. Next action: push MGE to sign and seal, then send to Hi Rise. Hi Rise cannot call for inspection until they have signed as-builts from MGE.</div>
       <span class="proc-link" onclick="searchKeyword('FDNY')">🔍 Search all FDNY items in this project →</span>
     </div>
   </div>
@@ -1543,7 +1543,7 @@ body{
     <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:14px" id="action-modal-title">Add Action Item</div>
     <input type="hidden" id="action-edit-id">
     <label style="font-size:11.5px;color:var(--text2);display:block;margin-bottom:3px">Action *</label>
-    <textarea id="am-action" style="width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-family:inherit;min-height:60px;resize:vertical;margin-bottom:8px" placeholder="e.g. Follow up with Hi Rise on FDNY inspection date for B1/B2/A4"></textarea>
+    <textarea id="am-action" style="width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-family:inherit;min-height:60px;resize:vertical;margin-bottom:8px" placeholder="e.g. Push MGE to sign and seal as-builts for B2/A3/A4 and send to Hi Rise"></textarea>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div>
         <label style="font-size:11.5px;color:var(--text2);display:block;margin-bottom:3px">Owner</label>
@@ -2750,7 +2750,7 @@ RECENT LOG: ${recentCtx||'None'}
 OVERDUE ACTIONS: ${overdueActions.map(a=>a.action).join(' | ')||'None'}
 PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days`).join(' | ')||'None'}
 TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None'}
-KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby phases only: B1/B2/A3/A4/A5) and 59-17 JB (upper floors: 3rd/10th/11th/12th). Never mention a third building. FDNY inspections pending are at 96-05 HHE ground floor phases B1/B2/A4. 11th fl V5 approved 4/23, pre-construction notice posted 4/24 — DEP 4-week employee notice pending. B2 FA pretest needs devices. B2 plumber unsigned. MGE as-builts WIP. GC permits expire 5/20/26. 10th fl ARTS under DEP review. SCHEDULE DATES (per 4/23/26 MS Project): Floor 11 soft demo 5/15/26, reconstruction 6/18–8/21/26, DEP occupies 9/28–9/29/26. Floor 3 (Phase 6A): transfer corridor demo 9/4/26, completes 12/3/26. Floor 10 (Phase 6B): DEP vacates 9/29/26, reconstruction 11/11/26–1/25/27, DEP occupies 3/10–3/12/27. ARTS filing for 10th+3rd scheduled 2/23–6/12/26.
+KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby phases only: B1/B2/A3/A4/A5) and 59-17 JB (upper floors: 3rd/10th/11th/12th). Never mention a third building. FDNY STATUS (critical — get this right): B2/A3/A4 drawings were signed by Troon (elec contractor) 4/28/26 and FedExed to MGE. MGE (EOR/MEP engineer) must now sign and seal the as-builts — ONLY AFTER MGE signs does Hi Rise submit to FDNY and call for inspection. Do NOT ever suggest following up with Hi Rise on FDNY until MGE has confirmed they signed and sent. B1: PAA filed 4/9/26 is in FDNY system awaiting approval — Hi Rise cannot even request inspection on B1 until FDNY approves the PAA. B2 FA pretest needs additional devices (FA devices delivered 4/28). B2 plumber unsigned. GC permits expire 5/20/26. 10th fl ARTS under DEP review. 11th fl: elevator lobby closes 5/15, soft demo 5/18-5/20, abatement 5/29-6/1, reconstruction 6/4, DEP occupies 9/28-9/29/26. ARTS filing for 10th+3rd scheduled through 6/12/26.
 
 CRITICAL: Return ONLY valid JSON. No preamble.
 {"headline":"one sentence","urgent":["item1","item2"],"push_today":["who + what to say"],"watch":["item"],"meetings_today":["prep note if meetings"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one good thing"}`;

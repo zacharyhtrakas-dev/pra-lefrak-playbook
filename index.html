@@ -985,29 +985,11 @@ body{
 
 <!-- MEETINGS -->
 <div id="page-meetings" class="page">
-  <div class="ph"><div class="ph-title">Meetings</div><div class="ph-sub">Weekly recurring schedule + prep guide</div></div>
-  <div class="card">
-    <div class="mtg-block"><div class="mtg-time"><div class="mtg-day">Monday</div><div class="mtg-hr">12:30 pm</div></div><div><div class="mtg-name">Weekly Sign-Off — 96-05 Ground Floor & Detectives</div><div class="mtg-detail">Run by PRA. Permits + closeout items across all 96-05 phases. Foremost permit matrix — permit numbers reliable, statuses sometimes wrong.</div><div class="tags"><span class="tag">96-05 HHE only</span><span class="tag">PRA leads</span><span class="tag">Permit matrix ref</span></div></div></div>
-    <div class="mtg-block"><div class="mtg-time"><div class="mtg-day">Monday</div><div class="mtg-hr">1:30 pm</div></div><div><div class="mtg-name">59-17 / 96-05 — DEP — ACM Next Steps</div><div class="mtg-detail">Run by ESG (Javier Catalan, covering for Lisa Javier on maternity leave). ECC (Clayton Long) also on the call. Covers abatement scope, drawings, phasing, filings, strategy. PRA role: receive updates, flag concerns, ask questions. KK organizes from PRA side.</div><div class="tags"><span class="tag">Both buildings</span><span class="tag">ESG runs it</span><span class="tag">ECC attends</span><span class="tag">KK organizes</span></div></div></div>
-    <div class="mtg-block"><div class="mtg-time"><div class="mtg-day">Tuesday</div><div class="mtg-hr">10:30 am</div></div><div><div class="mtg-name">96-05 HHE + 59-17 JB — GC Update</div><div class="mtg-detail">GC updates for all projects. Astor & Stone on for A5 + 12th fl (minus bathrooms) + 11th fl all.</div><div class="tags"><span class="tag">Both buildings</span><span class="tag">GC updates</span></div></div></div>
-    <div class="mtg-block"><div class="mtg-time"><div class="mtg-day">Tuesday</div><div class="mtg-hr">1:30 pm</div></div><div><div class="mtg-name">Main DEP / DCAS / Lefrak / Foremost Meeting</div><div class="mtg-detail">All ongoing projects and concerns. 10 min to 3 hrs. Zach sends minutes per building via Stepflo after the call.</div><div class="tags"><span class="tag">All parties</span><span class="tag">Zach sends minutes</span><span class="tag">Stepflo</span></div></div></div>
+  <div class="ph" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div><div class="ph-title">Meetings</div><div class="ph-sub">Weekly recurring schedule + prep guide · Editable via AI assistant</div></div>
+    <button class="btn btn-a" style="font-size:12px" onclick="openAddMeeting()">+ Add meeting</button>
   </div>
-  <div class="sec-lbl">Meeting prep checklist</div>
-  <div class="card">
-    <div class="prep-h">Before Mon 12:30 sign-off</div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Review Foremost permit matrix — flag status discrepancies vs DOB/BIS</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>FDNY status: B2/A3/A4 — has MGE signed as-builts yet? B1 — has FDNY approved the PAA yet?</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Update HHE closeout spreadsheet with anything closed since last week</span></div>
-    <div class="prep-h">Before Tue 10:30 GC call</div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Know 11th fl pre-construction notice status — posted in lobby + floor?</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Know A3 reconstruction progress and LV coordination status</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Any Blackbull RFIs in Procore pending response?</span></div>
-    <div class="prep-h">Before Tue 1:30 DEP/DCAS meeting</div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Open Stepflo — set up draft minutes for both buildings before the call</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Review open action items from prior week's minutes</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Draft Donna Cappa weekly update — finalize after the call</span></div>
-    <div class="prep-item"><span style="color:var(--text3)">→</span><span>Anticipate Foremost needing a push — come with specific documented asks</span></div>
-  </div>
+  <div id="meetings-container"></div>
 </div>
 
 <!-- CLOSEOUT -->
@@ -1110,10 +1092,8 @@ body{
 <div id="page-processes" class="page">
   <div class="ph">
     <div class="ph-title">📖 Process Library</div>
-    <div class="ph-sub">Step-by-step guides for every major process · Tap any step to search related items · Updated as you learn more</div>
+    <div class="ph-sub">Step-by-step guides · Tap any step to search related items · Editable via AI assistant</div>
   </div>
-
-  <!-- Search within processes -->
   <div class="search-bar-wrap" style="margin-bottom:12px">
     <span class="search-icon">🔍</span>
     <input class="search-bar" id="proc-search" type="search" placeholder="Search processes e.g. FDNY, PAA, as-built, LOC..." oninput="filterProcesses(this.value)" autocomplete="off">
@@ -1127,384 +1107,7 @@ body{
     <span class="keyword-chip" onclick="filterProcesses('design');document.getElementById('proc-search').value='design'">Design Change</span>
     <span class="keyword-chip" onclick="filterProcesses('abatement');document.getElementById('proc-search').value='abatement'">Abatement</span>
   </div>
-
-  <div id="proc-list">
-
-  <!-- FDNY INSPECTION -->
-  <div class="proc-card" data-tags="fdny inspection as-built riser diagram fire alarm paa b1 b2 a3 a4 hhe">
-    <div class="proc-header" onclick="toggleProc('proc-fdny')">
-      <span class="proc-icon">🚒</span>
-      <div>
-        <div class="proc-title">FDNY Fire Alarm Inspection + As-Built Submission</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: B1, B2, A3, A4 — 96-05 HHE</div>
-      </div>
-      <span class="proc-tag" style="background:var(--amber-dim);color:var(--amber)">In Progress</span>
-      <span class="proc-toggle" id="toggle-proc-fdny">▼</span>
-    </div>
-    <div class="proc-body" id="proc-fdny">
-      <div class="proc-desc">FDNY must inspect and approve the fire alarm system before a Letter of Approval (LOA) can be issued, which is required for the DOB Letter of Completion (LOC). The as-built riser diagram must be submitted to the Fire Alarm Inspection Unit before or at the time of inspection. <strong>Key insight for B2/A3/A4:</strong> because the drawing changes were minor (under 10 devices/floor), a PAA is NOT required — the as-built can reflect the changes and the inspector accepts or rejects at their discretion.</div>
-
-      <div class="proc-section-lbl">Chain of custody — current situation (B2, A3, A4)</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Fire alarm drawings signed by electrical contractor (Troon)</div>
-            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews and signs the fire alarm drawings — which include a riser diagram where applicable — confirming accuracy against actual installation and signing the functionality statement. The functionality statement can be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Status as of 4/28/26:</strong> Troon signed drawings for B2, A3, and A4 and FedEx'd back to MGE.</div>
-            <span class="proc-step-owner">👤 Troon (elec/FA contractor)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">MEP engineer (MGE) signs and seals fire alarm drawings</div>
-            <div class="proc-step-detail">MGE (MEP engineers, EOR) signs and seals the fire alarm drawings including the as-built riser diagram where applicable. Must be signed and sealed by the licensed design professional who is applicant of record. Title block must include all job numbers (PW-1, FPIMS, Record ID). <strong>Current status B2/A3/A4:</strong> Drawings at MGE now — received from Troon 4/28.</div>
-            <span class="proc-step-owner">👤 MGE (EOR)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">As-built sent to Hi Rise — they call for FDNY inspection</div>
-            <div class="proc-step-detail">Once as-built is signed and sealed by MGE, it goes to Hi Rise (GC / expeditor). Hi Rise submits the as-built to the Fire Alarm Inspection Unit and calls for the FDNY inspection. Confirm Hi Rise has everything they need before the call is placed.</div>
-            <span class="proc-step-owner">👤 Hi Rise</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">4</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">PAA decision tree — do you need one?</div>
-            <div class="proc-step-detail">
-              <strong style="display:block;margin-bottom:8px">Ask: what changed from the approved plans?</strong>
-
-              <div style="background:var(--green-dim);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:8px">
-                <strong style="color:var(--green)">✓ NO PAA needed — as-built only</strong><br>
-                <span style="font-size:12px">• Added up to 10 devices/appliances per floor<br>
-                • Up to 10 devices shown on approved plans were NOT installed<br>
-                • DGPs installed inconsistent with approved plans<br>
-                • System performance not downgraded<br>
-                → Reflect changes in the signed/sealed as-built. Inspector accepts at their discretion. An affidavit from the applicant of record may be included on the as-built.</span>
-              </div>
-
-              <div style="background:var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:8px">
-                <strong style="color:var(--amber)">⚠ PAA optional — you have a choice</strong><br>
-                <span style="font-size:12px">When fewer than 10 devices were added, you can choose to file a PAA anyway for extra certainty — but it's not required. The as-built route is faster. <strong>B2/A3/A4 are in this category</strong> — we are taking the as-built route (no PAA).</span>
-              </div>
-
-              <div style="background:var(--red-bg);border-left:3px solid var(--red);border-radius:0 6px 6px 0;padding:8px 12px">
-                <strong style="color:var(--red)">✕ PAA REQUIRED — no exceptions</strong><br>
-                <span style="font-size:12px">• Added or removed MORE than 10 devices/appliances on a floor<br>
-                • Relocated fire alarm control panels or Fire Command Centers<br>
-                • Changes affecting system type or job description<br>
-                • Changes affecting work floors<br>
-                • Changes requiring further review (partial coverage, new floor layouts)<br>
-                • ANY modification to ARCS (auxiliary radio communication) — always requires PAA<br>
-                <strong>B1 is in this category</strong> — PAA filed 4/9/26, currently in FDNY system awaiting approval. Cannot request inspection until PAA is approved.</span>
-              </div>
-            </div>
-            <span class="proc-step-owner">👤 Hi Rise → FDNY</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">5</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">FDNY inspection occurs — inspector reviews as-built on-site</div>
-            <div class="proc-step-detail">Inspector reviews the fire alarm drawings and as-built documentation on-site. Tests system. Has discretion to accept minor deviations from approved plans if reflected in the as-built. If rejected, inspector will note specific deficiencies — Hi Rise / MGE must resolve and reschedule.</div>
-            <span class="proc-step-owner">👤 FDNY Inspector</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">6</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">FDNY issues Letter of Approval (LOA)</div>
-            <div class="proc-step-detail">Upon passing inspection, FDNY issues LOA. As-built and LOA are electronically transmitted to DOB. Copy of as-built must be kept at fire command center.</div>
-            <span class="proc-step-owner">👤 FDNY → DOB</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">7</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DOB LOC can now be issued</div>
-            <div class="proc-step-detail">With FDNY LOA received, all other sign-offs complete (MEP, arch as-builts, BEC/electrical, air balancing, plumbing), DOB issues Letter of Completion (LOC). This is the final step before Substantial Completion.</div>
-            <span class="proc-step-owner">👤 Muhammad (MBC) → DOB</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="proc-note danger">⚠ Current blocker: B2/A3/A4: as-builts signed by Troon 4/28, now at MGE for EOR signature. Once MGE signs → Hi Rise → FDNY inspection. B1: PAA filed 4/9/26, awaiting FDNY approval before inspection can even be requested — Hi Rise has no control until PAA is approved.</div>
-      <div class="proc-note">📋 Current status as of 4/28: Troon signed drawings and FedExed back. MGE should have received today. Next action: push MGE to sign and seal, then send to Hi Rise. Hi Rise cannot call for inspection until they have signed as-builts from MGE.</div>
-      <span class="proc-link" onclick="searchKeyword('FDNY')">🔍 Search all FDNY items in this project →</span>
-    </div>
-  </div>
-
-  <!-- ARTS / ABATEMENT FILING -->
-  <div class="proc-card" data-tags="arts abatement acm filing dob dep variance tru jb 11th 10th 3rd asbestos">
-    <div class="proc-header" onclick="toggleProc('proc-arts')">
-      <span class="proc-icon">🧪</span>
-      <div>
-        <div class="proc-title">ARTS Filing — ACM Abatement Authorization</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: 59-17 JB — all floors</div>
-      </div>
-      <span class="proc-tag" style="background:var(--blue-dim);color:var(--blue)">Active — 11th fl done, 10th+3rd in progress</span>
-      <span class="proc-toggle" id="toggle-proc-arts">▼</span>
-    </div>
-    <div class="proc-body" id="proc-arts">
-      <div class="proc-desc">ARTS (Asbestos Reporting and Tracking System) is the DOB/DEP filing required before any ACM (asbestos-containing material) abatement work can begin. ECC prepares the drawings and files. ESG executes the abatement. Both must work in close coordination. The process can involve objections, variance requests, and re-submissions before approval.</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">ACM testing + scope confirmation</div>
-            <div class="proc-step-detail">Bulk sampling / testing to identify all ACM in the scope area. DEP tenant confirms scope. Additional testing may be required if new materials are identified during demo prep (e.g. corridor columns on 10th fl).</div>
-            <span class="proc-step-owner">👤 ECC (Clayton Long) + DEP</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">ECC prepares ARTS drawings</div>
-            <div class="proc-step-detail">ECC drafts abatement scope drawings showing all ACM locations, quantities, and removal methods. Must match confirmed scope. PRA reviews and submits to DEP for review before DOB filing.</div>
-            <span class="proc-step-owner">👤 ECC (Clayton Long)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DEP reviews drawings</div>
-            <div class="proc-step-detail">DEP tenant reviews and approves the ARTS drawings before filing. They may request changes or additional scope. This step can take weeks. Currently active for 10th + 3rd floors (drawings submitted 4/21/26, under DEP review).</div>
-            <span class="proc-step-owner">👤 DEP / DCAS</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">4</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">ARTS filing submitted to DOB</div>
-            <div class="proc-step-detail">ECC files ARTS application with DOB via the ARTS portal. Felix Urena is the listed ARTS applicant. Filing includes drawings, scope, contractor info (ESG), air monitoring plan. DOB assigns a TRU number (e.g. TRU1110QN25).</div>
-            <span class="proc-step-owner">👤 ECC + Felix Urena (ARTS applicant)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">5</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DOB/DEP review — objections possible</div>
-            <div class="proc-step-detail">DOB ATRU (Asbestos Technical Review Unit) reviews the filing. DEP may also object. Objections require a written response from ECC/ESG. Multiple rounds possible. Variance requests (V1–V5) may be required for contested items. 11th floor required V5 variance (approved 4/23/26 as VAR# 2487QN25).</div>
-            <span class="proc-step-owner">👤 ECC → DOB/DEP</span>
-            <div class="proc-note">Variance requests add 2–8+ weeks. Track objection deadlines closely — missed deadlines can restart the clock.</div>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">6</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">ARTS approval issued — pre-construction notification required</div>
-            <div class="proc-step-detail">Once approved, ESG must send pre-construction notification to DEP. Zach posts notice in building lobby and on affected floor. Proof of posting sent to Sheranne (DEP). DEP then issues 4-week employee notice — abatement cannot start until 4 weeks after this notice.</div>
-            <span class="proc-step-owner">👤 ESG (Javier Catalan) + Zach (PRA)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">7</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">ESG performs abatement</div>
-            <div class="proc-step-detail">ESG executes abatement per approved means & methods. Air monitoring throughout. ACP-20/ACP-21 forms must be posted on site. 1 ACP-21 must be submitted to DOB prior to sign-off. ESG provides air clearance after completion.</div>
-            <span class="proc-step-owner">👤 ESG (Javier Catalan)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">8</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Air clearance + ARTS closeout</div>
-            <div class="proc-step-detail">ECC performs air clearance testing. Results must pass before reconstruction begins. ARTS filing is then closed out with DOB.</div>
-            <span class="proc-step-owner">👤 ECC (Clayton Long)</span>
-          </div>
-        </div>
-      </div>
-      <span class="proc-link" onclick="searchKeyword('ARTS')">🔍 Search all ARTS items →</span>
-    </div>
-  </div>
-
-  <!-- DESIGN / MATERIAL CHANGE (DEP/DCAS) -->
-  <div class="proc-card" data-tags="design material change architect aja dep dcas approval drawing">
-    <div class="proc-header" onclick="toggleProc('proc-design-change')">
-      <span class="proc-icon">📐</span>
-      <div>
-        <div class="proc-title">Design or Material Change — DEP/DCAS Approval</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">AJA proposes → DEP approves → DCAS approves → proceed</div>
-      </div>
-      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
-      <span class="proc-toggle" id="toggle-proc-design-change">▼</span>
-    </div>
-    <div class="proc-body" id="proc-design-change">
-      <div class="proc-desc">When a design or material change is needed — whether during construction or requested by DEP/DCAS — the change must go through the architect of record (AJA) first, then receive DEP and DCAS approval before work proceeds.</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Architect (AJA) proposes the change</div>
-            <div class="proc-step-detail">All design or material changes must be proposed by AJA (Anthony Johnson, principal; Janki Patel, day-to-day). AJA documents the change, its justification, and impact on approved drawings. Nothing moves forward until AJA has formally proposed it.</div>
-            <span class="proc-step-owner">👤 AJA (Anthony Johnson / Janki Patel)</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DEP reviews and approves</div>
-            <div class="proc-step-detail">AJA's proposal goes to DEP (tenant) for formal approval. DEP may request modifications or additional documentation before approving.</div>
-            <span class="proc-step-owner">👤 DEP</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DCAS approves — work can proceed</div>
-            <div class="proc-step-detail">DCAS signs off. Once both DEP and DCAS have approved, the change is authorized. AJA issues updated drawings and files with DOB if required (PAA or amended filing depending on scope).</div>
-            <span class="proc-step-owner">👤 DCAS → AJA → Muhammad (MBC) if DOB filing needed</span>
-          </div>
-        </div>
-      </div>
-      <div class="proc-note">📋 PRA role: ensure no GC or Foremost proceeds on a verbal change without written DEP/DCAS approval on record.</div>
-    </div>
-  </div>
-
-  <!-- DESIGN CHANGE / DRAWING REVISION -->
-  <div class="proc-card" data-tags="design change drawing revision paa affidavit minor amendment dob">
-    <div class="proc-header" onclick="toggleProc('proc-design')">
-      <span class="proc-icon">✏️</span>
-      <div>
-        <div class="proc-title">Design Change / Drawing Revision Process</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: all DOB-filed work — HHE + JB</div>
-      </div>
-      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
-      <span class="proc-toggle" id="toggle-proc-design">▼</span>
-    </div>
-    <div class="proc-body" id="proc-design">
-      <div class="proc-desc">When the actual construction deviates from approved plans, the deviation must be documented and handled correctly. The route depends on the severity of the change. Getting this wrong (e.g. filing a PAA unnecessarily) wastes weeks. Understanding the threshold is critical.</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Identify the change and assess severity</div>
-            <div class="proc-step-detail">Document exactly what changed from approved plans. Key questions: How many devices added/removed per floor? Did any control panels move? Did work floors change? Did system type change? Does it require further review (partial coverage, new floor layouts)?</div>
-            <span class="proc-step-owner">👤 MEP engineer / GC + PRA</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Route A: Minor change → As-built only (no PAA)</div>
-            <div class="proc-step-detail">Per FDNY Bulletin 12-11-2023: up to 10 devices/appliances added per floor = as-built only, no further documentation needed. Inspector accepts at discretion. Other minor changes (up to 10 devices not installed, DGPs inconsistent with plans, system performance not downgraded) = affidavit from applicant of record, may appear on signed/sealed as-built.</div>
-            <span class="proc-step-owner">👤 Design professional (applicant of record)</span>
-            <div class="proc-note success">✓ This is the route for B2, A3, A4. No PAA needed.</div>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Route B: Major change → Post-Approval Amendment (PAA)</div>
-            <div class="proc-step-detail">A PAA IS required for: (a) relocation of fire alarm control panels / Fire Command Centers, (b) changes affecting system type or job description, (c) changes affecting work floors, (d) changes requiring further review, (e) addition/exclusion of MORE than 10 devices per floor. PAA adds weeks to the process and must be filed and approved before inspection.</div>
-            <span class="proc-step-owner">👤 Design professional → DOB</span>
-            <div class="proc-note danger">⚠ ARCS (auxiliary radio communication) modifications always require a PAA — no exceptions.</div>
-          </div>
-        </div>
-      </div>
-      <span class="proc-link" onclick="searchKeyword('PAA')">🔍 Search PAA-related items →</span>
-    </div>
-  </div>
-
-  <!-- PERMIT RENEWAL -->
-  <div class="proc-card" data-tags="permit renewal expiry extension dob gc q00940195 q00919587 blackbull">
-    <div class="proc-header" onclick="toggleProc('proc-permit')">
-      <span class="proc-icon">📋</span>
-      <div>
-        <div class="proc-title">Permit Renewal / Extension Process</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: B1/B2/A4 GC (exp 5/20/26) · A3 GC (exp 5/20/26)</div>
-      </div>
-      <span class="proc-tag" style="background:var(--red-bg);color:var(--red)">⚠ 22 days remaining</span>
-      <span class="proc-toggle" id="toggle-proc-permit">▼</span>
-    </div>
-    <div class="proc-body" id="proc-permit">
-      <div class="proc-desc">DOB permits expire if work is not completed or extended in time. For HHE, two GC permits expire 5/20/26. If work is still ongoing, permits must be renewed BEFORE expiration. If work is complete and just awaiting sign-offs, the permit can often stay expired while closeout proceeds — but confirm with Muhammad (MBC).</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Confirm if renewal is needed</div>
-            <div class="proc-step-detail">If all physical work under the permit is complete, renewal may not be required — closeout can proceed on an expired permit in some cases. If work is still ongoing, renewal is mandatory before expiration. Confirm with Muhammad (MBC expeditor) and Foremost immediately.</div>
-            <span class="proc-step-owner">👤 Muhammad (MBC) + Foremost</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">File renewal application with DOB</div>
-            <div class="proc-step-detail">Muhammad (MBC) files the permit renewal via DOB NOW. Requires updated insurance, worker's comp, and sometimes updated drawings if scope changed. GC (Blackbull for B1/B2/A3/A4) must provide updated documentation.</div>
-            <span class="proc-step-owner">👤 Muhammad (MBC) + Blackbull</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">DOB issues renewed permit</div>
-            <div class="proc-step-detail">Typically takes a few days to 2 weeks. Renewed permit must be posted on site. Confirm new expiration date and calendar a reminder 60 days before next expiration.</div>
-            <span class="proc-step-owner">👤 DOB → Muhammad (MBC)</span>
-          </div>
-        </div>
-      </div>
-      <div class="proc-note danger">🚨 Q00940195-L1-GC (B1/B2/A4) and Q00919587-I1-GC (A3) both expire 5/20/26 — 22 days away. Confirm renewal plan with Foremost and Muhammad this week.</div>
-      <span class="proc-link" onclick="searchKeyword('Permit')">🔍 Search permit items →</span>
-    </div>
-  </div>
-
-  <!-- SUBSTANTIAL COMPLETION / LOC -->
-  <div class="proc-card" data-tags="substantial completion loc letter of completion dob closeout sign-off mep as-builts punchlist">
-    <div class="proc-header" onclick="toggleProc('proc-sc')">
-      <span class="proc-icon">✅</span>
-      <div>
-        <div class="proc-title">Substantial Completion + DOB Letter of Completion (LOC)</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px">Applies to: all HHE phases + JB floors at completion</div>
-      </div>
-      <span class="proc-tag" style="background:var(--surface2);color:var(--text2)">Reference</span>
-      <span class="proc-toggle" id="toggle-proc-sc">▼</span>
-    </div>
-    <div class="proc-body" id="proc-sc">
-      <div class="proc-desc">The DOB Letter of Completion (LOC) is the official DOB sign-off that closes out a construction permit. Substantial Completion (SC) is a contractual milestone between Lefrak and DEP/DCAS that the space is ready for occupancy. Both are required at the end of each phase. Getting to LOC requires all sign-offs to be in hand.</div>
-      <div class="proc-steps">
-        <div class="proc-step">
-          <div class="proc-step-num">1</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">All physical work complete — punchlist issued</div>
-            <div class="proc-step-detail">GC declares substantial completion. DEP/DCAS and PRA do a formal walkthrough and issue a punchlist. All punchlist items must be resolved before sign-offs can be collected.</div>
-            <span class="proc-step-owner">👤 GC + DEP/DCAS + PRA</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">2</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Collect all required sign-offs</div>
-            <div class="proc-step-detail">All of the following must be in hand before LOC can be filed: (1) MEP as-builts signed by MGE, (2) Arch as-builts signed by AJA, (3) FDNY Letter of Approval, (4) BEC/Electrical sign-off, (5) Certified air balancing report, (6) DOB plumbing sign-off (plumber signature), (7) FA pretest certification, (8) Emergency lighting test.</div>
-            <span class="proc-step-owner">👤 MGE + AJA + FDNY + BEC + Testing labs</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">3</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Muhammad (MBC) files for LOC with DOB</div>
-            <div class="proc-step-detail">Once all sign-offs are collected, Muhammad files the LOC application via DOB NOW. DOB reviews and issues the letter. This is the official DOB record that the project is complete.</div>
-            <span class="proc-step-owner">👤 Muhammad (MBC) → DOB</span>
-          </div>
-        </div>
-        <div class="proc-step">
-          <div class="proc-step-num">4</div>
-          <div class="proc-step-body">
-            <div class="proc-step-title">Substantial Completion letter executed with Lefrak/DEP</div>
-            <div class="proc-step-detail">Anita Jhamb (Lefrak) issues the Substantial Completion notice. DEP/DCAS signs off. This triggers the contractual start of the warranty period and allows DEP to re-occupy the space.</div>
-            <span class="proc-step-owner">👤 Anita Jhamb (Lefrak) + DEP/DCAS</span>
-          </div>
-        </div>
-      </div>
-      <span class="proc-link" onclick="searchKeyword('Substantial Completion')">🔍 Search SC items →</span>
-    </div>
-  </div>
-
-  </div><!-- end proc-list -->
+  <div id="proc-list"></div>
   <div style="height:40px"></div>
 </div>
 
@@ -1679,6 +1282,10 @@ function initFirebase() {
       listenToContacts();
       listenToActions();
       listenToSchedule();
+      listenToMeetings();
+      listenToProcesses();
+      listenToProcessOverlays();
+      listenToMeetingOverlays();
     }).catch(() => {
       clearTimeout(fbTimeout);
       setSyncStatus('local');
@@ -2221,11 +1828,12 @@ function goto(id, btn) {
   if (target) target.classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0,0);
-  // Sync bottom bar
   const btMap = {briefing:'bt-briefing',actions:'bt-actions',ai:'bt-ai',overview:'bt-overview'};
   document.querySelectorAll('.bottom-tab').forEach(t=>t.classList.remove('active'));
   if (btMap[id]) document.getElementById(btMap[id])?.classList.add('active');
   document.getElementById('more-panel')?.classList.remove('open');
+  if (id === 'processes') setTimeout(renderProcessOverlays, 50);
+  if (id === 'meetings') setTimeout(renderMeetingOverlays, 50);
 }
 
 function mobileGoto(id, tabId) {
@@ -3233,6 +2841,65 @@ RESPONSE JSON STRUCTURE:
       "reason": "why this date changed"
     }
   ],
+  "process_updates": [
+    {
+      "action": "add_note | add_step | new_process",
+      "procId": "proc-fdny (existing process ID, required for add_note and add_step)",
+      "note": {"text": "update text", "date": "Apr 29, 2026", "person": "Zach Trakas"},
+      "step": {"title": "new step title", "detail": "step detail", "owner": "who owns it", "date": "Apr 29, 2026"},
+      "process": {"id": "unique-id", "title": "Process Title", "icon": "📋", "subtitle": "applies to...", "tags": "comma separated search tags", "desc": "description", "steps": [{"title":"","detail":"","owner":""}], "note": "optional note"}
+    }
+  ],
+  "meeting_updates": [
+    {
+      "action": "add_note | add_prep | update_detail | update_time | new_meeting",
+      "meetingId": "mtg-mon-130 (existing meeting ID, required for updates)",
+      "note": {"text": "note text", "date": "Apr 29, 2026", "person": "Zach Trakas"},
+      "prepItem": {"text": "prep item text"},
+      "detail": "updated meeting detail text",
+      "time": "updated time string",
+      "meeting": {"id": "unique-id", "day": "Wednesday", "time": "2:00 pm", "name": "Meeting Name", "detail": "description", "tags": ["tag1"]}
+    }
+  ],
+  "meeting_updates": [
+    {
+      "action": "add_meeting | edit_meeting | add_prep_note",
+      "meetingId": "mtg-mon-1230 (for edit/add_prep) or null for add_meeting",
+      "day": "Monday (for add_meeting)",
+      "time": "12:30 pm (for add_meeting)",
+      "name": "Meeting name (for add_meeting or edit_meeting)",
+      "detail": "Meeting details (for add_meeting or edit_meeting)",
+      "tags": ["tag1","tag2"],
+      "prepNote": "prep item text (for add_prep_note)",
+      "reason": "why this change"
+    }
+  ],
+  "process_updates": [
+    {
+      "action": "add_note | edit_step | add_step | add_process | edit_process_desc",
+      "processId": "proc-fdny (for edit/add_note)",
+      "stepNum": 2,
+      "noteText": "note to add (for add_note)",
+      "noteType": "info | warn | danger | success",
+      "stepTitle": "step title (for edit_step or add_step)",
+      "stepDetail": "step detail (for edit_step or add_step)",
+      "stepOwner": "owner (for edit_step or add_step)",
+      "processDesc": "updated description (for edit_process_desc)",
+      "newProcess": {
+        "id": "proc-new-id",
+        "icon": "📋",
+        "title": "New Process Title",
+        "subtitle": "applies to...",
+        "status": "ref",
+        "statusLabel": "Reference",
+        "tags": "searchable tags",
+        "desc": "description",
+        "steps": [],
+        "notes": []
+      },
+      "reason": "why this change"
+    }
+  ],
   "new_contacts": [
     {
       "name": "Full name as mentioned",
@@ -3253,7 +2920,11 @@ RESPONSE JSON STRUCTURE:
   "ready_to_apply": true
 }
 
-SCHEDULE TASK IDs for schedule_updates (use exact values):
+PROCESS LIBRARY IDs (use for process_updates → procId field):
+proc-fdny, proc-arts, proc-design-change, proc-design, proc-permit, proc-sc
+
+MEETING IDs (use for meeting_updates → meetingId field):
+mtg-mon-1230 (Mon 12:30 — HHE Sign-Off), mtg-mon-130 (Mon 1:30 — ACM Next Steps), mtg-tue-1030 (Tue 10:30 — GC Update), mtg-tue-130 (Tue 1:30 — Main DEP/DCAS meeting)
 Floor 11: t_11_vacate, t_11_boxes, t_11_condition, t_11_furniture, t_11_3notice, t_11_arts_scope, t_11_arts_file, t_11_demo_lobby, t_11_demo_carpet, t_11_demo_restroom, t_11_recon_lobby, t_11_recon_restroom, t_11_recon_ceiling1, t_11_recon_ceiling2, t_11_carpet, t_11_inspect, t_11_punchlist, t_11_sc, t_11_reinstall, t_11_occupy
 Floor 3: t_3_corridor_demo, t_3_corridor_acm, t_3_corridor_build, t_3_lobby_demo, t_3_lobby_acm, t_3_lobby_build, t_3_men_build, t_3_women_build, t_3_lobby_complete, t_3_restroom_open, t_3_sc
 Floor 10: t_10_pack, t_10_vacate, t_10_boxes, t_10_condition, t_10_furniture, t_10_demo_corridor, t_10_demo_carpet, t_10_demo_restroom, t_10_recon_restroom, t_10_ceiling1, t_10_ceiling2, t_10_carpet, t_10_inspect, t_10_punchlist, t_10_reinstall, t_10_sc, t_10_occupy
@@ -3413,11 +3084,52 @@ async function applyChanges() {
     });
   }
 
+  // Apply meeting updates via overlay system
+  const meetingUpdates = pendingResult.meeting_updates || [];
+  if (meetingUpdates.length > 0) {
+    for (const u of meetingUpdates) {
+      if (u.action === 'new_meeting' && u.meeting) {
+        liveNewMeetings = [...liveNewMeetings, {...u.meeting, id: u.meeting.id||'mtg-ai-'+Date.now()}];
+      } else if (u.meetingId) {
+        if (!liveMeetingOverlays[u.meetingId]) liveMeetingOverlays[u.meetingId] = {notes:[],prepItems:[]};
+        if (u.action === 'add_note' && u.note) liveMeetingOverlays[u.meetingId].notes = [...(liveMeetingOverlays[u.meetingId].notes||[]), u.note];
+        if (u.action === 'add_prep' && u.prepItem) liveMeetingOverlays[u.meetingId].prepItems = [...(liveMeetingOverlays[u.meetingId].prepItems||[]), u.prepItem];
+        if (u.action === 'update_detail' && u.detail) liveMeetingOverlays[u.meetingId].detail = u.detail;
+        if (u.action === 'update_time' && u.time) liveMeetingOverlays[u.meetingId].time = u.time;
+        // Legacy support
+        if (u.action === 'add_meeting') liveNewMeetings.push({id:'mtg-ai-'+Date.now(), day:u.day||'', time:u.time||'', name:u.name||'', detail:u.detail||'', tags:u.tags||[]});
+        if (u.action === 'edit_meeting') { const m=liveMeetings.find(x=>x.id===u.meetingId); if(m){if(u.name)m.name=u.name;if(u.detail)m.detail=u.detail;} }
+        if (u.action === 'add_prep_note') { const m=liveMeetings.find(x=>x.id===u.meetingId); if(m&&u.prepNote){if(!m.prep)m.prep=[];m.prep.push(u.prepNote);} }
+      }
+    }
+    await saveMeetingsToFirebase();
+    await saveMeetings();
+  }
+
+  // Apply process library updates via overlay system
+  const processUpdates = pendingResult.process_updates || [];
+  if (processUpdates.length > 0) {
+    for (const u of processUpdates) {
+      if (u.action === 'new_process' && u.process) {
+        liveNewProcesses = [...liveNewProcesses, {...u.process, id: u.process.id||'proc-ai-'+Date.now()}];
+      } else if (u.action === 'add_note' && u.procId && u.note) {
+        if (!liveProcessOverlays[u.procId]) liveProcessOverlays[u.procId] = {notes:[],newSteps:[],stepOverrides:{}};
+        liveProcessOverlays[u.procId].notes = [...(liveProcessOverlays[u.procId].notes||[]), u.note];
+      } else if (u.action === 'add_step' && u.procId && u.step) {
+        if (!liveProcessOverlays[u.procId]) liveProcessOverlays[u.procId] = {notes:[],newSteps:[],stepOverrides:{}};
+        liveProcessOverlays[u.procId].newSteps = [...(liveProcessOverlays[u.procId].newSteps||[]), u.step];
+      }
+    }
+    await saveProcessesToFirebase();
+  }
+
   if(logSaved){
     document.getElementById('ai-resp-area').innerHTML=`<div class="ai-resp"><div class="ai-resp-lbl">✓ Saved & synced</div>
       Update logged.${statusUpdates.length>0?` ${statusUpdates.length} status field(s) updated.`:''}
       ${timelineUpdates.length>0?` ${timelineUpdates.length} timeline step(s) updated.`:''}
       ${scheduleUpdates.length>0?` ${scheduleUpdates.length} schedule task(s) updated.`:''}
+      ${meetingUpdates.length>0?` ${meetingUpdates.length} meeting update(s) applied.`:''}
+      ${processUpdates.length>0?` ${processUpdates.length} process library update(s) applied.`:''}
       All changes synced to every device instantly.</div>`;
     document.getElementById('ai-input').value='';
     removeFile(); pendingResult=null;
@@ -3440,6 +3152,98 @@ async function confirmReset() {
   } else {
     showToast('✓ Reset saved locally');
   }
+}
+
+// ── PROCESS LIBRARY OVERLAY ────────────────────────────────
+let liveProcessOverlays = {};
+let liveNewProcesses = [];
+
+function listenToProcessOverlays() {
+  if (!db || window.location.protocol === 'file:') { renderProcessOverlays(); return; }
+  db.collection('processes').doc('overlays').onSnapshot(snap => {
+    if (snap.exists) { const d = snap.data(); liveProcessOverlays = d.overlays||{}; liveNewProcesses = d.newProcesses||[]; }
+    renderProcessOverlays();
+  }, () => renderProcessOverlays());
+}
+
+async function saveProcessesToFirebase() {
+  const data = {overlays: liveProcessOverlays, newProcesses: liveNewProcesses};
+  try { localStorage.setItem('pra_processes', JSON.stringify(data)); } catch(e) {}
+  if (!db || window.location.protocol === 'file:') { renderProcessOverlays(); return; }
+  setSyncStatus('saving');
+  try { await db.collection('processes').doc('overlays').set(data); setSyncStatus('ok'); renderProcessOverlays(); }
+  catch(e) { setSyncStatus('err'); }
+}
+
+function renderProcessOverlays() {
+  try { const s = localStorage.getItem('pra_processes'); if (s && !Object.keys(liveProcessOverlays).length) { const d=JSON.parse(s); liveProcessOverlays=d.overlays||{}; liveNewProcesses=d.newProcesses||[]; } } catch(e) {}
+  // Inject notes and steps into existing proc cards
+  Object.entries(liveProcessOverlays).forEach(([procId, overlay]) => {
+    const body = document.getElementById(procId);
+    if (!body) return;
+    // Notes
+    let noteZone = body.querySelector('.proc-overlay-notes');
+    if (!noteZone) { noteZone = document.createElement('div'); noteZone.className='proc-overlay-notes'; body.appendChild(noteZone); }
+    noteZone.innerHTML = (overlay.notes||[]).map(n => `<div class="proc-note info" style="margin-top:6px"><strong>${escH(n.date||'')} — ${escH(n.person||'')}</strong><br>${linkify(n.text||'')}</div>`).join('');
+    // New steps
+    let stepZone = body.querySelector('.proc-overlay-steps');
+    if (!stepZone) { const steps = body.querySelector('.proc-steps'); if (steps) { stepZone = document.createElement('div'); stepZone.className='proc-overlay-steps'; steps.appendChild(stepZone); } }
+    if (stepZone) stepZone.innerHTML = (overlay.newSteps||[]).map((s,i) => `<div class="proc-step" style="background:var(--blue-dim)"><div class="proc-step-num" style="background:var(--blue);font-size:10px">AI</div><div class="proc-step-body"><div class="proc-step-title">${linkify(s.title||'')}</div><div class="proc-step-detail">${linkify(s.detail||'')}</div>${s.owner?`<span class="proc-step-owner">👤 ${linkify(s.owner)}</span>`:''}<div style="font-size:10px;color:var(--text3);margin-top:3px">Added ${escH(s.date||'')} via AI</div></div></div>`).join('');
+  });
+  // New process cards
+  const list = document.getElementById('proc-list');
+  if (!list) return;
+  liveNewProcesses.forEach(proc => {
+    if (document.getElementById('proc-ai-'+proc.id)) return;
+    const card = document.createElement('div');
+    card.id = 'proc-ai-'+proc.id; card.className='proc-card'; card.dataset.tags=proc.tags||'';
+    const steps = (proc.steps||[]).map((s,i) => `<div class="proc-step"><div class="proc-step-num">${i+1}</div><div class="proc-step-body"><div class="proc-step-title">${linkify(s.title||'')}</div><div class="proc-step-detail">${linkify(s.detail||'')}</div>${s.owner?`<span class="proc-step-owner">👤 ${linkify(s.owner)}</span>`:''}</div></div>`).join('');
+    card.innerHTML = `<div class="proc-header" onclick="toggleProc('proc-ai-body-${proc.id}')"><span class="proc-icon">${proc.icon||'📋'}</span><div><div class="proc-title">${escH(proc.title)}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${escH(proc.subtitle||'')}</div></div><span class="proc-tag" style="background:var(--blue-dim);color:var(--blue)">Added via AI</span><span class="proc-toggle" id="toggle-proc-ai-body-${proc.id}">▼</span></div><div class="proc-body" id="proc-ai-body-${proc.id}"><div class="proc-desc">${linkify(proc.desc||'')}</div><div class="proc-steps">${steps}</div>${proc.note?`<div class="proc-note">${linkify(proc.note)}</div>`:''}</div>`;
+    list.appendChild(card);
+  });
+}
+
+// ── MEETING OVERLAY ─────────────────────────────────────────
+let liveMeetingOverlays = {};
+let liveNewMeetings = [];
+
+function listenToMeetingOverlays() {
+  if (!db || window.location.protocol === 'file:') { renderMeetingOverlays(); return; }
+  db.collection('meetings').doc('overlays').onSnapshot(snap => {
+    if (snap.exists) { const d = snap.data(); liveMeetingOverlays = d.overlays||{}; liveNewMeetings = d.newMeetings||[]; }
+    renderMeetingOverlays();
+  }, () => renderMeetingOverlays());
+}
+
+async function saveMeetingsToFirebase() {
+  const data = {overlays: liveMeetingOverlays, newMeetings: liveNewMeetings};
+  try { localStorage.setItem('pra_meetings', JSON.stringify(data)); } catch(e) {}
+  if (!db || window.location.protocol === 'file:') { renderMeetingOverlays(); return; }
+  setSyncStatus('saving');
+  try { await db.collection('meetings').doc('overlays').set(data); setSyncStatus('ok'); renderMeetingOverlays(); }
+  catch(e) { setSyncStatus('err'); }
+}
+
+function renderMeetingOverlays() {
+  try { const s = localStorage.getItem('pra_meetings'); if (s && !Object.keys(liveMeetingOverlays).length) { const d=JSON.parse(s); liveMeetingOverlays=d.overlays||{}; liveNewMeetings=d.newMeetings||[]; } } catch(e) {}
+  Object.entries(liveMeetingOverlays).forEach(([meetingId, overlay]) => {
+    const block = document.getElementById('mtg-'+meetingId);
+    if (!block) return;
+    let noteZone = block.querySelector('.mtg-ai-notes');
+    if (!noteZone) { noteZone = document.createElement('div'); noteZone.className='mtg-ai-notes'; noteZone.style.marginTop='8px'; block.querySelector('.mtg-detail')?.after(noteZone) || block.appendChild(noteZone); }
+    noteZone.innerHTML = [...(overlay.notes||[]).map(n=>`<div style="font-size:12px;color:var(--text2);padding:4px 0;border-top:1px solid var(--border);margin-top:4px"><strong>${escH(n.date||'')}:</strong> ${linkify(n.text||'')}</div>`), ...(overlay.prepItems||[]).map(p=>`<div style="font-size:12px;color:var(--blue);padding:2px 0">→ ${linkify(p.text||'')}</div>`)].join('');
+    if (overlay.time) { const t = block.querySelector('.mtg-hr'); if(t) t.textContent = overlay.time; }
+    if (overlay.detail) { const d = block.querySelector('.mtg-detail'); if(d) d.innerHTML = linkify(overlay.detail); }
+  });
+  const mtgList = document.getElementById('mtg-list');
+  if (!mtgList) return;
+  liveNewMeetings.forEach(mtg => {
+    if (document.getElementById('mtg-ai-'+mtg.id)) return;
+    const block = document.createElement('div');
+    block.id = 'mtg-ai-'+mtg.id; block.className = 'mtg-block';
+    block.innerHTML = `<div class="mtg-time"><div class="mtg-day">${escH(mtg.day||'')}</div><div class="mtg-hr">${escH(mtg.time||'')}</div></div><div><div class="mtg-name">${linkify(mtg.name||'')}</div><div class="mtg-detail">${linkify(mtg.detail||'')}</div><div class="tags">${(mtg.tags||[]).map(t=>`<span class="tag">${escH(t)}</span>`).join('')}<span class="tag" style="background:var(--blue-dim);color:var(--blue)">Added via AI</span></div></div>`;
+    mtgList.appendChild(block);
+  });
 }
 
 function toggleProc(id) {
@@ -3465,7 +3269,6 @@ function filterProcesses(query) {
 
 // Wire process links into timeline steps
 function addProcessLinksToTimeline() {
-  // Add "📖 See process guide" links to relevant timeline steps
   const links = {
     'fdny': 'proc-fdny',
     'arts': 'proc-arts',
@@ -3474,8 +3277,130 @@ function addProcessLinksToTimeline() {
   };
   // This runs after timeline renders — future enhancement
 }
-// Mirrors TIMELINE_DEFS but with editable fields stored in Firebase
-// schedule_tasks/{phaseKey} = [{id, name, start, finish, pct, notes}]
+
+// ── MEETINGS DATA ─────────────────────────────────────────
+const DEFAULT_MEETINGS = [
+  {id:'mtg-mon-1230',day:'Monday',time:'12:30 pm',name:'Weekly Sign-Off — 96-05 Ground Floor',detail:'Run by PRA. Permits + closeout items across all 96-05 phases. Foremost permit matrix — permit numbers reliable, statuses sometimes wrong.',tags:['96-05 HHE only','PRA leads','Permit matrix ref'],prep:['Review Foremost permit matrix — flag status discrepancies vs DOB/BIS','FDNY status: B2/A3/A4 — has MGE signed fire alarm drawings yet? B1 — has FDNY approved the PAA yet?','Update HHE closeout spreadsheet with anything closed since last week']},
+  {id:'mtg-mon-130',day:'Monday',time:'1:30 pm',name:'59-17 / 96-05 — DEP — ACM Next Steps',detail:'Run by ESG (Javier Catalan, covering for Lisa Javier on maternity leave). ECC (Clayton Long) also on the call. Covers abatement scope, drawings, phasing, filings, strategy. PRA role: receive updates, flag concerns, ask questions. KK organizes from PRA side.',tags:['Both buildings','ESG runs it','ECC attends','KK organizes'],prep:['Review latest ECC/ESG update on 10th+3rd ARTS filing status','Check 11th fl abatement schedule — any changes from Foremost?','Prepare questions for Clayton on scope/timeline']},
+  {id:'mtg-tue-1030',day:'Tuesday',time:'10:30 am',name:'96-05 HHE + 59-17 JB — GC Update',detail:'GC updates for all projects. Astor & Stone on for A5 + 12th fl (minus bathrooms) + 11th fl all.',tags:['Both buildings','GC updates'],prep:['Know 11th fl schedule status — elevator bypass confirmed? Soft demo 5/18 ready?','Know A3 glass arrival date and punchlist walk status (5/11 with AJA)','Any Blackbull RFIs in Procore pending response?']},
+  {id:'mtg-tue-130',day:'Tuesday',time:'1:30 pm',name:'Main DEP / DCAS / Lefrak / Foremost Meeting',detail:'All ongoing projects and concerns. 10 min to 3 hrs. Zach sends minutes per building via Stepflo after the call.',tags:['All parties','Zach sends minutes','Stepflo'],prep:['Open Stepflo — set up draft minutes for both buildings before the call','Review open action items from prior week\'s minutes','Draft Donna Cappa weekly update — finalize after the call','Anticipate Foremost needing a push — come with specific documented asks']}
+];
+
+let liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS));
+
+function listenToMeetings() {
+  if (!db || window.location.protocol==='file:') { renderMeetings(); return; }
+  db.collection('meetings').doc('list').onSnapshot(snap => {
+    if (snap.exists && snap.data().items?.length) liveMeetings = snap.data().items;
+    else { liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS)); db.collection('meetings').doc('list').set({items:liveMeetings}); }
+    renderMeetings();
+    renderMeetingOverlays();
+  }, () => renderMeetings());
+}
+
+async function saveMeetings() {
+  try { localStorage.setItem('pra_meetings', JSON.stringify(liveMeetings)); } catch(e) {}
+  if (!db || window.location.protocol==='file:') { renderMeetings(); return; }
+  setSyncStatus('saving');
+  try { await db.collection('meetings').doc('list').set({items:liveMeetings}); setSyncStatus('ok'); } catch(e) { setSyncStatus('err'); }
+  renderMeetings();
+}
+
+function renderMeetings() {
+  const container = document.getElementById('meetings-container');
+  if (!container) return;
+  let html = '<div class="card" id="mtg-list">';
+  liveMeetings.forEach(m => {
+    html += `<div class="mtg-block" id="mtg-${escH(m.id||m.name.replace(/\s+/g,'-').toLowerCase())}">
+      <div class="mtg-time"><div class="mtg-day">${escH(m.day)}</div><div class="mtg-hr">${escH(m.time)}</div></div>
+      <div style="flex:1">
+        <div class="mtg-name">${linkify(m.name)}</div>
+        <div class="mtg-detail">${linkify(m.detail||'')}</div>
+        ${m.tags?.length?`<div class="tags">${m.tags.map(t=>`<span class="tag">${escH(t)}</span>`).join('')}</div>`:''}
+        ${m.prep?.length?`<div style="margin-top:8px;padding:8px 10px;background:var(--surface2);border-radius:6px">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Prep</div>
+          ${m.prep.map(p=>`<div style="font-size:12px;color:var(--text2);padding:2px 0;display:flex;gap:6px"><span style="color:var(--text4)">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}
+        </div>`:''}
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+  container.querySelectorAll('.brief-lk').forEach(el => { el.innerHTML = linkify(el.textContent); });
+  // Apply Firebase overlays on top
+  renderMeetingOverlays();
+}
+
+function openAddMeeting() {
+  const day = prompt('Day (e.g. Monday):'); if (!day) return;
+  const time = prompt('Time (e.g. 2:00 pm):'); if (!time) return;
+  const name = prompt('Meeting name:'); if (!name) return;
+  const detail = prompt('Details (optional):') || '';
+  liveMeetings.push({id:'mtg-'+Date.now(),day,time,name,detail,tags:[],prep:[]});
+  saveMeetings(); showToast('✓ Meeting added');
+}
+
+// ── PROCESS LIBRARY DATA ───────────────────────────────────
+const DEFAULT_PROCESSES = [
+  {id:'proc-fdny',icon:'🚒',title:'FDNY Fire Alarm Inspection + As-Built Submission',subtitle:'Applies to: B1, B2, A3, A4 — 96-05 HHE',status:'active',statusLabel:'In Progress',tags:'fdny inspection fire alarm paa b1 b2 a3 a4 hhe as-built',desc:'FDNY must inspect and approve the fire alarm system before a Letter of Approval (LOA) can be issued. The fire alarm drawings (including as-built riser diagram where applicable) must be submitted to the Fire Alarm Inspection Unit. Key insight for B2/A3/A4: drawing changes were minor (under 10 devices/floor), so a PAA is NOT required.',steps:[{num:1,title:'Fire alarm drawings signed by electrical contractor (Troon)',detail:'Troon (electrical and FA contractor) reviews and signs the fire alarm drawings — which include a riser diagram where applicable. Status as of 4/28/26: Troon signed drawings for B2, A3, and A4 and FedEx\'d back to MGE.',owner:'Troon (elec/FA contractor)'},{num:2,title:'MEP engineer (MGE) signs and seals fire alarm drawings',detail:'MGE (MEP engineers, EOR) signs and seals the fire alarm drawings. Must be signed by the licensed design professional who is applicant of record. Current status: Drawings at MGE — received from Troon 4/28.',owner:'MGE (EOR)'},{num:3,title:'As-built sent to Hi Rise — they call for FDNY inspection',detail:'Once signed by MGE, drawings go to Hi Rise. Hi Rise submits to FDNY and calls for inspection. IMPORTANT: Hi Rise has NO control until MGE delivers signed drawings. Do not push Hi Rise until MGE step is confirmed complete.',owner:'Hi Rise'},{num:4,title:'PAA decision tree',detail:'NO PAA: up to 10 devices added/floor, up to 10 not installed, DGPs inconsistent, system not downgraded. PAA OPTIONAL: under 10 devices — can file for certainty but not required. B2/A3/A4 taking no-PAA route. PAA REQUIRED: 10+ devices added/removed, control panel relocated, system type changed, work floors changed, any ARCS modification. B1: PAA filed 4/9/26 awaiting FDNY approval — inspection cannot be requested until approved.',owner:'Hi Rise → FDNY'},{num:5,title:'FDNY inspection occurs',detail:'Inspector reviews fire alarm drawings and as-built documentation on-site. Tests system. Has discretion to accept minor deviations if reflected in as-built.',owner:'FDNY Inspector'},{num:6,title:'FDNY issues Letter of Approval (LOA)',detail:'Upon passing, FDNY issues LOA. Transmitted to DOB electronically.',owner:'FDNY → DOB'},{num:7,title:'DOB LOC can now be issued',detail:'With FDNY LOA plus all other sign-offs, Muhammad files for LOC.',owner:'Muhammad (MBC) → DOB'}],notes:[{type:'danger',text:'B1: PAA filed 4/9/26 in FDNY system awaiting approval. Cannot request inspection until approved.'},{type:'info',text:'To corner Alex: are drawings signed and sealed by MGE? Has Hi Rise submitted to FDNY? What is the exact hold-up?'}]},
+  {id:'proc-arts',icon:'🧪',title:'ARTS Filing — ACM Abatement Authorization',subtitle:'Applies to: 59-17 JB — all floors',status:'active',statusLabel:'Active — 11th fl done, 10th+3rd in progress',tags:'arts abatement acm filing dob dep variance tru jb 11th 10th 3rd asbestos ecc esg',desc:'ARTS is the DOB/DEP filing required before any ACM abatement can begin. ECC prepares drawings and files. ESG executes abatement. Both work in close coordination.',steps:[{num:1,title:'ACM testing + scope confirmation',detail:'Bulk sampling/testing to identify all ACM in scope. DEP confirms scope. Additional testing may be required if new materials identified.',owner:'ECC (Clayton Long) + DEP'},{num:2,title:'ECC prepares ARTS drawings',detail:'ECC drafts abatement scope drawings showing ACM locations, quantities, and removal methods. PRA reviews before DEP submission.',owner:'ECC (Clayton Long)'},{num:3,title:'DEP reviews drawings',detail:'DEP reviews and approves ARTS drawings before filing. Can take weeks. Currently active for 10th+3rd floors (drawings submitted 4/21/26).',owner:'DEP / DCAS'},{num:4,title:'ARTS filing submitted to DOB',detail:'ECC files via DOB ARTS portal. Felix Urena is listed ARTS applicant. DOB assigns a TRU number.',owner:'ECC + Felix Urena'},{num:5,title:'DOB/DEP review — objections possible',detail:'Multiple rounds possible. Variance requests (V1–V5) may be required. 11th floor required V5 variance (approved 4/23/26, VAR# 2487QN25).',owner:'ECC → DOB/DEP'},{num:6,title:'ARTS approval — pre-construction notification required',detail:'ESG sends pre-construction notification. Zach posts notice in lobby + floor. Proof sent to Sheranne Wickham (DEP). DEP issues 4-week employee notice — abatement cannot start until 4 weeks after notice.',owner:'ESG (Javier Catalan) + Zach (PRA)'},{num:7,title:'ESG performs abatement',detail:'ESG executes abatement per approved means & methods. Air monitoring throughout. ACP-20/ACP-21 posted on site.',owner:'ESG (Javier Catalan)'},{num:8,title:'Air clearance + ARTS closeout',detail:'ECC performs air clearance testing. Must pass before reconstruction begins.',owner:'ECC (Clayton Long)'}],notes:[]},
+  {id:'proc-design-change',icon:'📐',title:'Design or Material Change — DEP/DCAS Approval',subtitle:'AJA proposes → DEP approves → DCAS approves → proceed',status:'ref',statusLabel:'Reference',tags:'design material change architect aja dep dcas approval drawing',desc:'When a design or material change is needed, it must go through AJA first, then receive DEP and DCAS approval before work proceeds.',steps:[{num:1,title:'Architect (AJA) proposes the change',detail:'All design or material changes must be proposed by AJA (Anthony Johnson, principal; Janki Patel, day-to-day). Nothing moves forward until AJA formally proposes it.',owner:'AJA (Anthony Johnson / Janki Patel)'},{num:2,title:'DEP reviews and approves',detail:'AJA\'s proposal goes to DEP for formal approval. DEP may request modifications.',owner:'DEP'},{num:3,title:'DCAS approves — work can proceed',detail:'DCAS signs off. Once both DEP and DCAS approved, change is authorized. AJA issues updated drawings and files with DOB if required.',owner:'DCAS → AJA → Muhammad (MBC) if DOB filing needed'}],notes:[{type:'info',text:'PRA role: ensure no GC or Foremost proceeds on a verbal change without written DEP/DCAS approval on record.'}]},
+  {id:'proc-design',icon:'✏️',title:'Design Change / Drawing Revision — DOB Route',subtitle:'When to file a PAA vs. as-built only',status:'ref',statusLabel:'Reference',tags:'design change drawing revision paa affidavit minor amendment dob',desc:'When actual construction deviates from approved plans, the deviation must be documented correctly.',steps:[{num:1,title:'Identify the change and assess severity',detail:'Document exactly what changed from approved plans. How many devices added/removed? Did control panels move? Did work floors change?',owner:'MEP engineer / GC + PRA'},{num:2,title:'Route A: Minor change → As-built only (no PAA)',detail:'Per FDNY Bulletin 12-11-2023: up to 10 devices/floor added = as-built only. This is the route for B2, A3, A4.',owner:'Design professional'},{num:3,title:'Route B: Major change → PAA required',detail:'PAA required for: 10+ devices added/removed, control panel relocated, system type changed, work floors changed, any ARCS modification.',owner:'Design professional → DOB'}],notes:[]},
+  {id:'proc-permit',icon:'📋',title:'Permit Renewal / Extension Process',subtitle:'B1/B2/A4 GC (exp 5/20/26) · A3 GC (exp 5/20/26)',status:'warn',statusLabel:'⚠ Expiring soon',tags:'permit renewal expiry extension dob gc q00940195 q00919587 blackbull',desc:'Two GC permits expire 5/20/26. Confirm renewal plan immediately.',steps:[{num:1,title:'Confirm if renewal is needed',detail:'If all physical work is complete, renewal may not be required. If work is still ongoing, renewal is mandatory before expiration. Confirm with Muhammad (MBC) and Foremost.',owner:'Muhammad (MBC) + Foremost'},{num:2,title:'File renewal application with DOB',detail:'Muhammad files via DOB NOW. Requires updated insurance, worker\'s comp. Blackbull must provide updated documentation.',owner:'Muhammad (MBC) + Blackbull'},{num:3,title:'DOB issues renewed permit',detail:'Typically a few days to 2 weeks. Must be posted on site.',owner:'DOB → Muhammad (MBC)'}],notes:[{type:'danger',text:'Q00940195-L1-GC (B1/B2/A4) and Q00919587-I1-GC (A3) both expire 5/20/26. Confirm renewal plan this week.'}]},
+  {id:'proc-sc',icon:'✅',title:'Substantial Completion + DOB Letter of Completion (LOC)',subtitle:'Applies to: all HHE phases + JB floors at completion',status:'ref',statusLabel:'Reference',tags:'substantial completion loc letter of completion dob closeout sign-off mep punchlist',desc:'The LOC closes out a construction permit. SC is the contractual milestone that the space is ready for occupancy.',steps:[{num:1,title:'All physical work complete — punchlist issued',detail:'GC declares SC. DEP/DCAS and PRA do a formal walkthrough and issue a punchlist.',owner:'GC + DEP/DCAS + PRA'},{num:2,title:'Collect all required sign-offs',detail:'Required: (1) MEP fire alarm drawings signed by MGE, (2) Arch as-builts signed by AJA, (3) FDNY LOA, (4) BEC/Electrical sign-off, (5) Air balancing report, (6) DOB plumbing sign-off, (7) FA pretest certification, (8) Emergency lighting test.',owner:'MGE + AJA + FDNY + BEC + Testing labs'},{num:3,title:'Muhammad (MBC) files for LOC with DOB',detail:'Once all sign-offs collected, Muhammad files via DOB NOW.',owner:'Muhammad (MBC) → DOB'},{num:4,title:'Substantial Completion letter executed',detail:'Anita Jhamb (Lefrak) issues SC notice. DEP/DCAS signs off. Triggers warranty period and DEP re-occupancy.',owner:'Anita Jhamb (Lefrak) + DEP/DCAS'}],notes:[]}
+];
+
+let liveProcesses = JSON.parse(JSON.stringify(DEFAULT_PROCESSES));
+
+function listenToProcesses() {
+  if (!db || window.location.protocol==='file:') { renderProcesses(); return; }
+  db.collection('processes').doc('library').onSnapshot(snap => {
+    if (snap.exists && snap.data().items?.length) liveProcesses = snap.data().items;
+    else { liveProcesses = JSON.parse(JSON.stringify(DEFAULT_PROCESSES)); db.collection('processes').doc('library').set({items:liveProcesses}); }
+    renderProcesses();
+  }, () => renderProcesses());
+}
+
+async function saveProcesses() {
+  try { localStorage.setItem('pra_processes', JSON.stringify(liveProcesses)); } catch(e) {}
+  if (!db || window.location.protocol==='file:') { renderProcesses(); return; }
+  setSyncStatus('saving');
+  try { await db.collection('processes').doc('library').set({items:liveProcesses}); setSyncStatus('ok'); } catch(e) { setSyncStatus('err'); }
+  renderProcesses();
+}
+
+function renderProcesses() {
+  const container = document.getElementById('proc-list');
+  if (!container) return;
+  const statusColors = {active:'background:var(--blue-dim);color:var(--blue)',warn:'background:var(--red-bg);color:var(--red)',done:'background:var(--green-dim);color:var(--green)',ref:'background:var(--surface2);color:var(--text2)'};
+  container.innerHTML = liveProcesses.map(p => {
+    const noteHtml = (p.notes||[]).map(n => `<div class="proc-note ${n.type==='danger'?'danger':n.type==='success'?'success':n.type==='info'?'info':''}">${linkify(n.text)}</div>`).join('');
+    const stepsHtml = (p.steps||[]).map(s => `<div class="proc-step"><div class="proc-step-num">${s.num}</div><div class="proc-step-body"><div class="proc-step-title">${linkify(s.title)}</div><div class="proc-step-detail">${linkify(s.detail||'')}</div>${s.owner?`<span class="proc-step-owner">👤 ${linkify(s.owner)}</span>`:''}</div></div>`).join('');
+    return `<div class="proc-card" data-tags="${escH(p.tags||'')}">
+      <div class="proc-header" onclick="toggleProc('pb-${p.id}')">
+        <span class="proc-icon">${p.icon||'📋'}</span>
+        <div><div class="proc-title">${escH(p.title)}</div>${p.subtitle?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${escH(p.subtitle)}</div>`:''}</div>
+        <span class="proc-tag" style="${statusColors[p.status]||statusColors.ref}">${escH(p.statusLabel||'')}</span>
+        <span class="proc-toggle" id="toggle-pb-${p.id}">▼</span>
+      </div>
+      <div class="proc-body" id="pb-${p.id}">
+        ${p.desc?`<div class="proc-desc">${linkify(p.desc)}</div>`:''}
+        <div class="proc-steps">${stepsHtml}</div>
+        ${noteHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProcesses(query) {
+  const q = (query||'').toLowerCase().trim();
+  document.querySelectorAll('#proc-list .proc-card').forEach(card => {
+    if (!q) { card.style.display=''; return; }
+    card.style.display = (card.dataset.tags||'').toLowerCase().includes(q) || card.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── SCHEDULE DATA ─────────────────────────────────────────
 
 const SCHEDULE_PHASES = [
   {
@@ -4097,6 +4022,9 @@ function initRender() {
   updateActionBadge();
   renderSchedule();
   initSearch();
+  renderMeetings();
+  setTimeout(() => { renderProcessOverlays(); renderMeetingOverlays(); }, 100);
+  renderProcesses();
 }
 
 initRender();

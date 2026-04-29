@@ -2888,7 +2888,7 @@ function renderContacts() {
         <div class="cr">${escH(c.role||'')}</div>
         ${c.email?`<div class="ce" onclick="event.stopPropagation();navigator.clipboard.writeText('${escH(c.email)}');showToast('Email copied!')" style="cursor:pointer" title="Click to copy">${escH(c.email)}</div>`:''}
         ${c.notes?`<div class="cn2">${linkify(c.notes)}</div>`:''}
-        <div style="margin-top:6px"><span class="lk" data-search="${escH(c.name.split(' ')[0])}" onclick="searchKeyword(this.dataset.search)">See all related items →</span></div>
+        <div style="margin-top:6px"><span class="lk" data-s="${encodeURIComponent(c.name.split(' ')[0])}" onclick="searchKeyword(decodeURIComponent(this.dataset.s))">See all related items →</span></div>
       </div>`;
     });
     html += `</div>`;
@@ -3879,7 +3879,8 @@ function linkify(text) {
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
     const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
-    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-search="' + m.replace(/"/g,'&quot;') + '" onclick="searchKeyword(this.dataset.search)">' + m + '</span>');
+    // Use encodeURIComponent to safely store search term in data attribute
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-s="' + encodeURIComponent(m) + '" onclick="searchKeyword(decodeURIComponent(this.dataset.s))">' + m + '</span>');
   });
   return result;
 }
@@ -3890,7 +3891,7 @@ function linkifyRaw(text) {
   LINK_TERMS_TYPED.forEach(({term, type}) => {
     const et = escH(term);
     const rx = new RegExp('(?<![\\w>])(' + et.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![\\w<])','gi');
-    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-search="' + m.replace(/"/g,'&quot;') + '" onclick="searchKeyword(this.dataset.search)">' + m + '</span>');
+    result = result.replace(rx, m => '<span class="lk lk-' + type + '" data-s="' + encodeURIComponent(m) + '" onclick="searchKeyword(decodeURIComponent(this.dataset.s))">' + m + '</span>');
   });
   return result;
 }

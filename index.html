@@ -2775,24 +2775,28 @@ function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateSt
     html+=`<div class="card" style="border-color:var(--red-border);background:var(--red-bg)"><div class="card-title" style="color:var(--red)">🚨 Permit Expiry Warnings</div>${permitWarnings.map(p=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--red-border)"><strong style="color:var(--red)">${escH(p.permit)}</strong> — expires ${new Date(p.expires).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} <strong style="color:var(--red)">(${p.daysLeft} days left)</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">→ Confirm with <span class="lk" onclick="searchKeyword('Foremost');goto('search',null)">Foremost</span> / <span class="lk" onclick="searchKeyword('Muhammad');goto('search',null)">Muhammad</span> whether closeout or renewal is planned immediately</div></div>`).join('')}</div>`;
   }
   if (b.urgent?.length) {
-    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:600">!</span><span>${linkify(u)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:600">!</span><span class="brief-lk">${escH(u)}</span></div>`).join('')}</div>`;
   }
   if (overdueActions.length) {
-    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1">${linkify(a.action)}<div style="font-size:11px;color:var(--text3)">👤 ${linkify(a.owner||'')} · ${linkify(a.area||'')}</div></div><button class="btn btn-g" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1"><span class="brief-lk">${escH(a.action)}</span><div style="font-size:11px;color:var(--text3)">👤 <span class="brief-lk">${escH(a.owner||'')}</span> · <span class="brief-lk">${escH(a.area||'')}</span></div></div><button class="btn btn-g" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
   }
   if (b.push_today?.length) {
-    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--gold);flex-shrink:0;font-weight:600">→</span><span>${linkify(p)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--gold);flex-shrink:0;font-weight:600">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}</div>`;
   }
   if (todayMeetings.length || b.meetings_today?.length) {
-    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><strong>${escH(m.time)}</strong> — ${linkify(m.name)}</div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ ${linkify(n)}</div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><strong>${escH(m.time)}</strong> — <span class="brief-lk">${escH(m.name)}</span></div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ <span class="brief-lk">${escH(n)}</span></div>`).join('')}</div>`;
   }
   if (b.watch?.length) {
-    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text3)">○</span><span>${linkify(w)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text3)">○</span><span class="brief-lk">${escH(w)}</span></div>`).join('')}</div>`;
   }
   if (b.donna_draft) {
     html+=`<div class="card"><div class="card-title">📧 Donna Cappa weekly update — ready to send</div><div style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--bg2);padding:12px;border-radius:6px;line-height:1.7;margin-bottom:10px;max-height:300px;overflow-y:auto">${escH(b.donna_draft)}</div><button class="btn btn-a" style="font-size:12px" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);showToast('Donna draft copied!')">📋 Copy to clipboard</button></div>`;
   }
   document.getElementById('briefing-container').innerHTML = html;
+  // Post-process: linkify .brief-lk spans after HTML is safely set
+  document.querySelectorAll('#briefing-container .brief-lk').forEach(el => {
+    el.innerHTML = linkify(el.textContent);
+  });
 }
 
 // ── CONTACTS ──────────────────────────────────────────────

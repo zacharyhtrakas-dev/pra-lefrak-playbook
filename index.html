@@ -1149,16 +1149,16 @@ body{
         <div class="proc-step">
           <div class="proc-step-num">1</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">MEP/FA drawings signed by electrical contractor (Troon)</div>
-            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews the as-built riser diagram for accuracy against actual installation and signs the functionality statement. The functionality statement can be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Status as of 4/28/26:</strong> Troon has signed drawings for B2, A3, and A4.</div>
+            <div class="proc-step-title">Fire alarm drawings signed by electrical contractor (Troon)</div>
+            <div class="proc-step-detail">Troon (electrical and FA contractor) reviews and signs the fire alarm drawings — which include a riser diagram where applicable — confirming accuracy against actual installation and signing the functionality statement. The functionality statement can be signed by a Licensed Electrician or NY State Licensed Fire Alarm Installer (raised seal required). <strong>Status as of 4/28/26:</strong> Troon signed drawings for B2, A3, and A4 and FedEx'd back to MGE.</div>
             <span class="proc-step-owner">👤 Troon (elec/FA contractor)</span>
           </div>
         </div>
         <div class="proc-step">
           <div class="proc-step-num">2</div>
           <div class="proc-step-body">
-            <div class="proc-step-title">MEP engineer (MGE) signs and seals as-built riser diagram</div>
-            <div class="proc-step-detail">MGE (MEP engineers, EOR) must draft, sign, and seal the as-built riser diagram reflecting actual installation. Must be 11"x17", include I/O matrix, functionality statement, title block with all job numbers (PW-1, FPIMS, Record ID). Signed and sealed by the licensed design professional who is applicant of record. <strong>Current status B2/A3/A4:</strong> Drawings now at MGE for EOR signature.</div>
+            <div class="proc-step-title">MEP engineer (MGE) signs and seals fire alarm drawings</div>
+            <div class="proc-step-detail">MGE (MEP engineers, EOR) signs and seals the fire alarm drawings including the as-built riser diagram where applicable. Must be signed and sealed by the licensed design professional who is applicant of record. Title block must include all job numbers (PW-1, FPIMS, Record ID). <strong>Current status B2/A3/A4:</strong> Drawings at MGE now — received from Troon 4/28.</div>
             <span class="proc-step-owner">👤 MGE (EOR)</span>
           </div>
         </div>
@@ -1209,7 +1209,7 @@ body{
           <div class="proc-step-num">5</div>
           <div class="proc-step-body">
             <div class="proc-step-title">FDNY inspection occurs — inspector reviews as-built on-site</div>
-            <div class="proc-step-detail">Inspector reviews as-built riser diagram on-site. Tests system. Has discretion to accept minor deviations from approved plans if reflected in as-built. If rejected, inspector will note specific deficiencies — Hi Rise / MGE must resolve and reschedule.</div>
+            <div class="proc-step-detail">Inspector reviews the fire alarm drawings and as-built documentation on-site. Tests system. Has discretion to accept minor deviations from approved plans if reflected in the as-built. If rejected, inspector will note specific deficiencies — Hi Rise / MGE must resolve and reschedule.</div>
             <span class="proc-step-owner">👤 FDNY Inspector</span>
           </div>
         </div>
@@ -2350,7 +2350,7 @@ const TIMELINE_DEFS = {
       {id:'slab', title:'Slab Demo + New Slab', state:'done', date:'Jul–Sep 2025', detail:'Slab demo and new slab on grade complete.'},
       {id:'reconstruction', title:'Reconstruction', state:'done', date:'Sep 2025–Jan 2026', detail:'B1/B2/A4 reconstruction substantially complete. 90%.'},
       {id:'doc_locs', title:'DOB Letters of Completion', state:'done', date:'Mar–Apr 2026', detail:'Arch LOCs received 3/19. Mech LOCs received 4/10. B2 plumbing LOC still pending — plumber to sign off.', rejType:'dob_permit'},
-      {id:'asbuilts', title:'As-Builts & Punchlist Signoffs', state:'warn', date:'Mar 2026–present', detail:'Arch as-builts sent 3/27 by AJA. MEP as-builts still WIP with MGE. MEP + Arch punchlist signoffs under review with EOR/AOR.', rejType:'closeout'},
+      {id:'asbuilts', title:'As-Builts & Punchlist Signoffs', state:'warn', date:'Mar 2026–present', detail:'Arch drawings sent 3/27 by AJA. MEP fire alarm drawings still WIP with MGE. MEP + Arch punchlist signoffs under review with EOR/AOR.', rejType:'closeout'},
       {id:'fa_pretest', title:'FA Pretest (30-day clock)', state:'warn', date:'B1/A4: Feb 2026 · B2: TBD', detail:'B1 and A4 pretests passed 2/2026. B2 pretest failed — additional devices required. Re-pretest must be scheduled. 30-day clock restarts from passing pretest.', rejType:'fdny'},
       {id:'fdny', title:'FDNY Inspection', state:'blocked', date:'PAA filed 4/9/26', detail:'FDNY PAA filed 4/9/26. Inspection date not yet assigned. This is THE current main blocker. Follow up with Hi Rise weekly.', rejType:'fdny'},
       {id:'sc_notice', title:'Substantial Completion Notice', state:'todo', date:'After FDNY + FA clear', detail:'Anita Jhamb (Lefrak) issues SC notice ≥10 business days before anticipated SC date. Full package due 5 business days after notice.'},
@@ -2367,7 +2367,7 @@ const TIMELINE_DEFS = {
       {id:'reconstruction', title:'Reconstruction', state:'active', date:'Sep 2025–present', detail:'A3 reconstruction in progress. A few more weeks remaining. Furniture layout accepted by DCAS 4/21. LV/connect-trac coordination with Mason/DFI underway. Arch (AJA) to send updated layout to DFI.'},
       {id:'lv_coord', title:'Low Voltage Coordination', state:'warn', date:'In progress', detail:'Ceiling was closed before Mason completed LV work — ceiling will need to be opened again. AJA to send updated furniture layout to DFI. Coordinate early to minimize damage.'},
       {id:'dob_locs', title:'DOB Letters of Completion', state:'blocked', date:'After reconstruction', detail:'DOB Arch LOC Q00919587 and Mech LOC Q00919605 — both WIP, not yet received. Required after construction is complete.', rejType:'dob_permit'},
-      {id:'fdny', title:'FDNY', state:'todo', date:'After construction', detail:'FDNY #2023-TMFALM-007841. MGE to sign as-builts and send to Hi Rise to request FDNY inspection.', rejType:'fdny'},
+      {id:'fdny', title:'FDNY', state:'todo', date:'After construction', detail:'FDNY #2023-TMFALM-007841. MGE to sign fire alarm drawings and send to Hi Rise to request FDNY inspection.', rejType:'fdny'},
       {id:'sc_notice', title:'SC Notice + Turnover', state:'todo', date:'TBD ~May 2026', detail:'Estimated completion ~4/20/26 per schedule. SC notice to follow.'}
     ]
   },

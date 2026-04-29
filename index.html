@@ -1503,6 +1503,7 @@ const DEFAULT_STATUSES = {
     {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
     {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'Arch to send updated layout to DFI', cls:'bw', owner:'AJA/DFI/Mason'},
+    {id:'a3_glass_install',item:'Glass partition installation', status:'Glass scheduled to arrive May 6, 2026 (Blackbull trying to get sooner). Installation to follow delivery.', cls:'bw', owner:'Blackbull'},
     {id:'a3_punchlist_walk',item:'AJA Punchlist Walk', status:'Confirmed 5/11/26 at 10:30am — AJA creates PL on walk and sends to team (Foremost confirmed 4/28)', cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
     {id:'acp_5_acp_21',item:'ACP-5 / ACP-21', status:'Foremost to provide ACP-21', cls:'bw', owner:'ECC/D.Jenkins'},
     {id:'hhe_back_corridor',item:'HHE back corridor — ceiling/HVAC removal', status:'PAUSED 4/28 — Sheranne flagged ACM concern on ceiling grid removal. Donna had sampling done night of 4/28. Results pending few days. ECC involved.', cls:'bd', owner:'Donna Cappa / ECC'}
@@ -3848,6 +3849,11 @@ function buildPlaybookContext() {
   sections.push('CONTACTS:\n'+liveContacts.map(c=>'  • '+c.name+' — '+c.role+' ('+c.org+')'+(c.notes?' | '+c.notes.substring(0,100):'')).join('\n'));
   const open = liveActions.filter(a=>a.status==='open');
   if (open.length) sections.push('OPEN ACTIONS:\n'+open.map(a=>'  • ['+a.area+'] '+a.action+' — Owner: '+(a.owner||'?')+' — Due: '+(a.due||'?')).join('\n'));
+  // Include recent update log — this contains field-observed facts like delivery dates
+  if (recentLogEntries && recentLogEntries.length) {
+    const logText = recentLogEntries.slice().reverse().map(d=>`  • [${d.date||''}] [${d.area||''}] ${d.headline||''}${d.detail?' — '+d.detail:''}`).join('\n');
+    sections.push('RECENT UPDATE LOG (field-logged facts, most recent first):\n'+logText);
+  }
   return sections.join('\n\n');
 }
 

@@ -608,6 +608,28 @@ body{
   .more-panel{display:none!important}
 }
 
+/* ── ASK PAGE ── */
+.ask-input-wrap{display:flex;gap:8px;margin-bottom:16px;align-items:flex-start}
+.ask-textarea{flex:1;padding:11px 14px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text);resize:none;min-height:56px;transition:border-color .15s;line-height:1.5}
+.ask-textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(22,34,54,.06)}
+.ask-btn{padding:11px 18px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
+.ask-btn:disabled{opacity:.5;cursor:not-allowed}
+.ask-answer{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.ask-answer-text{font-size:14px;line-height:1.7;color:var(--text);margin-bottom:14px}
+.ask-sources{border-top:1px solid var(--border);padding-top:12px}
+.ask-sources-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;font-family:'DM Mono',monospace}
+.ask-source-item{display:flex;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:6px;margin-bottom:5px;cursor:pointer;transition:background .1s}
+.ask-source-item:hover{background:var(--blue-dim)}
+.ask-source-label{font-size:12px;font-weight:600;color:var(--navy)}
+.ask-source-detail{font-size:11px;color:var(--text3);margin-top:1px}
+.ask-insufficient{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:var(--r);padding:14px;font-size:13px;color:var(--text2);line-height:1.6}
+.ask-chip{display:inline-block;padding:5px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;font-size:12px;cursor:pointer;margin:0 4px 6px 0;color:var(--text2);transition:all .12s}
+.ask-chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ask-prev{padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;cursor:pointer;transition:border-color .12s}
+.ask-prev:hover{border-color:var(--navy)}
+.ask-prev-q{font-size:13px;font-weight:500;color:var(--text)}
+.ask-prev-a{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 /* ── PROCESS LIBRARY ── */
 .proc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .proc-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .13s;touch-action:manipulation}
@@ -762,6 +784,7 @@ body{
   <div class="more-grid">
     <div class="more-item" onclick="mobileGoto('timeline','');toggleMorePanel()"><span class="mi-icon">🗺</span>Timeline</div>
     <div class="more-item" onclick="mobileGoto('schedule','');toggleMorePanel()"><span class="mi-icon">📅</span>Schedule</div>
+    <div class="more-item" onclick="mobileGoto('ask','');toggleMorePanel()"><span class="mi-icon">💬</span>Ask</div>
     <div class="more-item" onclick="mobileGoto('search','');toggleMorePanel()"><span class="mi-icon">🔍</span>Search</div>
     <div class="more-item" onclick="mobileGoto('hhe','');toggleMorePanel()"><span class="mi-icon">🏢</span>HHE</div>
     <div class="more-item" onclick="mobileGoto('jb','');toggleMorePanel()"><span class="mi-icon">🏗</span>JB</div>
@@ -802,6 +825,7 @@ body{
     <div class="nav-item active" onclick="goto('overview',this)"><span class="nav-icon">📊</span>Overview</div>
     <div class="nav-item" onclick="goto('timeline',this)"><span class="nav-icon">🗺</span>Process Timeline</div>
     <div class="nav-item" onclick="goto('schedule',this)"><span class="nav-icon">📅</span>Schedule</div>
+    <div class="nav-item" onclick="goto('ask',this)"><span class="nav-icon">💬</span>Ask a Question</div>
     <div class="nav-item" onclick="goto('search',this)"><span class="nav-icon">🔍</span>Search / Filter</div>
 
     <div class="nav-lbl" style="margin-top:8px">Tools</div>
@@ -1126,6 +1150,31 @@ body{
   </div>
   <div id="schedule-upload-status"></div>
   <div id="schedule-container"></div>
+</div>
+
+<!-- ASK PAGE -->
+<div id="page-ask" class="page">
+  <div class="ph">
+    <div class="ph-title">💬 Ask a Question</div>
+    <div class="ph-sub">Ask anything about the project — answers are drawn from the playbook and cited</div>
+  </div>
+  <div class="ask-input-wrap">
+    <textarea class="ask-textarea" id="ask-input" placeholder="e.g. What's the current status of the FDNY inspection for B2? Who owns the MEP as-builts? What's the next step for 11th floor abatement?" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAsk()}"></textarea>
+    <button class="ask-btn" id="ask-btn" onclick="submitAsk()">Ask</button>
+  </div>
+  <div style="margin-bottom:14px">
+    <span class="ask-chip" onclick="askQuick('What is the current status of the FDNY inspection for B1, B2, A3 and A4?')">FDNY status</span>
+    <span class="ask-chip" onclick="askQuick('What is the next action needed for the 11th floor abatement?')">11th fl next step</span>
+    <span class="ask-chip" onclick="askQuick('When do the HHE GC permits expire and what needs to happen?')">Permit expiry</span>
+    <span class="ask-chip" onclick="askQuick('What is the status of the 10th and 3rd floor ARTS filing?')">10th+3rd ARTS</span>
+    <span class="ask-chip" onclick="askQuick('Who is responsible for the MEP as-builts and what is their status?')">MEP as-builts</span>
+    <span class="ask-chip" onclick="askQuick('What are all the open blockers preventing Substantial Completion for B1 and B2?')">B1/B2 blockers</span>
+  </div>
+  <div id="ask-result"></div>
+  <div id="ask-history-section" style="display:none">
+    <div class="sec-lbl" style="margin-top:16px">Previous questions this session</div>
+    <div id="ask-history"></div>
+  </div>
 </div>
 
 <!-- SEARCH PAGE -->
@@ -3771,6 +3820,94 @@ async function applyScheduleUpdate() {
   document.getElementById('schedule-upload-status').innerHTML = '';
   pendingScheduleResult = null;
   showToast('✓ Schedule updated from MS Project PDF');
+}
+
+// ── ASK A QUESTION ─────────────────────────────────────────
+const askHistory = [];
+
+function askQuick(q) {
+  document.getElementById('ask-input').value = q;
+  goto('ask', document.querySelector('[onclick*="goto(\'ask\'"]'));
+  submitAsk();
+}
+
+function buildPlaybookContext() {
+  const sections = [];
+  const sectionLabels = {'hhe-b1':'B1 — 96-05 HHE','hhe-b2':'B2 — 96-05 HHE','hhe-a3':'A3 — 96-05 HHE','hhe-a4':'A4 — 96-05 HHE','hhe-a5':'A5 — 96-05 HHE','jb-12':'12th Floor — 59-17 JB','jb-11':'11th Floor — 59-17 JB','jb-10':'10th Floor — 59-17 JB','jb-3':'3rd Floor — 59-17 JB'};
+  Object.entries(liveStatuses).forEach(([key, rows]) => {
+    const label = sectionLabels[key]||key;
+    sections.push('STATUS — '+label+':\n'+rows.map(r=>'  • '+r.item+': '+r.status+(r.owner?' [Owner: '+r.owner+']':'')).join('\n'));
+  });
+  Object.entries(TIMELINE_DEFS).forEach(([key, def]) => {
+    const ov = liveTimelineStates[key]||{};
+    sections.push('TIMELINE — '+def.label+':\n'+def.steps.map(s=>'  • ['+((ov[s.id]||s.state).toUpperCase())+'] '+s.title+(s.date?' ('+s.date+')':'')+(ov[s.id+'_detail']||s.detail?' — '+(ov[s.id+'_detail']||s.detail):'')).join('\n'));
+  });
+  SCHEDULE_PHASES.forEach(phase => {
+    sections.push('SCHEDULE — '+phase.label+':\n'+phase.tasks.map(t=>'  • '+t.name+': '+getTaskData(phase.key,t.id,'start',t.start)+' → '+getTaskData(phase.key,t.id,'finish',t.finish)+' ('+getTaskData(phase.key,t.id,'pct',t.pct)+'%)').join('\n'));
+  });
+  sections.push('CONTACTS:\n'+liveContacts.map(c=>'  • '+c.name+' — '+c.role+' ('+c.org+')'+(c.notes?' | '+c.notes.substring(0,100):'')).join('\n'));
+  const open = liveActions.filter(a=>a.status==='open');
+  if (open.length) sections.push('OPEN ACTIONS:\n'+open.map(a=>'  • ['+a.area+'] '+a.action+' — Owner: '+(a.owner||'?')+' — Due: '+(a.due||'?')).join('\n'));
+  return sections.join('\n\n');
+}
+
+async function submitAsk() {
+  const input = document.getElementById('ask-input');
+  const btn = document.getElementById('ask-btn');
+  const resultEl = document.getElementById('ask-result');
+  const q = input.value.trim();
+  if (!q) return;
+  btn.disabled = true; btn.textContent = '…';
+  resultEl.innerHTML = `<div class="ask-answer"><div class="ask-answer-text" style="color:var(--text3)">Searching the playbook...</div></div>`;
+  try {
+    const context = buildPlaybookContext();
+    const prompt = `You are an assistant for a construction PMO playbook for PRA Consulting managing two NYC DEP/DCAS projects:
+- 96-05 Horace Harding Exwy (HHE) — ground floor lobby phases B1/B2/A3/A4/A5
+- 59-17 Junction Blvd (JB) — upper floors 3rd/10th/11th/12th
+
+PLAYBOOK DATA:
+${context}
+
+USER QUESTION: ${q}
+
+INSTRUCTIONS:
+- Answer ONLY from the playbook data above. Do not use outside knowledge.
+- If data is insufficient, set canAnswer to false and explain what is missing.
+- For every fact, cite the source using [SOURCE: section — item].
+- Be concise. Lead with the answer.
+
+Respond ONLY with valid JSON (no backticks):
+{"canAnswer":true,"answer":"answer with [SOURCE: ...] citations","insufficientReason":"if canAnswer false","sources":[{"section":"STATUS — B2 — 96-05 HHE","item":"FDNY inspection","value":"current status text"}],"confidence":"high"}`;
+
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    const data = await resp.json();
+    if (!data.content) throw new Error(data.error?.message||'API error');
+    const parsed = safeParseJSON(data.content.map(c=>c.text||'').join(''));
+
+    const confBadge = {'high':'<span style="background:var(--green-dim);color:var(--green);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">High confidence</span>','medium':'<span style="background:var(--amber-dim);color:var(--amber);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">Medium confidence</span>','low':'<span style="background:var(--red-bg);color:var(--red);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">Low confidence</span>'}[parsed.confidence||'medium']||'';
+
+    if (!parsed.canAnswer) {
+      resultEl.innerHTML = `<div class="ask-answer"><div style="font-size:12px;color:var(--text3);margin-bottom:8px">Q: <strong style="color:var(--text)">${escH(q)}</strong></div><div class="ask-insufficient"><strong>⚠ Not enough information in the playbook to answer this.</strong><br><br>${escH(parsed.insufficientReason||'')}</div></div>`;
+    } else {
+      const srcs = (parsed.sources||[]).map(s=>`<div class="ask-source-item" data-lk="1">${s.section||''} — ${s.item||''}<div class="ask-source-detail">${escH((s.value||'').substring(0,120))}</div></div>`).join('');
+      resultEl.innerHTML = `<div class="ask-answer"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px"><div style="font-size:12px;color:var(--text3)">Q: <strong style="color:var(--text)">${escH(q)}</strong></div>${confBadge}</div><div class="ask-answer-text brief-lk">${escH(parsed.answer||'')}</div>${srcs?`<div class="ask-sources"><div class="ask-sources-lbl">📎 Sources (tap to search)</div>${srcs}</div>`:''}</div>`;
+      resultEl.querySelectorAll('.brief-lk').forEach(el=>{ el.innerHTML = linkify(el.textContent); });
+    }
+    askHistory.unshift({q, a:(parsed.answer||parsed.insufficientReason||'').substring(0,100)});
+    renderAskHistory();
+  } catch(e) {
+    resultEl.innerHTML = `<div class="ask-answer"><div style="color:var(--red);font-size:13px">Error: ${escH(e.message)}</div></div>`;
+  }
+  btn.disabled = false; btn.textContent = 'Ask';
+  input.value = '';
+}
+
+function renderAskHistory() {
+  const hist = document.getElementById('ask-history');
+  const sec = document.getElementById('ask-history-section');
+  if (!hist||!askHistory.length) return;
+  sec.style.display='block';
+  hist.innerHTML = askHistory.slice(0,5).map(h=>`<div class="ask-prev" onclick="document.getElementById('ask-input').value=${JSON.stringify(h.q)};submitAsk()"><div class="ask-prev-q">${escH(h.q)}</div><div class="ask-prev-a">${escH(h.a)}...</div></div>`).join('');
 }
 
 // ── LINKIFY ────────────────────────────────────────────────

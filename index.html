@@ -2415,7 +2415,7 @@ KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby p
 CRITICAL: Return ONLY valid JSON. No preamble.
 {"headline":"one sentence","urgent":["item1","item2"],"push_today":["who + what to say"],"watch":["item"],"meetings_today":["prep note if meetings"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one good thing"}`;
 
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
     const raw = data.content.map(c=>c.text||'').join('');
@@ -2999,14 +2999,14 @@ async function submitToAI() {
     }
     userContent.push({type:'text',text:input||'Analyze the attached file and determine what project information it contains.'});
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:2000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
     });
     if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'API error '+resp.status);}
     const data=await resp.json();
     const raw=data.content.map(c=>c.text||'').join('');
         let parsed;
     try{parsed=safeParseJSON(raw);}
-    catch(e){throw new Error('JSON parse failed. Raw snippet: '+raw.substring(f,Math.min(f+300,l+1)));}
+    catch(e){throw new Error('JSON parse failed. Raw: '+raw.substring(0,200));}
     pendingResult=parsed;
     renderAIResponse(parsed);
   } catch(e) {
@@ -3759,7 +3759,7 @@ Floor 10: t_10_pack, t_10_vacate, t_10_demo_corridor, t_10_demo_carpet, t_10_dem
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:2000,
+      body: JSON.stringify({model:'claude-sonnet-4-5-20251001', max_tokens:2000,
         messages:[{role:'user',content:[
           {type:'image',source:{type:'base64',media_type:mime,data:parts[1]}},
           {type:'text',text:prompt}
@@ -3885,7 +3885,7 @@ INSTRUCTIONS:
 Respond ONLY with valid JSON (no backticks):
 {"canAnswer":true,"answer":"answer with [SOURCE: ...] citations","insufficientReason":"if canAnswer false","sources":[{"section":"STATUS — B2 — 96-05 HHE","item":"FDNY inspection","value":"current status text"}],"confidence":"high"}`;
 
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
     if (!data.content) throw new Error(data.error?.message||'API error');
     const parsed = safeParseJSON(data.content.map(c=>c.text||'').join(''));

@@ -1475,7 +1475,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc_q00940195',item:'DOB Arch LOC — Q00940195', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q00940285',item:'DOB Mech LOC — Q00940285', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_q01342765_i1_pl',item:'DOB Plumbing — Q01342765-I1-PL', status:'Plumber needs to sign off', cls:'bw', owner:'Muhammad (MBC)'},
-    {id:'fdny_2025_tmfalm_00516',item:'FDNY — #2025-TMFALM-00516', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
+    {id:'fdny_2025_tmfalm_00516',item:'FDNY — #2025-TMFALM-00516', status:'CORRECTION 5/4/26: As-builts still with Troon (Foremost gave incorrect info earlier). Troon signing by Tues 5/4, overnight FedEx to MGE. MGE signs Wed 5/5, overnight FedEx to Hi Rise. Hi Rise receives Thurs 5/6 and requests FDNY inspection same day.', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'electrical_bec_bis_q01186589',item:'Electrical BEC BIS — Q01186589', status:'Passed — awaits all phases', cls:'bi', owner:'Ary (Blackbull)'},
     {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
     {id:'fa_pretest',item:'FA Pretest', status:'Additional devices required — re-pretest TBD', cls:'bd', owner:'Blackbull'},
@@ -1488,7 +1488,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc_q01286541',item:'DOB Arch LOC — Q01286541', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q01286552',item:'DOB Mech LOC — Q01286552', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing',item:'DOB Plumbing', status:'N/A', cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_20258_tmfalm_007621',item:'FDNY — #20258-TMFALM-007621', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
+    {id:'fdny_20258_tmfalm_007621',item:'FDNY — #20258-TMFALM-007621', status:'CORRECTION 5/4/26: As-builts still with Troon (Foremost gave incorrect info earlier). Troon signing by Tues 5/4, overnight FedEx to MGE. MGE signs Wed 5/5, overnight FedEx to Hi Rise. Hi Rise receives Thurs 5/6 and requests FDNY inspection same day.', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
     {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
     {id:'arch_as_builts_aja',item:'Arch As-Builts (AJA)', status:'Sent 3/27', cls:'bs', owner:'AJA'},
@@ -1500,7 +1500,7 @@ const DEFAULT_STATUSES = {
     {id:'reconstruction',item:'Reconstruction', status:'In progress. Glass scheduled May 6 (BB trying sooner). FA devices delivered 4/28. Furniture relocation by 5/1. Dropbox expected 5/15.', cls:'bi', owner:'Blackbull'},
     {id:'dob_arch_loc_q00919587',item:'DOB Arch LOC — Q00919587', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q00919605',item:'DOB Mech LOC — Q00919605', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'Drawings signed by Troon 4/28 — now at MGE (EOR) for signature → Hi Rise → FDNY inspection request', cls:'bw', owner:'MGE → Hi Rise'},
+    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'Hi Rise has signed and sealed A3 as-builts. Requesting FDNY inspection Tuesday 5/4/26.', cls:'bw', owner:'MGE → Hi Rise'},
     {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
     {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'Arch to send updated layout to DFI', cls:'bw', owner:'AJA/DFI/Mason'},
     {id:'a3_glass_install',item:'Glass partition installation', status:'Glass scheduled to arrive May 6, 2026 (Blackbull trying to get sooner). Installation to follow delivery.', cls:'bw', owner:'Blackbull'},
@@ -1965,10 +1965,25 @@ function subShow(prefix,id,btn) {
 }
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function safeParseJSON(raw) {
-  const clean = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+  if (!raw) throw new Error('Empty response');
+  // Strip code fences
+  let clean = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  // Find outermost JSON object
   const f = clean.indexOf('{'), l = clean.lastIndexOf('}');
-  if (f===-1||l===-1) throw new Error('No JSON found: ' + clean.substring(0,200));
-  return JSON.parse(clean.substring(f,l+1));
+  if (f===-1||l===-1) throw new Error('No JSON object found in response');
+  try {
+    return JSON.parse(clean.substring(f, l+1));
+  } catch(e1) {
+    // Try fixing common issues: smart quotes, unescaped apostrophes in values
+    try {
+      const fixed = clean.substring(f, l+1)
+        .replace(/[\u2018\u2019]/g,"'")
+        .replace(/[\u201C\u201D]/g,'"');
+      return JSON.parse(fixed);
+    } catch(e2) {
+      throw new Error('JSON parse failed: ' + e1.message + ' | Raw: ' + clean.substring(f, Math.min(f+200, l+1)));
+    }
+  }
 }
 
 // ── TIMELINES ─────────────────────────────────────────────
@@ -2410,7 +2425,7 @@ RECENT LOG: ${recentCtx||'None'}
 OVERDUE ACTIONS: ${overdueActions.map(a=>a.action).join(' | ')||'None'}
 PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days`).join(' | ')||'None'}
 TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None'}
-KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby phases only: B1/B2/A3/A4/A5) and 59-17 JB (upper floors: 3rd/10th/11th/12th). Never mention a third building. FDNY STATUS (critical — get this right): B2/A3/A4 drawings were signed by Troon (elec contractor) 4/28/26 and FedExed to MGE. MGE (EOR/MEP engineer) must now sign and seal the as-builts — ONLY AFTER MGE signs does Hi Rise submit to FDNY and call for inspection. Do NOT ever suggest following up with Hi Rise on FDNY until MGE has confirmed they signed and sent. B1: PAA filed 4/9/26 is in FDNY system awaiting approval — Hi Rise cannot even request inspection on B1 until FDNY approves the PAA. B2 FA pretest needs additional devices (FA devices delivered 4/28). B2 plumber unsigned. GC permits expire 5/20/26. 10th fl ARTS under DEP review. 11th fl: elevator lobby closes 5/15, soft demo 5/18-5/20, abatement 5/29-6/1, reconstruction 6/4, DEP occupies 9/28-9/29/26. ARTS filing for 10th+3rd scheduled through 6/12/26.
+KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby phases only: B1/B2/A3/A4/A5) and 59-17 JB (upper floors: 3rd/10th/11th/12th). Never mention a third building. FDNY STATUS (critical — get this right): CORRECTION as of 5/4/26 — Foremost gave incorrect info earlier. A4 and B2 as-builts are still with Troon. Troon signing by 5/4, overnight FedEx to MGE, MGE signs 5/5, overnight to Hi Rise, Hi Rise receives 5/6 and requests inspection. A3: Hi Rise already has signed/sealed as-builts and is requesting FDNY inspection 5/4/26. MGE (EOR/MEP engineer) must now sign and seal the as-builts — ONLY AFTER MGE signs does Hi Rise submit to FDNY and call for inspection. Do NOT ever suggest following up with Hi Rise on FDNY until MGE has confirmed they signed and sent. B1: PAA filed 4/9/26 is in FDNY system awaiting approval — Hi Rise cannot even request inspection on B1 until FDNY approves the PAA. B2 FA pretest needs additional devices (FA devices delivered 4/28). B2 plumber unsigned. GC permits expire 5/20/26. 10th fl ARTS under DEP review. 11th fl: elevator lobby closes 5/15, soft demo 5/18-5/20, abatement 5/29-6/1, reconstruction 6/4, DEP occupies 9/28-9/29/26. ARTS filing for 10th+3rd scheduled through 6/12/26.
 
 CRITICAL: Return ONLY valid JSON. No preamble.
 {"headline":"one sentence","urgent":["item1","item2"],"push_today":["who + what to say"],"watch":["item"],"meetings_today":["prep note if meetings"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one good thing"}`;
@@ -2999,7 +3014,7 @@ async function submitToAI() {
     }
     userContent.push({type:'text',text:input||'Analyze the attached file and determine what project information it contains.'});
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:2000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
+      body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:4000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
     });
     if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'API error '+resp.status);}
     const data=await resp.json();

@@ -1329,13 +1329,9 @@ function initFirebase() {
       firebase.initializeApp(firebaseConfig);
     }
     db = firebase.firestore();
-    // Enable offline persistence so it works even with spotty connection
-    db.enablePersistence({synchronizeTabs: true}).catch(err => {
-      if (err.code === 'failed-precondition') {
-        // Multiple tabs open — persistence only in one
-        db.enablePersistence();
-      }
-    });
+    // Use recommended persistence setting (replaces deprecated enableMultiTabIndexedDbPersistence)
+    try { db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED }); } catch(e) {}
+    db.enablePersistence({synchronizeTabs: true}).catch(() => {});
     const fbTimeout = setTimeout(() => {
       console.warn('Firebase timeout — falling back to localStorage');
       setSyncStatus('local');

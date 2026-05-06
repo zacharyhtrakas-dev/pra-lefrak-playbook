@@ -2612,14 +2612,11 @@ ${crossRefSummary}
 PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days (${p.expires})`).join(' | ')||'None'}
 TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None scheduled'}
 
-KEY CONTEXT: GC: Blackbull everywhere. FA contractor: Scutum (formerly Hi Rise). FDNY: B1 PAA #2025-TMFALM-007622-PLAN pending, B2/A3/A4 as-builts sent to MGE→Scutum for inspection. A3 FDNY inspection requested 5/5/26, SC target May 15. A3 FA pretest: extra devices needed (not yet installed — THIS IS A BLOCKER for A3 FDNY inspection and closeout). A1 FDNY inspection May 12. AJA punchlist walk May 11. 10th fl GC permits blocked pending data center access agreement. GC permits expire 5/20/26. B2 plumbing LOC unsigned. B2 structural LOC pending.
+INSTRUCTIONS: Surface everything — cross-reference all data sources. Never omit a blocker. Blockers and cross-ref flags take priority.
 
-INSTRUCTIONS: Surface EVERYTHING that matters — cross-reference all data sources. If the status table, action items, log, or cross-ref flags all say something needs attention, it MUST appear. Never omit a blocker.
+Return ONLY valid JSON, no preamble: {"headline":"string","urgent":["..."],"push_today":["who + what"],"watch":["..."],"meetings_today":["..."],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"string"}`;
 
-CRITICAL: Return ONLY valid JSON. No preamble.
-{"headline":"one sentence summary of the day","urgent":["specific blocker or overdue item"],"push_today":["who + exactly what to say/ask"],"watch":["item to monitor this week"],"meetings_today":["prep note if meetings today"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one concrete win or positive development"}`;
-
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,stream:false,messages:[{role:'user',content:prompt}]})});
 
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
@@ -3308,7 +3305,7 @@ async function submitToAI() {
     }
     userContent.push({type:'text',text:input||'Analyze the attached file and determine what project information it contains.'});
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
     });
     if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'API error '+resp.status);}
     const data=await resp.json();

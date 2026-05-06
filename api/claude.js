@@ -5,12 +5,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
 
-  // Enforce max_tokens cap to prevent timeouts
   const body = {...req.body};
-  if (!body.max_tokens || body.max_tokens > 1500) body.max_tokens = 1500;
+  if (!body.max_tokens || body.max_tokens > 2000) body.max_tokens = 2000;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 55000); // 55s hard abort
+  const timeout = setTimeout(() => controller.abort(), 55000);
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -29,7 +28,7 @@ export default async function handler(req, res) {
   } catch(e) {
     clearTimeout(timeout);
     if (e.name === 'AbortError') {
-      return res.status(504).json({error: 'Request timed out — try again or reduce content length'});
+      return res.status(504).json({error: 'Request timed out — try again'});
     }
     return res.status(500).json({error: e.message});
   }

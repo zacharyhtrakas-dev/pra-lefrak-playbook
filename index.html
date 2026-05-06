@@ -2008,23 +2008,43 @@ function subShow(prefix,id,btn) {
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function safeParseJSON(raw) {
   if (!raw) throw new Error('Empty response');
-  // Strip code fences
+  // Strip code fences and leading text
   let clean = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
   // Find outermost JSON object
-  const f = clean.indexOf('{'), l = clean.lastIndexOf('}');
-  if (f===-1||l===-1) throw new Error('No JSON object found in response');
-  try {
-    return JSON.parse(clean.substring(f, l+1));
-  } catch(e1) {
-    // Try fixing common issues: smart quotes, unescaped apostrophes in values
+  const f = clean.indexOf('{');
+  if (f === -1) throw new Error('No JSON object found in response');
+  let jsonStr = clean.substring(f);
+  // Try full parse first
+  const l = jsonStr.lastIndexOf('}');
+  if (l !== -1) {
+    try { return JSON.parse(jsonStr.substring(0, l+1)); } catch(e) {}
+    // Try with smart quote fix
     try {
-      const fixed = clean.substring(f, l+1)
+      return JSON.parse(jsonStr.substring(0, l+1)
         .replace(/[\u2018\u2019]/g,"'")
-        .replace(/[\u201C\u201D]/g,'"');
-      return JSON.parse(fixed);
-    } catch(e2) {
-      throw new Error('JSON parse failed: ' + e1.message + ' | Raw: ' + clean.substring(f, Math.min(f+200, l+1)));
+        .replace(/[\u201C\u201D]/g,'"'));
+    } catch(e) {}
+  }
+  // Response may be truncated — try to recover partial JSON
+  // Close any open arrays/objects
+  try {
+    let partial = jsonStr;
+    // Count open brackets to determine how many to close
+    let opens = 0, openSquare = 0;
+    for (const ch of partial) {
+      if (ch === '{') opens++;
+      else if (ch === '}') opens--;
+      else if (ch === '[') openSquare++;
+      else if (ch === ']') openSquare--;
     }
+    // Close unclosed strings first (remove trailing partial string)
+    partial = partial.replace(/,?\s*"[^"]*$/, '');
+    // Close open arrays then objects
+    for (let i = 0; i < openSquare; i++) partial += '"]';
+    for (let i = 0; i < opens; i++) partial += '}';
+    return JSON.parse(partial);
+  } catch(e) {
+    throw new Error('JSON parse failed. Raw: ' + clean.substring(f, f+300));
   }
 }
 
@@ -3180,7 +3200,7 @@ function removeFile(){attachedFile=null;attachedFileData=null;document.getElemen
 // ── AI ASSISTANT ──────────────────────────────────────────
 const SYSTEM_PROMPT = `You are an elite PMO AI embedded in a live project management playbook for PRA Consulting. You serve Zachary Trakas, project coordinator for Lefrak/DEP construction projects in Queens, NY.
 
-CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation. Start with { end with }.
+CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation, no code fences. Start with { end with }. Keep all string values CONCISE — max 150 chars each. Do not write paragraphs inside JSON strings.
 
 ═══════════════════════════════════════
 INTELLIGENCE RULES — READ FIRST

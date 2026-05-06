@@ -711,8 +711,7 @@ body{
 .schedule-dates{display:flex;flex-direction:column;gap:3px;align-items:flex-end;min-width:110px}
 .schedule-date-group{display:flex;flex-direction:column;align-items:flex-end}
 .schedule-date-label{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--text4);font-family:'DM Mono',monospace}
-.schedule-date-val{font-size:12px;font-family:'DM Mono',monospace;color:var(--text2);font-weight:500;cursor:pointer;padding:3px 7px;border-radius:5px;border:1px solid transparent;transition:all .13s;white-space:nowrap}
-.schedule-date-val:hover{border-color:var(--border2);background:var(--surface3);color:var(--navy)}
+.schedule-date-val{font-size:12px;font-family:'DM Mono',monospace;color:var(--text2);font-weight:500;padding:3px 7px;border-radius:5px;white-space:nowrap;cursor:default}
 .pct-badge{font-size:11px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:5px;font-weight:600;min-width:40px;text-align:center}
 .pct-100{background:var(--green-dim);color:var(--green)}
 .pct-high{background:var(--blue-dim);color:var(--blue)}
@@ -825,7 +824,7 @@ body{
   <div class="sync-bar"><span class="sync-dot" id="sdot"></span><span id="slbl">Connecting...</span></div>
   <div class="nav-sec">
     <div class="nav-lbl">Priority</div>
-    <div class="nav-item" onclick="goto('briefing',this)"><span class="nav-icon">☀️</span>Today's Briefing</div>
+    <div class="nav-item" onclick="goto('briefing',this)"><span class="nav-icon">☀️</span>Today's Briefing<span id="crossref-badge" class="nav-badge" style="display:none;background:var(--blue);margin-left:auto"></span></div>
     <div class="nav-item" onclick="goto('actions',this)"><span class="nav-icon">⚡</span>Action Items<span class="nav-badge" id="nav-actions-badge" style="display:none">0</span></div>
 
     <div class="nav-lbl" style="margin-top:8px">Projects</div>
@@ -1158,13 +1157,17 @@ body{
   <div class="ph" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
     <div>
       <div class="ph-title">📅 Schedule</div>
-      <div class="ph-sub">59-17 Junction Blvd · View, edit, and export · Tap any date to edit</div>
+      <div class="ph-sub">59-17 Junction Blvd · Read-only · Upload a new MS Project PDF to update dates</div>
     </div>
     <div class="export-bar">
       <button class="btn btn-p" onclick="exportSchedulePDF()" style="gap:6px">🖨 Export PDF</button>
-      <button class="btn btn-g" onclick="document.getElementById('schedule-pdf-upload').click()">📄 Upload MS Project PDF</button>
+      <button class="btn btn-a" onclick="document.getElementById('schedule-pdf-upload').click()" style="gap:6px">📄 Upload MS Project PDF to update</button>
       <input type="file" id="schedule-pdf-upload" accept=".pdf,application/pdf" style="display:none" onchange="handleSchedulePDFUpload(event)">
     </div>
+  </div>
+  <div class="alert alert-i" style="margin-bottom:12px">
+    <span class="alert-icon">🔒</span>
+    <div>Schedule is <strong>read-only</strong>. To update dates, upload a new Microsoft Project PDF export using the button above — the AI will extract and apply the changes automatically.</div>
   </div>
   <div id="schedule-upload-status"></div>
   <div id="schedule-container"></div>
@@ -1633,6 +1636,7 @@ function listenToStatuses() {
       db.collection('statuses').doc('current').set(JSON.parse(JSON.stringify(DEFAULT_STATUSES)));
     }
     renderAllTables();
+    triggerCrossRef();
   }, () => renderAllTables());
   // Listen to timeline state overrides
   db.collection('timeline_states').doc('current').onSnapshot(snap => {
@@ -2346,6 +2350,7 @@ function listenToActions() {
     }
     else { db.collection('actions').doc('list').set({items: SEED_ACTIONS}); liveActions = [...SEED_ACTIONS]; }
     renderActions();
+    triggerCrossRef();
   }, () => { liveActions = [...SEED_ACTIONS]; renderActions(); });
 }
 
@@ -2546,6 +2551,10 @@ const WEEKLY_MEETINGS = [
 ];
 
 async function generateBriefing() {
+  // Wait for Firebase to be ready
+  if (db && Object.keys(liveStatuses).every(k => liveStatuses[k] === (DEFAULT_STATUSES[k] || liveStatuses[k]))) {
+    await new Promise(r => setTimeout(r, 600));
+  }
   const btn = document.getElementById('briefing-btn');
   btn.disabled=true; btn.textContent='Generating...';
   const container = document.getElementById('briefing-container');
@@ -2557,22 +2566,61 @@ async function generateBriefing() {
     const permitWarnings = PERMIT_EXPIRY.map(p=>{const exp=new Date(p.expires);const days=Math.round((exp-today)/86400000);return {...p,daysLeft:days};}).filter(p=>p.daysLeft<=30);
     const todayMid = new Date(); todayMid.setHours(0,0,0,0);
     const overdueActions = liveActions.filter(a=>a.status!=='done'&&a.due&&new Date(a.due)<todayMid);
+    const openActions = liveActions.filter(a=>a.status!=='done');
     const todayMeetings = WEEKLY_MEETINGS.filter(m=>m.day===today.getDay());
-    const statusSummary = Object.entries(liveStatuses).map(([k,rows])=>`${k}: ${rows.filter(r=>r.cls==='bd'||r.cls==='bw').map(r=>`${r.item}=${r.status}`).join('; ')}`).join('\n');
-    const recentCtx = recentLogEntries.slice(0,5).map(e=>`[${e.date}] ${e.area}: ${e.headline}`).join('\n');
+
+    // Build full status summary — ALL non-green items including blue/info
+    const statusSummary = Object.entries(liveStatuses).map(([k,rows])=>{
+      const issues = rows.filter(r=>r.cls==='bd'||r.cls==='bw'||r.cls==='bi');
+      if(!issues.length) return null;
+      return `${k}:\n${issues.map(r=>`  [${r.cls==='bd'?'BLOCKED':r.cls==='bw'?'PENDING':'INFO'}] ${r.item}: ${r.status}`).join('\n')}`;
+    }).filter(Boolean).join('\n\n');
+
+    // Build open actions by building
+    const actionsByArea = openActions.reduce((acc,a)=>{
+      const area = a.area||'General';
+      if(!acc[area]) acc[area]=[];
+      acc[area].push(`${a.action}${a.owner?' ('+a.owner+')':''}${a.due?' — due '+a.due:''}`);
+      return acc;
+    },{});
+    const actionsSummary = Object.entries(actionsByArea).map(([area,items])=>`${area}:\n${items.map(i=>`  • ${i}`).join('\n')}`).join('\n\n');
+
+    const recentCtx = recentLogEntries.slice(0,8).map(e=>`[${e.date}] ${e.area}: ${e.headline}${e.detail?' — '+e.detail.substring(0,120):''}`).join('\n');
+
+    // Build cross-ref flags
+    const crossRefFlags = window._crossRefFlags || runCrossRef();
+    const crossRefSummary = crossRefFlags.length
+      ? crossRefFlags.map(f => `[${f.type.toUpperCase()}] ${f.msg}`).join('\n')
+      : 'No cross-reference flags';
+
     const prompt = `You are PRA Consulting PMO AI. Generate a sharp daily briefing for Zachary Trakas for ${todayStr}.
 
-PROJECT ISSUES (amber/red items): ${statusSummary}
-RECENT LOG: ${recentCtx||'None'}
-OVERDUE ACTIONS: ${overdueActions.map(a=>a.action).join(' | ')||'None'}
-PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days`).join(' | ')||'None'}
-TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None'}
-KEY CONTEXT: There are EXACTLY TWO buildings — 96-05 HHE (ground floor lobby phases only: B1/B2/A3/A4/A5 + A1) and 59-17 JB (upper floors: 3rd/10th/11th/12th). Never mention a third building. GC CHANGE: Astor & Stone no longer working for Lefrak in any capacity — Blackbull (MBC) assumed their scope everywhere they were working or planned to work. FA CONTRACTOR: Hi Rise rebranded to Scutum — use Scutum everywhere. FDNY STATUS (critical): CORRECTION as of 5/4/26 — A4 and B2 as-builts were still with Troon. Troon signing by 5/4, overnight FedEx to MGE, MGE signs 5/5, overnight to Scutum, Scutum receives 5/6 and requests inspection. A3: Scutum has signed/sealed as-builts and requested FDNY inspection 5/5/26. B1: PAA #2025-TMFALM-007622-PLAN filed 4/9/26 awaiting FDNY approval — Scutum cannot request inspection on B1 until PAA approved. 30-DAY SELF-CERT: If FDNY gives inspection date >30 days after request, Lefrak can self-certify FA if 30 days have passed since pretest passed — self-cert sufficient for closeout. If date is within 30 days of request, must pass FDNY inspection. KEY DATES: A1 FDNY inspection May 12. AJA punchlist walkthrough May 11. A3 SC declared May 15. DCAS & DEP approved 10th fl drawing 5/4/26 — however GC CANNOT yet pull permits until Lefrak/Foremost and DEP/DCAS reach agreement on data center access for 10th fl abatement. Do not say permits can be pulled until that is resolved. ELECTRICAL: B1/B2/A4 elec inspections passed 3/19/26 (permit Q01300039I1EL) — once A3 passes and Troon provides letter, DOB closes permit automatically. B2 FA pretest needs additional devices (FA devices delivered 4/28). B2 plumber unsigned Q01342765-I1-PL (Foremost to check). B2 structural LOC pending MBC sign-off. GC permits expire 5/20/26. 10th fl ARTS under DEP review. 11th fl: elevator lobby closes 5/15, soft demo 5/18-5/20, abatement 5/29-6/1, reconstruction 6/4, DEP occupies 9/28-9/29/26. A3: AJA sent updated layout to DFI and coordinated, Melissa (DCAS) accepted updated quote. BIWEEKLY MEETING: Internal DEP/PRA meeting every other Thursday 11am (next May 14 — organizer Meredith Jackness).
+TWO BUILDINGS ONLY: 96-05 HHE (ground floor phases A1/B1/B2/A3/A4/A5) and 59-17 JB (floors 3/10/11/12).
+
+CURRENT STATUS — ALL OPEN/BLOCKED/PENDING ITEMS:
+${statusSummary||'All items green'}
+
+OPEN ACTION ITEMS (${openActions.length} total, ${overdueActions.length} overdue):
+${actionsSummary||'None'}
+
+RECENT UPDATES LOG (last 8):
+${recentCtx||'None'}
+
+CROSS-REFERENCE FLAGS (inconsistencies detected across data sources — ALWAYS surface these):
+${crossRefSummary}
+
+PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days (${p.expires})`).join(' | ')||'None'}
+TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None scheduled'}
+
+KEY CONTEXT: GC: Blackbull everywhere. FA contractor: Scutum (formerly Hi Rise). FDNY: B1 PAA #2025-TMFALM-007622-PLAN pending, B2/A3/A4 as-builts sent to MGE→Scutum for inspection. A3 FDNY inspection requested 5/5/26, SC target May 15. A3 FA pretest: extra devices needed (not yet installed — THIS IS A BLOCKER for A3 FDNY inspection and closeout). A1 FDNY inspection May 12. AJA punchlist walk May 11. 10th fl GC permits blocked pending data center access agreement. GC permits expire 5/20/26. B2 plumbing LOC unsigned. B2 structural LOC pending.
+
+INSTRUCTIONS: Surface EVERYTHING that matters — cross-reference all data sources. If the status table, action items, log, or cross-ref flags all say something needs attention, it MUST appear. Never omit a blocker.
 
 CRITICAL: Return ONLY valid JSON. No preamble.
-{"headline":"one sentence","urgent":["item1","item2"],"push_today":["who + what to say"],"watch":["item"],"meetings_today":["prep note if meetings"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one good thing"}`;
+{"headline":"one sentence summary of the day","urgent":["specific blocker or overdue item"],"push_today":["who + exactly what to say/ask"],"watch":["item to monitor this week"],"meetings_today":["prep note if meetings today"],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n11th Fl\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"one concrete win or positive development"}`;
 
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
     const raw = data.content.map(c=>c.text||'').join('');
@@ -2587,7 +2635,7 @@ CRITICAL: Return ONLY valid JSON. No preamble.
 
 function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateStr) {
   const genTime = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  let html = '';
+  let html = renderCrossRefPanel();
   // Hero card
   html+=`<div class="card" style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;border-color:var(--navy)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -2919,11 +2967,158 @@ async function saveEditModal() {
 
 // ── AI CONTEXT ENRICHMENT ─────────────────────────────────
 function buildRecentContext() {
-  if (!recentLogEntries.length) return '';
+  if (!recentLogEntries.length && !(window._crossRefFlags||[]).length) return '';
   const entries = recentLogEntries.slice(0,5).map(e =>
     `[${e.date||''}] ${e.area||''}: ${e.headline||''} — ${e.detail||''}`
   ).join('\n');
-  return `\n\nRECENT UPDATE HISTORY (last 5 logged updates — use this to understand project evolution):\n${entries}`;
+  const flags = (window._crossRefFlags||[]).map(f=>`[${f.type}] ${f.msg}`).join('\n');
+  return (entries ? `\n\nRECENT UPDATE HISTORY:\n${entries}` : '') +
+    (flags ? `\n\nCROSS-REFERENCE FLAGS (inconsistencies across data sources — prioritize these):\n${flags}` : '');
+}
+
+// ── CROSS-REFERENCE ENGINE ────────────────────────────────
+// Runs after any data change. Links statuses ↔ actions ↔ log ↔ contacts ↔ processes.
+// Surfaces inconsistencies, missing follow-ups, and stale items across all data.
+
+function runCrossRef() {
+  const flags = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // 1. Blocked/red status items with no open action item
+  Object.entries(liveStatuses).forEach(([key, rows]) => {
+    rows.forEach(row => {
+      if (row.cls !== 'bd' && row.cls !== 'bw') return;
+      const areaPrefix = key.startsWith('hhe') ? '96-05 HHE' : '59-17 JB';
+      const hasAction = liveActions.some(a =>
+        a.status !== 'done' &&
+        (a.area||'').includes(areaPrefix) &&
+        (a.action||'').toLowerCase().includes(row.item.toLowerCase().substring(0,12))
+      );
+      if (!hasAction) {
+        flags.push({
+          type: 'missing_action',
+          area: key,
+          item: row.item,
+          status: row.status,
+          msg: `No open action item for blocked/pending: "${row.item}" (${key})`
+        });
+      }
+    });
+  });
+
+  // 2. Action items referencing a phase/floor that has gone green — may be stale
+  liveActions.forEach(a => {
+    if (a.status === 'done') return;
+    const areaKey = Object.keys(liveStatuses).find(k => {
+      if (k.startsWith('hhe') && (a.area||'').includes('HHE')) return true;
+      if (k.startsWith('jb') && (a.area||'').includes('JB')) return true;
+      return false;
+    });
+    if (!areaKey) return;
+    const rows = liveStatuses[areaKey] || [];
+    const allGreen = rows.length > 0 && rows.every(r => r.cls === 'bs');
+    if (allGreen) {
+      flags.push({
+        type: 'stale_action',
+        actionId: a.id,
+        msg: `Action "${(a.action||'').substring(0,60)}" may be stale — all items for ${areaKey} are green`
+      });
+    }
+  });
+
+  // 3. Log entries that mention a status item but no update was applied
+  recentLogEntries.slice(0, 10).forEach(entry => {
+    const detail = ((entry.headline||'') + ' ' + (entry.detail||'')).toLowerCase();
+    const area = entry.area || '';
+    const areaKey = area.includes('hhe') || area.includes('HHE') || area.includes('96-05')
+      ? Object.keys(liveStatuses).find(k => k.startsWith('hhe') && area.toLowerCase().includes(k.split('-')[1]))
+      : Object.keys(liveStatuses).find(k => k.startsWith('jb') && area.toLowerCase().includes(k.split('-')[1]));
+    if (!areaKey) return;
+    // Check if log mentions a known item but status is still pending
+    (liveStatuses[areaKey]||[]).forEach(row => {
+      const itemWord = (row.item||'').toLowerCase().split(' ')[0];
+      if (itemWord.length < 4) return;
+      if (detail.includes(itemWord) && (detail.includes('passed') || detail.includes('approved') || detail.includes('received') || detail.includes('complete') || detail.includes('done')) && (row.cls === 'bw' || row.cls === 'bd')) {
+        flags.push({
+          type: 'log_status_mismatch',
+          area: areaKey,
+          item: row.item,
+          msg: `Log entry suggests "${row.item}" may be complete, but status still shows ${row.cls==='bd'?'blocked':'pending'} — verify and update`
+        });
+      }
+    });
+  });
+
+  // 4. Overdue actions with no corresponding log entry in past 7 days
+  const sevenDaysAgo = new Date(today); sevenDaysAgo.setDate(sevenDaysAgo.getDate()-7);
+  liveActions.filter(a => a.status !== 'done' && a.due && new Date(a.due) < today).forEach(a => {
+    const hasRecentLog = recentLogEntries.some(e => {
+      const logDate = new Date(e.date);
+      return logDate >= sevenDaysAgo && ((e.area||'').includes(a.area||'') || (e.headline||'').toLowerCase().includes((a.action||'').toLowerCase().substring(0,15)));
+    });
+    if (!hasRecentLog) {
+      flags.push({
+        type: 'overdue_no_log',
+        actionId: a.id,
+        msg: `Overdue action with no recent log update: "${(a.action||'').substring(0,60)}" (due ${a.due})`
+      });
+    }
+  });
+
+  // Store flags in memory for briefing and overview to consume
+  window._crossRefFlags = flags;
+  updateCrossRefBadge(flags);
+  return flags;
+}
+
+function updateCrossRefBadge(flags) {
+  const badge = document.getElementById('crossref-badge');
+  if (!badge) return;
+  const count = flags.filter(f => f.type === 'log_status_mismatch' || f.type === 'missing_action').length;
+  badge.textContent = count > 0 ? count : '';
+  badge.style.display = count > 0 ? 'inline-flex' : 'none';
+}
+
+function renderCrossRefPanel() {
+  const flags = window._crossRefFlags || [];
+  if (!flags.length) return '';
+  const byType = {
+    log_status_mismatch: flags.filter(f=>f.type==='log_status_mismatch'),
+    missing_action: flags.filter(f=>f.type==='missing_action'),
+    stale_action: flags.filter(f=>f.type==='stale_action'),
+    overdue_no_log: flags.filter(f=>f.type==='overdue_no_log'),
+  };
+  let html = `<div class="card" style="border-color:var(--blue-border);background:var(--blue-bg);margin-bottom:14px">
+    <div class="card-title" style="color:var(--blue)">🔗 Cross-reference alerts — ${flags.length} item${flags.length!==1?'s':''} need attention</div>`;
+  if (byType.log_status_mismatch.length) {
+    html += `<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">⚠ Log says done, status still pending</div>`;
+    byType.log_status_mismatch.forEach(f => {
+      html += `<div style="font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--blue-border)">${escH(f.msg)}</div>`;
+    });
+    html += `</div>`;
+  }
+  if (byType.missing_action.length) {
+    html += `<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">🔴 Blocked items with no action item</div>`;
+    byType.missing_action.forEach(f => {
+      html += `<div style="font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--blue-border)">${escH(f.msg)} <button class="btn btn-g" style="font-size:10px;padding:2px 7px;margin-left:6px" onclick="openAddAction()">+ Add action</button></div>`;
+    });
+    html += `</div>`;
+  }
+  if (byType.overdue_no_log.length) {
+    html += `<div><div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">📋 Overdue with no recent update</div>`;
+    byType.overdue_no_log.forEach(f => {
+      html += `<div style="font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--blue-border)">${escH(f.msg)}</div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// Hook cross-ref into all data changes
+const _origRenderActions = typeof renderActions === 'function' ? renderActions : null;
+function triggerCrossRef() {
+  setTimeout(runCrossRef, 200);
 }
 if (typeof pdfjsLib !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -3733,67 +3928,16 @@ function toggleSchedulePhase(id) {
 let activeEditEl = null;
 
 function openDateEdit(phaseKey, taskId, field, currentVal) {
-  // Close any existing edit
-  if (activeEditEl) activeEditEl.innerHTML = '';
-  const container = document.getElementById('stask-edit-' + taskId);
-  if (!container) return;
-  activeEditEl = container;
-
-  // Parse current value for date input
-  const parts = currentVal.match(/(\d+)\/(\d+)\/(\d+)/);
-  let isoVal = '';
-  if (parts) {
-    const yr = parseInt(parts[3]) < 100 ? 2000 + parseInt(parts[3]) : parseInt(parts[3]);
-    isoVal = `${yr}-${String(parts[1]).padStart(2,'0')}-${String(parts[2]).padStart(2,'0')}`;
-  }
-
-  container.innerHTML = `<div class="date-edit-row">
-    <input type="date" class="date-input-field" id="date-input-${taskId}-${field}" value="${isoVal}">
-    <input type="text" class="date-input-field" placeholder="or type: 5/15/26" id="date-text-${taskId}-${field}" style="width:110px">
-    <button class="date-confirm-btn" onclick="confirmDateEdit('${phaseKey}','${taskId}','${field}')">✓</button>
-    <button class="date-cancel-btn" onclick="cancelDateEdit('${taskId}')">✕</button>
-  </div>`;
-  document.getElementById('date-input-' + taskId + '-' + field)?.focus();
+  showToast('Schedule is read-only — upload a new MS Project PDF to update dates');
 }
 
-function confirmDateEdit(phaseKey, taskId, field) {
-  const dateInput = document.getElementById('date-input-' + taskId + '-' + field);
-  const textInput = document.getElementById('date-text-' + taskId + '-' + field);
-  let val = textInput?.value?.trim() || '';
-  if (!val && dateInput?.value) {
-    // Convert ISO to M/D/YY
-    const [y,m,d] = dateInput.value.split('-');
-    val = `${parseInt(m)}/${parseInt(d)}/${y.slice(-2)}`;
-  }
-  if (!val) { cancelDateEdit(taskId); return; }
-  saveScheduleTask(phaseKey, taskId, {[field]: val});
-  cancelDateEdit(taskId);
-  showToast(`✓ Date updated: ${val}`);
-}
-
+function confirmDateEdit(phaseKey, taskId, field) { /* locked */ }
 function cancelDateEdit(taskId) {
   if (activeEditEl) { activeEditEl.innerHTML = ''; activeEditEl = null; }
 }
 
 function openPctEdit(phaseKey, taskId, currentPct) {
-  if (activeEditEl) activeEditEl.innerHTML = '';
-  const container = document.getElementById('stask-edit-' + taskId);
-  if (!container) return;
-  activeEditEl = container;
-  container.innerHTML = `<div class="date-edit-row">
-    <input type="number" class="date-input-field" id="pct-input-${taskId}" value="${currentPct}" min="0" max="100" style="width:70px"> %
-    <button class="date-confirm-btn" onclick="confirmPctEdit('${phaseKey}','${taskId}')">✓</button>
-    <button class="date-cancel-btn" onclick="cancelDateEdit('${taskId}')">✕</button>
-  </div>`;
-  document.getElementById('pct-input-' + taskId)?.focus();
-  document.getElementById('pct-input-' + taskId)?.select();
-}
-
-function confirmPctEdit(phaseKey, taskId) {
-  const val = parseInt(document.getElementById('pct-input-' + taskId)?.value || '0');
-  saveScheduleTask(phaseKey, taskId, {pct: val});
-  cancelDateEdit(taskId);
-  showToast(`✓ ${val}% saved`);
+  showToast('Schedule is read-only — upload a new MS Project PDF to update dates');
 }
 
 function exportSchedulePDF() {

@@ -2353,13 +2353,13 @@ function renderActions() {
   const renderSection = (bLabel, items, order) => {
     if (!items.length) return '';
     let html = `<div class="sec-lbl" style="margin-top:6px">${escH(bLabel)}</div>`;
-    const orderedAreas = [...order.filter(o => items.some(a => (a.area||'General') === o)),
-      ...items.map(a=>a.area||'General').filter(a => !order.includes(a) && !html.includes(escH(a)))];
-    const uniqueAreas = [...new Set(orderedAreas)];
+    const presentAreas = [...new Set(items.map(a => a.area || 'General'))];
+    const uniqueAreas = [...order.filter(o => presentAreas.includes(o)),
+      ...presentAreas.filter(a => !order.includes(a))];
     uniqueAreas.forEach(area => {
-      const aItems = items.filter(a=>(a.area||'General')===area);
+      const aItems = items.filter(a => (a.area || 'General') === area);
       if (!aItems.length) return;
-      const shortLabel = area.replace(/^96-05 HHE — |^59-17 JB — /,'');
+      const shortLabel = area.replace(/^96-05 HHE — |^59-17 JB — /, '');
       html += `<div class="card" style="margin-bottom:8px"><div class="card-title" style="margin-bottom:6px;font-size:11px">${escH(shortLabel)}</div>`;
       aItems.forEach(item => { html += renderActionItem(item); });
       html += `</div>`;

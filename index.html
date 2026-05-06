@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PRA Playbook v5.1 - 2026-05-05 -->
+<!-- PRA Playbook v5.2 - 2026-05-06 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -378,7 +378,16 @@ body{
 .fb-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
 .fb-lbl{font-size:12px;font-weight:700;color:var(--navy);width:100%;margin-bottom:3px}
 
-/* ── UPDATE LOG ── */
+/* ── BACK TO TOP ── */
+#back-to-top{
+  position:fixed;bottom:90px;right:18px;width:38px;height:38px;border-radius:50%;
+  background:var(--navy);color:#fff;border:none;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;z-index:100;
+  box-shadow:var(--shadow);transition:all .2s;opacity:0;
+}
+#back-to-top.visible{display:flex;opacity:1}
+#back-to-top:hover{background:var(--navy-mid);transform:translateY(-2px)}
+@media(min-width:769px){#back-to-top{bottom:24px}}
 .log-entry{padding:11px 0;border-bottom:1px solid var(--border);font-size:13px}
 .log-entry:last-child{border-bottom:none;padding-bottom:0}
 .log-hdr{display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
@@ -742,6 +751,7 @@ body{
 </style>
 </head>
 <body>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 <div class="topbar"></div>
 
 <!-- MOBILE TOP BAR -->
@@ -855,14 +865,12 @@ body{
       <div class="ph-title">☀️ Today's Briefing</div>
       <div class="ph-sub" id="briefing-date">Loading...</div>
     </div>
-    <button class="btn btn-a" style="font-size:12px" onclick="generateBriefing()" id="briefing-btn">Generate briefing</button>
+    <button class="btn btn-a" style="font-size:12px" onclick="generateBriefing()" id="briefing-btn">Refresh briefing</button>
   </div>
   <div id="briefing-container">
-    <div class="card" style="text-align:center;padding:32px;color:var(--text3)">
-      <div style="font-size:32px;margin-bottom:12px">☀️</div>
-      <div style="font-size:14px;font-weight:500;margin-bottom:6px">Your daily briefing is ready to generate</div>
-      <div style="font-size:13px;margin-bottom:16px">Hit "Generate briefing" to get a full summary of what's overdue, what's due this week, permit warnings, and what to push on today.</div>
-      <button class="btn btn-a" onclick="generateBriefing()">Generate today's briefing</button>
+    <div class="card" style="text-align:center;padding:32px;color:var(--text3)" id="briefing-placeholder">
+      <div class="ai-dots" style="justify-content:center;margin-bottom:12px"><span></span><span></span><span></span></div>
+      <div style="font-size:13px">Generating today's briefing...</div>
     </div>
   </div>
 </div>
@@ -894,13 +902,16 @@ body{
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>B2 FA pretest incomplete.</strong> Additional devices required. Re-pretest TBD. Astor &amp; Stone replaced by <strong>Blackbull</strong> everywhere.</div></div>
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>10th fl — GC permits blocked.</strong> DCAS &amp; DEP approved drawings 5/4/26, but GC cannot pull permits until Lefrak/Foremost and DEP/DCAS reach agreement on data center access for 10th fl abatement.</div></div>
   </div>
-  <div style="margin-top:14px" class="metric-grid">
-    <div class="metric"><div class="metric-lbl">HHE phases</div><div class="metric-val">5</div><div class="metric-sub">B1·B2·A3·A4·A5</div></div>
-    <div class="metric"><div class="metric-lbl">JB floors</div><div class="metric-val">4</div><div class="metric-sub">10·11·12·3rd</div></div>
-    <div class="metric"><div class="metric-lbl">Weekly meetings</div><div class="metric-val">4</div><div class="metric-sub">Mon + Tue recurring</div></div>
-    <div class="metric"><div class="metric-lbl">Key blocker</div><div class="metric-val" style="font-size:14px;margin-top:3px">FDNY B1/B2/A4</div></div>
+  <div style="margin-top:14px" id="dynamic-metrics" class="metric-grid">
+    <div class="metric m-warn"><div class="metric-lbl">Open Actions</div><div class="metric-val" id="m-open-actions">—</div><div class="metric-sub" id="m-overdue-actions">Loading...</div></div>
+    <div class="metric m-red"><div class="metric-lbl">Key Blocker</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">FDNY B1/B2/A4</div><div class="metric-sub">PAA pending since 4/9</div></div>
+    <div class="metric m-green"><div class="metric-lbl">Next milestone</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">A3 SC</div><div class="metric-sub">May 15, 2026</div></div>
+    <div class="metric m-blue"><div class="metric-lbl">GC Permit Expires</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2" id="m-permit-days">—</div><div class="metric-sub">Q00940195 · May 20</div></div>
   </div>
-  <div class="sec-lbl">Current status by space</div>
+  <div class="sec-lbl" style="display:flex;align-items:center;justify-content:space-between">
+    <span>Current status by space</span>
+    <span id="permit-countdown" style="font-size:10px;color:var(--red);font-family:'DM Mono',monospace;font-weight:700"></span>
+  </div>
   <div class="card"><div class="phase-grid" id="status-grid"></div></div>
 </div>
 
@@ -946,7 +957,7 @@ body{
   <div class="ph"><div class="ph-title">96-05 Horace Harding Exwy</div><div class="ph-sub">Ground floor (lobby) slab replacement + DCAS reconstruction · All phases B1/B2/A3/A4/A5 are ground floor sections</div></div>
   <div class="card">
     <div class="card-title">Building Info</div>
-    <div class="row"><span class="rl">PRA scope</span><span class="rv">Phases B1, B2, A3, A4, A5</span></div>
+    <div class="row"><span class="rl">PRA scope</span><span class="rv">Phases A1, B1, B2, A3, A4, A5</span></div>
     <div class="row"><span class="rl">GC — B1/B2/A3/A4</span><span class="rv">Blackbull (MBC)</span></div>
     <div class="row"><span class="rl">GC — A5</span><span class="rv">Blackbull (MBC) — formerly Astor &amp; Stone</span></div>
     <div class="row"><span class="rl">GC permit (B1/B2/A4)</span><span class="rv">Q00940195-L1-GC — expires 05/20/2026</span></div>
@@ -1343,6 +1354,10 @@ function initFirebase() {
       listenToLog();
       listenToContacts();
       listenToActions();
+  // Auto-generate briefing on first load
+  setTimeout(() => {
+    if(document.getElementById('briefing-placeholder')) generateBriefing();
+  }, 1200);
       listenToSchedule();
       listenToMeetings();
       listenToProcesses();
@@ -1924,6 +1939,8 @@ function toggleMorePanel() {
 
 // Close more panel when user scrolls
 window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-to-top');
+  if(btn) btn.classList.toggle('visible', window.scrollY > 400);
   document.getElementById('more-panel')?.classList.remove('open');
 }, {passive: true});
 
@@ -2406,6 +2423,24 @@ function renderActions() {
   let html = '';
   html += renderSection('96-05 Horace Harding Exwy', hheItems, HHE_ORDER);
   html += renderSection('59-17 Junction Blvd', jbItems, JB_ORDER);
+  // Update overview metrics
+  const openCount = liveActions.filter(a=>a.status!=='done').length;
+  const overdueCount = liveActions.filter(a=>{
+    if(a.status==='done'||!a.due) return false;
+    return new Date(a.due)<new Date();
+  }).length;
+  const mOpen = document.getElementById('m-open-actions');
+  const mOver = document.getElementById('m-overdue-actions');
+  const mPerm = document.getElementById('m-permit-days');
+  if(mOpen) mOpen.textContent = openCount;
+  if(mOver) mOver.textContent = overdueCount > 0 ? overdueCount+' overdue' : 'None overdue';
+  if(mPerm){
+    const expiry = new Date('2026-05-20');
+    const days = Math.ceil((expiry-new Date())/(1000*60*60*24));
+    mPerm.textContent = days+'d left';
+    const metricEl = mPerm.closest('.metric');
+    if(metricEl) metricEl.className = 'metric '+( days<=7?'m-red':days<=14?'m-warn':'m-blue');
+  }
   if (otherItems.length) {
     const otherAreas = [...new Set(otherItems.map(a=>a.area||'General'))];
     html += `<div class="sec-lbl" style="margin-top:6px">General</div>`;
@@ -2551,28 +2586,41 @@ CRITICAL: Return ONLY valid JSON. No preamble.
 }
 
 function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateStr) {
+  const genTime = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
   let html = '';
-  html+=`<div class="card" style="background:var(--navy);color:#fff;border-color:var(--navy)"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px">${escH(dateStr)}</div><div style="font-size:16px;font-weight:500;line-height:1.4">${escH(b.headline||'')}</div>${b.positive?`<div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.08);border-radius:6px;font-size:13px;color:rgba(255,255,255,.8)">✓ ${escH(b.positive)}</div>`:''}</div>`;
+  // Hero card
+  html+=`<div class="card" style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;border-color:var(--navy)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);font-family:'DM Mono',monospace">${escH(dateStr)}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3)">Generated ${genTime}</div>
+    </div>
+    <div style="font-size:16px;font-weight:600;line-height:1.45;letter-spacing:-.01em">${escH(b.headline||'')}</div>
+    ${b.positive?`<div style="margin-top:12px;padding:10px 13px;background:rgba(255,255,255,.08);border-radius:8px;font-size:12.5px;color:rgba(255,255,255,.8);display:flex;gap:8px;align-items:flex-start"><span style="color:#4ade80;flex-shrink:0">✓</span><span>${escH(b.positive)}</span></div>`:''}
+  </div>`;
   if (permitWarnings.length) {
     html+=`<div class="card" style="border-color:var(--red-border);background:var(--red-bg)"><div class="card-title" style="color:var(--red)">🚨 Permit Expiry Warnings</div>${permitWarnings.map(p=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--red-border)"><strong style="color:var(--red)">${escH(p.permit)}</strong> — expires ${new Date(p.expires).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} <strong style="color:var(--red)">(${p.daysLeft} days left)</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">→ Confirm with <span class="lk" onclick="searchKeyword('Foremost');goto('search',null)">Foremost</span> / <span class="lk" onclick="searchKeyword('Muhammad');goto('search',null)">Muhammad</span> whether closeout or renewal is planned immediately</div></div>`).join('')}</div>`;
   }
   if (b.urgent?.length) {
-    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:600">!</span><span class="brief-lk">${escH(u)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--red-border)"><div class="card-title" style="color:var(--red)">🔴 Urgent — action needed today</div>${b.urgent.map(u=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--red);flex-shrink:0;font-weight:700;margin-top:1px">!</span><span class="brief-lk">${escH(u)}</span></div>`).join('')}</div>`;
   }
   if (overdueActions.length) {
-    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1"><span class="brief-lk">${escH(a.action)}</span><div style="font-size:11px;color:var(--text3)">👤 <span class="brief-lk">${escH(a.owner||'')}</span> · <span class="brief-lk">${escH(a.area||'')}</span></div></div><button class="btn btn-g" style="font-size:11px;padding:3px 8px;flex-shrink:0" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
+    html+=`<div class="card" style="border-color:var(--amber-border)"><div class="card-title" style="color:var(--amber)">⚠ ${overdueActions.length} Overdue Action${overdueActions.length>1?'s':''}</div>${overdueActions.map(a=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center"><div style="flex:1"><span class="brief-lk">${escH(a.action)}</span><div style="font-size:11px;color:var(--text3);margin-top:2px">👤 <span class="brief-lk">${escH(a.owner||'')}</span> · <span style="font-family:'DM Mono',monospace;font-size:10px">${escH(a.area||'')}</span></div></div><button class="btn btn-g btn-sm" onclick="quickCompleteAction('${escH(a.id)}');generateBriefing()">✓ Done</button></div>`).join('')}</div>`;
   }
   if (b.push_today?.length) {
-    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--gold);flex-shrink:0;font-weight:600">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start"><span style="color:var(--gold);flex-shrink:0;font-weight:700;margin-top:1px">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}</div>`;
   }
   if (todayMeetings.length || b.meetings_today?.length) {
-    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><strong>${escH(m.time)}</strong> — <span class="brief-lk">${escH(m.name)}</span></div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ <span class="brief-lk">${escH(n)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><strong style="font-family:'DM Mono',monospace;font-size:12px">${escH(m.time)}</strong> <span style="color:var(--text3);margin:0 4px">·</span> <span class="brief-lk">${escH(m.name)}</span></div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ <span class="brief-lk">${escH(n)}</span></div>`).join('')}</div>`;
   }
   if (b.watch?.length) {
-    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text3)">○</span><span class="brief-lk">${escH(w)}</span></div>`).join('')}</div>`;
+    html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start"><span style="color:var(--text4);flex-shrink:0;margin-top:2px">○</span><span class="brief-lk">${escH(w)}</span></div>`).join('')}</div>`;
   }
   if (b.donna_draft) {
-    html+=`<div class="card"><div class="card-title">📧 Donna Cappa weekly update — ready to send</div><div style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--bg2);padding:12px;border-radius:6px;line-height:1.7;margin-bottom:10px;max-height:300px;overflow-y:auto">${escH(b.donna_draft)}</div><button class="btn btn-a" style="font-size:12px" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);showToast('Donna draft copied!')">📋 Copy to clipboard</button></div>`;
+    html+=`<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>📧 Donna Cappa weekly update</span>
+      <button class="btn btn-a btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('donna-draft-txt').textContent);showToast('Copied to clipboard!')">📋 Copy</button>
+    </div>
+    <div id="donna-draft-txt" style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--surface2);padding:14px;border-radius:8px;line-height:1.75;max-height:320px;overflow-y:auto;border:1px solid var(--border)">${escH(b.donna_draft)}</div></div>`;
   }
   document.getElementById('briefing-container').innerHTML = html;
   // Post-process: linkify .brief-lk spans after HTML is safely set
@@ -2646,6 +2694,23 @@ function listenToContacts() {
     }
     renderContacts();
   }, () => renderContacts());
+}
+
+function filterContacts(q) {
+  const query = (q||'').toLowerCase().trim();
+  const cards = document.querySelectorAll('#contacts-container .contact');
+  const labels = document.querySelectorAll('#contacts-container .sec-lbl');
+  const grids = document.querySelectorAll('#contacts-container .contacts-grid');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!query || text.includes(query)) ? '' : 'none';
+  });
+  // Hide section labels if all contacts in that section are hidden
+  grids.forEach((grid, i) => {
+    const visible = [...grid.querySelectorAll('.contact')].some(c => c.style.display !== 'none');
+    if(labels[i]) labels[i].style.display = visible ? '' : 'none';
+    grid.style.display = visible ? '' : 'none';
+  });
 }
 
 function renderContacts() {
@@ -2910,198 +2975,125 @@ function showFilePrev(name,type) {
 function removeFile(){attachedFile=null;attachedFileData=null;document.getElementById('file-prev-container').innerHTML='';document.getElementById('file-input').value='';}
 
 // ── AI ASSISTANT ──────────────────────────────────────────
-const SYSTEM_PROMPT = `You are an AI assistant embedded in a project management playbook for PRA Consulting, PMO firm for Lefrak/DEP projects in Queens NY.
+const SYSTEM_PROMPT = `You are an elite PMO AI embedded in a live project management playbook for PRA Consulting. You serve Zachary Trakas, project coordinator for Lefrak/DEP construction projects in Queens, NY.
 
-CRITICAL: Respond with ONLY a valid JSON object. No preamble, no explanation, no markdown. Start with { end with }.
+CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation. Start with { end with }.
 
-PROJECT CONTEXT:
-THERE ARE EXACTLY TWO BUILDINGS. Never reference a third building.
+═══════════════════════════════════════
+INTELLIGENCE RULES — READ FIRST
+═══════════════════════════════════════
 
-BUILDING 1: 96-05 Horace Harding Exwy (HHE), Queens — ALL work is on the GROUND FLOOR (1st floor / lobby level) only. This is a slab replacement and DCAS lobby reconstruction project. There are no upper floors in scope here. The "phases" (B1, B2, A3, A4, A5) are all sections of the ground floor lobby. The building has upper floors but they are NOT in scope.
-Phases in PRA scope (all ground floor lobby sections): B1, B2, A3, A4, A5
-GC: Blackbull (B1/B2/A3/A4/A5) — Astor & Stone no longer working, Blackbull assumed all their scope
-Permits: B1/B2/A4 GC Q00940195-L1-GC (exp 5/20/26), A3 GC Q00919587-I1-GC (exp 5/20/26), B2 plumbing Q01342765-I1-PL
-FDNY: B2 #2025-TMFALM-00516, A4 #20258-TMFALM-007621, A3 #2023-TMFALM-007841
-Status: B1/B2/A4 — DOB LOCs received, MEP as-builts WIP with MGE, FDNY PAA filed 4/9/26 awaiting inspection (MAIN BLOCKER), B2 FA pretest needs additional devices, SC notices not issued
-A3: reconstruction ongoing, DOB LOCs not yet received, furniture layout accepted 4/21
-A5: lobby open, desk complete 4/21, under-counter storage + green wall pending
+CONTEXT CLUE INFERENCE:
+You are highly context-aware. When input is brief or shorthand, infer full meaning from project knowledge:
+- "b2 fa done" → B2 fire alarm pretest passed, update FA pretest to green, note date
+- "fdny came b1" → FDNY inspection occurred at B1, ask if passed or note as in-progress
+- "mge signed" → MGE signed as-built drawings, advance FDNY step for relevant phases
+- "scutum called" → Scutum called for FDNY inspection, update accordingly
+- "troon sent" → Troon sent signed as-builts to MGE or Scutum
+- "aja walk done" → AJA punchlist walkthrough completed
+- "a3 sc" → A3 substantial completion declared or approaching May 15
+- "10th data center" → issue re: data center access for 10th fl abatement
+- Phase codes alone (A1, B1, B2, A3, A4, A5) = 96-05 HHE ground floor
+- Floor numbers alone (10, 11, 12, 3) = 59-17 JB
+- First names map to known contacts (Anita=Lefrak, Melissa=DCAS, Clayton=ECC, Javier=ESG, Kyle/Alex/David=Foremost, Ary/Muhammad=Blackbull)
+- "The meeting" on a given day = known recurring meeting for that day
+- Dollar amounts = likely contract/cost updates
+- Dates without context = likely SC dates, inspection dates, or permit deadlines
+- "Letter" or "LOC" = Letter of Completion from DOB
+- "Passed" without subject = infer most likely pending inspection (currently FDNY for B1/B2/A4)
 
-BUILDING 2: 59-17 Junction Blvd (JB), Queens — ACM abatement + rebuild, DEP is the tenant. All upper floors are here. FDNY work at this building is for the lobby/common areas as part of abatement scope, NOT a separate third building.
-Floors in PRA scope: 3rd, 10th, 11th, 12th (all at 59-17 JB)
-12th fl: DEP occupied 2/2/26, ARTS TRU1253QN24 closed 4/17/26, punchlist remaining
-11th fl: ARTS TRU1110QN25 V5 Variance Approved 4/23/26 VAR#2487QN25, DOB jobs Q01319665 Q01356141 Q01287581 Q01287674 Q01287693 Q01287704, pre-construction notification workflow initiated 4/24/26 (ESG/Javier Catalan sending notice, Zach to post in lobby+11th fl and send proof to Sheranne DEP), soft demo underway, DEP 4-week employee notice pending, scope revision 4/14 (FMC/Copy/File/BEPA rooms: walls out, VCT+ceilings+lights+wallpaper in), ACP-21 required to DOB before sign-off
-10th fl: ARTS drawings submitted to DEP 4/21/26 awaiting review, concurrent with 3rd fl
-3rd fl: new ARTS filing needed, concurrent with 10th fl, Phase 1 ~9/4/26 (Two Tone), Phase 2 ~10/2/26 (Black Bull)
+SCREENSHOT/PDF EXTRACTION:
+When analyzing images or documents:
+1. EXTRACT: permit numbers, dates, names, addresses, status indicators, approval stamps, signatures, dollar amounts, phone numbers, email addresses, form numbers
+2. IGNORE: letterhead decoration, logos, boilerplate legal text, headers/footers, page numbers, standard form language, watermarks
+3. IDENTIFY: inspection report? LOC? Email? Calendar invite? Permit? Contract? Meeting minutes? ARTS filing? DOB notice? BIS record?
+4. MAP: Match extracted info to known project items. Q00940195 = B1/B2/A4 GC permit. 2025-TMFALM = B1 FA. ARTS TRU numbers = specific floors.
+5. DATES: Always extract and note dates — approval date is the key data point
+6. PEOPLE: Any name + title/email/company = potential new contact
+7. SIGNAL vs NOISE: "PASSED" stamp + inspector name + date = signal. Boilerplate footer = noise.
 
-STATUS FIELD KEYS — ALWAYS use itemId for exact matching. Never guess itemMatch alone.
-HHE: hhe-b1, hhe-b2, hhe-a4, hhe-a3, hhe-a5
-JB: jb-12, jb-11, jb-10, jb-3
+AMBIGUITY HANDLING:
+- 80%+ confident → proceed, note assumption in analysis
+- 50-80% confident → make changes, flag assumptions as questions
+- <50% confident → ask 1-2 targeted questions, still populate what you can
+- NEVER ask for info you can infer. Only ask when genuinely ambiguous.
 
-EXACT ITEM IDs per section (use in status_updates as itemId):
+═══════════════════════════════════════
+PROJECT CONTEXT
+═══════════════════════════════════════
+
+TWO BUILDINGS ONLY. Never reference a third.
+
+BUILDING 1 — 96-05 Horace Harding Exwy (HHE), Queens
+All work GROUND FLOOR ONLY — lobby slab replacement + DCAS reconstruction.
+Phases: A1, B1, B2, A3, A4, A5
+GC: Blackbull (MBC) all phases. Astor & Stone out entirely.
+Permits: B1/B2/A4 GC Q00940195-L1-GC (exp 5/20/26), A3 GC Q00919587-I1-GC (exp 5/20/26), B2 plumbing Q01342765-I1-PL, Elec Q01300039I1EL
+FA permits: B1 #2025-TMFALM-007622-PLAN, B2 #2025-TMFALM-00516, A4 #20258-TMFALM-007621, A3 #2023-TMFALM-007841
+FA contractor: Scutum (formerly Hi Rise — always say Scutum). Elec: Troon. EOR/MEP: MGE. Architect: AJA.
+FDNY process: Scutum + Troon pretest → request inspection (need Troon + MGE signatures on approved FA drawings) → if FDNY date >30 days after request AND >30 days since pretest passed → self-certify (sufficient for closeout).
+B1: PAA #2025-TMFALM-007622-PLAN filed 4/9/26 — FDNY approval pending, cannot request inspection yet
+B2: FA pretest needs additional devices (delivered 4/28). Re-pretest TBD. Plumbing LOC Q01342765-I1-PL unsigned (Foremost to check). Structural LOC pending MBC.
+A3: Scutum requested FDNY inspection 5/5/26. SC target May 15. AJA punchlist walk May 11.
+A1: FDNY inspection May 12.
+Elec inspections passed B1/B2/A4 3/19/26. Once A3 passes + Troon letter → DOB auto-closes Q01300039I1EL.
+
+BUILDING 2 — 59-17 Junction Blvd (JB), Queens
+ACM abatement + rebuild. DEP is tenant. All upper floors.
+Floors: 3rd, 10th, 11th, 12th
+12th: DEP occupied 2/2/26, ARTS TRU1253QN24 closed 4/17/26, punchlist remaining
+11th: V5 Variance approved 4/23/26 VAR#2487QN25. Soft demo underway. Abatement ~5/29/26. DEP occupies 9/28-9/29/26.
+10th: DCAS & DEP approved drawings 5/4/26. GC CANNOT pull permits — blocked pending data center access agreement between Lefrak/Foremost and DEP/DCAS.
+3rd: New ARTS filing needed, concurrent with 10th. Phase 1 ~9/4/26, Phase 2 ~10/2/26.
+
+STATUS KEYS: HHE: hhe-b1, hhe-b2, hhe-a4, hhe-a3, hhe-a5 | JB: jb-12, jb-11, jb-10, jb-3
+cls: bs=green, bw=amber, bd=red, bi=blue, bm=gray
+
+ITEM IDs:
 hhe-b1: dob_arch_loc_q01225051, dob_mech_loc_q01286750, dob_plumbing_loc, fdny_letter_of_approval, electrical_bec_bis_sign_off, certified_air_balancing_report, mep_as_builts_mge, arch_as_builts_aja, mep_punchlist_signoff, arch_punchlist_signoff, loc_gc_mech, fa_pretest_30_day_clock, emergency_light_test, notice_of_substantial_completion
 hhe-b2: dob_arch_loc_q00940195, dob_mech_loc_q00940285, dob_plumbing_q01342765_i1_pl, fdny_2025_tmfalm_00516, electrical_bec_bis_q01186589, certified_air_balancing_report, fa_pretest, tr_1_dob_post_permit, mep_as_builts_mge, arch_as_builts_aja, notice_of_substantial_completion
 hhe-a4: dob_arch_loc_q01286541, dob_mech_loc_q01286552, dob_plumbing, fdny_20258_tmfalm_007621, certified_air_balancing_report, mep_as_builts_mge, arch_as_builts_aja, fa_pretest_30_day_clock, furniture, notice_of_substantial_completion
-hhe-a3: reconstruction, dob_arch_loc_q00919587, dob_mech_loc_q00919605, fdny_2023_tmfalm_007841, furniture_layout, lv_connect_trac_coordination, acp_5_acp_21
+hhe-a3: reconstruction, dob_arch_loc_q00919587, dob_mech_loc_q00919605, fdny_2023_tmfalm_007841, furniture_layout, lv_connect_trac_coordination, acp_5_acp_21, a3_punchlist_walk, a3_sc_date
 hhe-a5: new_lobby_open_active, new_lobby_desk_plexiglass, under_counter_storage, green_wall_dep_signage
 jb-12: dep_occupancy, arts_tru1253qn24, aja_mep_punchlists, fa_pretest_certification, dep_dcas_formal_punchlist, aja_restroom_saddle_slope
 jb-11: arts_tru1110qn25, dob_job_numbers, acp_21_requirement, pre_construction_notification, notice_posted_in_lobby_11th_fl, 4_week_employee_notice_by_dep, soft_demo, scope_revision_4_14_call, dep_low_voltage_shutdown, abatement, elevator_cross_over_reconstruction, full_floor_re_occupancy
-jb-10: arts_drawings, dep_review_of_arts_drawings, known_acm_scope, additional_acm_testing_corridor, arts_filing, construction
+jb-10: arts_drawings, dep_review_of_arts_drawings, dcas_dep_drawing_approval, gc_permits_10th, known_acm_scope, additional_acm_testing_corridor, arts_filing, construction
 jb-3: prior_arts_tru1253qn24, new_arts_filing, additional_acm_testing_corridor, phase_1_construction_crossover_brid, phase_2_construction_elevator_lobby
-cls: bs=green/done, bw=amber/pending, bd=red/blocked, bi=blue/info, bm=gray/upcoming
 
-EXAMPLE status_update: {"key":"jb-11","itemId":"notice_posted_in_lobby_11th_fl","itemMatch":"Notice posted","newStatus":"Posted 4/24/26 — proof sent to Sheranne (DEP)","newCls":"bs"}
+KEY PEOPLE (first name shortcuts):
+Zach/Zachary=Zach Trakas (PRA), KK=Krishnakant Maurya (PRA), Matt=Matthew Barlow (PRA Director)
+Cynthia=Cynthia Poulton (DCAS), Melissa=Melissa Rivera-Ferguson (DCAS)
+David/Jenkins=David Jenkins (Foremost), Alex/Alejandro=Alejandro Orellana (Foremost), Kyle=Kyle Josefson (Foremost)
+Anita=Anita Jhamb (Lefrak), Mike=Michael Leary (Lefrak), Meredith=Meredith Jackness (Lefrak), Donna=Donna Cappa (Lefrak)
+Clayton=Clayton Long (ECC), Javier=Javier Catalan (ESG), Lisa=Lisa Javier (ESG, maternity leave)
+Sheranne=Sheranne @ DEP, Ary=Ary @ Blackbull, Muhammad=Muhammad @ Blackbull
+Anthony/Janki=AJA architects
 
-KEY PEOPLE: Zach Trakas (PRA coordinator), KK Maurya (PRA Senior Manager — Zach's manager), Matthew Barlow (PRA Director), Cynthia Poulton (DCAS), Melissa Rivera-Ferguson (DCAS), David Jenkins (Foremost — Lefrak's internal commercial construction subsidiary), Alejandro Orellana (Foremost), Kyle Josefson (Foremost), Anita Jhamb (Lefrak — SC notices), Mike Leary (Lefrak), Meredith Jackness (Lefrak), Donna Cappa (Lefrak — building manager both buildings), Clayton Long (ECC — prepares ACM drawings and ARTS filings, submits to DOB/DEP), Javier Catalan (ESG — covering for Lisa Javier on maternity leave; ESG performs abatement, writes means & methods, air monitoring, runs Monday 1:30pm ACM meeting), Lisa Javier (ESG PM, on maternity leave), Sheranne DEP (11th fl notice recipient), Felix Urena (ARTS applicant — ESG)
+ORG: PRA(PMO)→DCAS/DEP(tenant)→Lefrak(owner)→Foremost(Lefrak construction sub)→ECC(ACM drawings)→ESG(abatement)→Blackbull/MBC(GC)→Scutum(FA)→Troon(elec)→MGE(EOR)→AJA(arch)
 
-ORG STRUCTURE: PRA (PMO consultant) · DCAS/DEP (city agency — tenant) · Lefrak (landlord/owner: Anita, Mike Leary, Meredith Jackness, Donna Cappa) · Foremost (Lefrak's internal commercial construction subsidiary: David Jenkins, Alex Orellana, Kyle Josefson) · ECC (ACM drawings + filings) · ESG (abatement execution + air monitoring)
+NEW CONTACTS: Any named person not in the list above → add to new_contacts using context clues.
 
-NEW CONTACTS RULE: If any named person appears in the input or attachment who is NOT in the KEY PEOPLE list, add them to new_contacts in your response. Use context clues (their signature, title, company, email) to fill in role/org/email. Named individuals only — not organizations. Do not re-add people already in the list above.
+TIMELINE STEP IDs:
+hhe-b1b2a4: demo,filings,abatement,slab,reconstruction,doc_locs,asbuilts,fa_pretest,fdny,sc_notice,dcas_walk,turnover
+hhe-a3: demo,temp_lobby,abatement,reconstruction,lv_coord,dob_locs,fdny,sc_notice
+hhe-a5: abatement,slab,fitout,complete
+jb-12: arts,demo,abatement,reconstruction,punchlist,occupied
+jb-11: arts_file,dob_review,objection,preconstruction,dep_notice,demo,lv,vacate,abatement,air_clearance,reconstruction,punchlist,occupied
+jb-10: walkthrough,arts_drawings,dep_review,arts_file,arts_approval,notice,demo,abatement,reconstruction,occupied
+jb-3: acm_test,arts_drawings,arts_file,arts_approval,phase1_demo,phase1_abate,phase1_build,phase2_demo,phase2_abate,phase2_build,occupied
+States: done,active,warn,blocked,todo
 
-TIMELINE STEP IDs (use exact values in timeline_updates phaseKey + stepId):
-hhe-b1b2a4: demo, filings, abatement, slab, reconstruction, doc_locs, asbuilts, fa_pretest, fdny, sc_notice, dcas_walk, turnover
-hhe-a3: demo, temp_lobby, abatement, reconstruction, lv_coord, dob_locs, fdny, sc_notice
-hhe-a5: abatement, slab, fitout, complete
-jb-12: arts, demo, abatement, reconstruction, punchlist, occupied
-jb-11: arts_file, dob_review, objection, preconstruction, dep_notice, demo, lv, vacate, abatement, air_clearance, reconstruction, punchlist, occupied
-jb-10: walkthrough, arts_drawings, dep_review, arts_file, arts_approval, notice, demo, abatement, reconstruction, occupied
-jb-3: acm_test, arts_drawings, arts_file, arts_approval, phase1_demo, phase1_abate, phase1_build, phase2_demo, phase2_abate, phase2_build, occupied
-step states: done, active, warn, blocked, todo
-- ARTS: filed → DEP review → possible objections/rejections → approval/V5 variance → pre-construction notification posted → DEP 4-week employee notice → vacate → abatement → air clearance → reconstruction → punchlist → re-occupancy
-- DOB closeout: LOC from each trade + TR-1 filings + special inspections
-- FDNY: PAA filing → inspection scheduled → inspection → LOA issued
-- SC: SC notice ≥10 business days before SC date → package due 5 days after notice → DCAS walkthrough within 5 days of SC date → as-builts within 90 days
-- 10th and 3rd floors run CONCURRENTLY under separate ARTS filings — neither blocks the other
+PROCESS IDs: proc-fdny, proc-arts, proc-design-change, proc-design, proc-permit, proc-sc
+MEETING IDs: mtg-mon-1230, mtg-mon-130, mtg-tue-1030, mtg-tue-130, mtg-thu-biweekly
+Schedule task IDs floor 11: t_11_vacate,t_11_boxes,t_11_condition,t_11_furniture,t_11_3notice,t_11_arts_scope,t_11_arts_file,t_11_demo_lobby,t_11_demo_carpet,t_11_demo_restroom,t_11_recon_lobby,t_11_recon_restroom,t_11_recon_ceiling1,t_11_recon_ceiling2,t_11_carpet,t_11_inspect,t_11_punchlist,t_11_sc,t_11_reinstall,t_11_occupy
+Schedule task IDs floor 3: t_3_corridor_demo,t_3_corridor_acm,t_3_corridor_build,t_3_lobby_demo,t_3_lobby_acm,t_3_lobby_build,t_3_men_build,t_3_women_build,t_3_lobby_complete,t_3_restroom_open,t_3_sc
+Schedule task IDs floor 10: t_10_pack,t_10_vacate,t_10_boxes,t_10_condition,t_10_furniture,t_10_demo_corridor,t_10_demo_carpet,t_10_demo_restroom,t_10_recon_restroom,t_10_ceiling1,t_10_ceiling2,t_10_carpet,t_10_inspect,t_10_punchlist,t_10_reinstall,t_10_sc,t_10_occupy
+Fields: "start","finish","pct"(0-100)
 
-RESPONSE JSON STRUCTURE:
-{
-  "questions": ["question if ambiguous"],
-  "analysis": "brief summary of what you understood from the input/attachment",
-  "proposed_changes": [
-    {
-      "area": "display label e.g. 59-17 JB · 11th Floor",
-      "from": "old status text",
-      "to": "new status text",
-      "reason": "why this change"
-    }
-  ],
-  "status_updates": [
-    {
-      "key": "jb-11",
-      "itemId": "notice_posted_in_lobby_11th_fl",
-      "itemMatch": "Notice posted",
-      "newStatus": "Posted 4/24/26 — proof sent to Sheranne (DEP)",
-      "newCls": "bs"
-    }
-  ],
-  "timeline_updates": [
-    {
-      "phaseKey": "jb-11",
-      "stepId": "dep_notice",
-      "state": "done",
-      "detail": "DEP issued 4-week notice 4/24/26",
-      "date": "4/24/26"
-    }
-  ],
-  "schedule_updates": [
-    {
-      "phaseKey": "jb-11",
-      "taskId": "t_11_demo_lobby",
-      "taskName": "Soft Demo — Lobbies + Corridor",
-      "field": "start",
-      "oldValue": "5/15/26",
-      "newValue": "5/22/26",
-      "reason": "why this date changed"
-    }
-  ],
-  "process_updates": [
-    {
-      "action": "add_note | add_step | new_process",
-      "procId": "proc-fdny (existing process ID, required for add_note and add_step)",
-      "note": {"text": "update text", "date": "Apr 29, 2026", "person": "Zach Trakas"},
-      "step": {"title": "new step title", "detail": "step detail", "owner": "who owns it", "date": "Apr 29, 2026"},
-      "process": {"id": "unique-id", "title": "Process Title", "icon": "📋", "subtitle": "applies to...", "tags": "comma separated search tags", "desc": "description", "steps": [{"title":"","detail":"","owner":""}], "note": "optional note"}
-    }
-  ],
-  "meeting_updates": [
-    {
-      "action": "add_note | add_prep | update_detail | update_time | new_meeting",
-      "meetingId": "mtg-mon-130 (existing meeting ID, required for updates)",
-      "note": {"text": "note text", "date": "Apr 29, 2026", "person": "Zach Trakas"},
-      "prepItem": {"text": "prep item text"},
-      "detail": "updated meeting detail text",
-      "time": "updated time string",
-      "meeting": {"id": "unique-id", "day": "Wednesday", "time": "2:00 pm", "name": "Meeting Name", "detail": "description", "tags": ["tag1"]}
-    }
-  ],
-  "meeting_updates": [
-    {
-      "action": "add_meeting | edit_meeting | add_prep_note",
-      "meetingId": "mtg-mon-1230 (for edit/add_prep) or null for add_meeting",
-      "day": "Monday (for add_meeting)",
-      "time": "12:30 pm (for add_meeting)",
-      "name": "Meeting name (for add_meeting or edit_meeting)",
-      "detail": "Meeting details (for add_meeting or edit_meeting)",
-      "tags": ["tag1","tag2"],
-      "prepNote": "prep item text (for add_prep_note)",
-      "reason": "why this change"
-    }
-  ],
-  "process_updates": [
-    {
-      "action": "add_note | edit_step | add_step | add_process | edit_process_desc",
-      "processId": "proc-fdny (for edit/add_note)",
-      "stepNum": 2,
-      "noteText": "note to add (for add_note)",
-      "noteType": "info | warn | danger | success",
-      "stepTitle": "step title (for edit_step or add_step)",
-      "stepDetail": "step detail (for edit_step or add_step)",
-      "stepOwner": "owner (for edit_step or add_step)",
-      "processDesc": "updated description (for edit_process_desc)",
-      "newProcess": {
-        "id": "proc-new-id",
-        "icon": "📋",
-        "title": "New Process Title",
-        "subtitle": "applies to...",
-        "status": "ref",
-        "statusLabel": "Reference",
-        "tags": "searchable tags",
-        "desc": "description",
-        "steps": [],
-        "notes": []
-      },
-      "reason": "why this change"
-    }
-  ],
-  "new_contacts": [
-    {
-      "name": "Full name as mentioned",
-      "role": "their role based on context",
-      "org": "PRA or DCAS / DEP or Lefrak or Foremost or ECC or ESG or Consultants / GCs or Other",
-      "email": "email if mentioned",
-      "notes": "any context about them"
-    }
-  ],
-  "next_steps": ["implied next step 1", "implied next step 2"],
-  "log_entry": {
-    "date": "Apr 24, 2026",
-    "area": "59-17 JB — 11th Floor",
-    "headline": "short summary",
-    "detail": "full detail including any permit numbers, dates, names mentioned",
-    "person": "Zach Trakas"
-  },
-  "ready_to_apply": true
-}
+RESPONSE JSON:
+{"questions":["max 2, only if genuinely unclear"],"analysis":"what you understood + what you extracted + assumptions made","proposed_changes":[{"area":"96-05 HHE · B2","from":"old","to":"new","reason":"why"}],"status_updates":[{"key":"hhe-b2","itemId":"fa_pretest","itemMatch":"FA Pretest","newStatus":"Passed 5/6/26","newCls":"bs"}],"timeline_updates":[{"phaseKey":"hhe-b1b2a4","stepId":"fa_pretest","state":"done","detail":"B2 FA pretest passed 5/6/26","date":"5/6/26"}],"schedule_updates":[{"phaseKey":"jb-11","taskId":"t_11_demo_lobby","taskName":"Soft Demo","field":"start","oldValue":"5/15/26","newValue":"5/22/26","reason":"why"}],"process_updates":[{"action":"add_note","procId":"proc-fdny","stepNum":4,"noteText":"30-day self-cert triggered","noteType":"info","reason":"why"}],"meeting_updates":[{"action":"add_note","meetingId":"mtg-mon-1230","note":{"text":"note","date":"May 6, 2026","person":"Zach Trakas"}}],"new_contacts":[{"name":"Full Name","role":"role","org":"org","email":"if found","notes":"context"}],"new_action_items":[{"action":"what to do","owner":"who","area":"96-05 HHE — B2","due":"YYYY-MM-DD"}],"next_steps":["next step"],"log_entry":{"date":"May 6, 2026","area":"96-05 HHE — B2","headline":"short summary","detail":"full detail","person":"Zach Trakas"},"ready_to_apply":true}
 
-PROCESS LIBRARY IDs (use for process_updates → procId field):
-proc-fdny, proc-arts, proc-design-change, proc-design, proc-permit, proc-sc
-
-MEETING IDs (use for meeting_updates → meetingId field):
-mtg-mon-1230 (Mon 12:30 — HHE Sign-Off), mtg-mon-130 (Mon 1:30 — ACM Next Steps), mtg-tue-1030 (Tue 10:30 — GC Update), mtg-tue-130 (Tue 1:30 — Main DEP/DCAS meeting)
-Floor 11: t_11_vacate, t_11_boxes, t_11_condition, t_11_furniture, t_11_3notice, t_11_arts_scope, t_11_arts_file, t_11_demo_lobby, t_11_demo_carpet, t_11_demo_restroom, t_11_recon_lobby, t_11_recon_restroom, t_11_recon_ceiling1, t_11_recon_ceiling2, t_11_carpet, t_11_inspect, t_11_punchlist, t_11_sc, t_11_reinstall, t_11_occupy
-Floor 3: t_3_corridor_demo, t_3_corridor_acm, t_3_corridor_build, t_3_lobby_demo, t_3_lobby_acm, t_3_lobby_build, t_3_men_build, t_3_women_build, t_3_lobby_complete, t_3_restroom_open, t_3_sc
-Floor 10: t_10_pack, t_10_vacate, t_10_boxes, t_10_condition, t_10_furniture, t_10_demo_corridor, t_10_demo_carpet, t_10_demo_restroom, t_10_recon_restroom, t_10_ceiling1, t_10_ceiling2, t_10_carpet, t_10_inspect, t_10_punchlist, t_10_reinstall, t_10_sc, t_10_occupy
-Fields: "start", "finish", or "pct" (percent complete 0-100)
-Set ready_to_apply false only if you have unanswered questions. Otherwise always true.`;
+Set ready_to_apply false ONLY if critical info is missing. new_action_items: always populate if input implies follow-up needed.`;
 
 let pendingResult = null;
 
@@ -4267,8 +4259,30 @@ function runSearch(query) {
 document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   listenToSchedule();
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    // Cmd/Ctrl+K → focus search
+    if((e.metaKey||e.ctrlKey) && e.key==='k') {
+      e.preventDefault();
+      goto('search', null);
+      setTimeout(() => { const si = document.getElementById('search-input'); if(si) si.focus(); }, 100);
+    }
+    // Escape → close modals
+    if(e.key==='Escape') {
+      ['action-modal','contact-modal','edit-action-modal'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el && el.style.display !== 'none') el.style.display='none';
+      });
+    }
+  });
 });
 function initRender() {
+  // Permit expiry countdown
+  const permitEl = document.getElementById('permit-countdown');
+  if(permitEl) {
+    const days = Math.ceil((new Date('2026-05-20') - new Date()) / 86400000);
+    permitEl.textContent = `GC permit expires in ${days} day${days!==1?'s':''} — May 20`;
+  }
   // Make sure overview is the active default page
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const overview = document.getElementById('page-overview');

@@ -2287,10 +2287,19 @@ const SEED_ACTIONS = [
   {id:'a18', action:'Biweekly DEP/PRA meeting: Thursday May 14 at 11am — prep notes beforehand', owner:'Zach Trakas', area:'Both buildings', due:'2026-05-14', status:'open', source:'system', created:'May 5, 2026'},
 ];
 
+function normalizeActionArea(item) {
+  const area = (item.area || '').trim();
+  const hheMap = {'A1':'96-05 HHE — A1','B1':'96-05 HHE — B1','B2':'96-05 HHE — B2','A3':'96-05 HHE — A3','A4':'96-05 HHE — A4','A5':'96-05 HHE — A5'};
+  const jbMap = {'3rd fl':'59-17 JB — 3rd fl','3rd':'59-17 JB — 3rd fl','10th fl':'59-17 JB — 10th fl','10th':'59-17 JB — 10th fl','11th fl':'59-17 JB — 11th fl','11th':'59-17 JB — 11th fl','12th fl':'59-17 JB — 12th fl','12th':'59-17 JB — 12th fl','59-17 JB · 11TH FLOOR':'59-17 JB — 11th fl','59-17 JB · 12TH FLOOR':'59-17 JB — 12th fl','59-17 JB · 10TH FLOOR':'59-17 JB — 10th fl','59-17 JB · 3RD FLOOR':'59-17 JB — 3rd fl'};
+  if (hheMap[area]) return {...item, area: hheMap[area]};
+  if (jbMap[area]) return {...item, area: jbMap[area]};
+  return item;
+}
+
 function listenToActions() {
   if (!db) { liveActions = [...SEED_ACTIONS]; renderActions(); return; }
   db.collection('actions').doc('list').onSnapshot(snap => {
-    if (snap.exists && snap.data().items) { liveActions = snap.data().items; }
+    if (snap.exists && snap.data().items) { liveActions = snap.data().items.map(normalizeActionArea); }
     else { db.collection('actions').doc('list').set({items: SEED_ACTIONS}); liveActions = [...SEED_ACTIONS]; }
     renderActions();
   }, () => { liveActions = [...SEED_ACTIONS]; renderActions(); });

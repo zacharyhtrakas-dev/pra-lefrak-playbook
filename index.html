@@ -2288,48 +2288,52 @@ const SEED_ACTIONS = [
 ];
 
 function normalizeActionArea(item) {
-  let area = (item.area || '').trim().replace(/\s*\(.*?\)\s*/g, '').trim();
-  const exactMap = {
-    '96-05 HHE · B2 | 59-17 JB · 11TH FLOOR': '96-05 HHE — B2',
-    '96-05 HHE · B1 | 59-17 JB · 11TH FLOOR': '96-05 HHE — B1',
-    '96-05 HHE · A3 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A3',
-    '96-05 HHE · A4 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A4',
-    '96-05 HHE · A5 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A5',
-    '59-17 JB · 11TH FLOOR': '59-17 JB — 11th fl',
-    '59-17 JB · 12TH FLOOR': '59-17 JB — 12th fl',
-    '59-17 JB · 10TH FLOOR': '59-17 JB — 10th fl',
-    '59-17 JB · 3RD FLOOR': '59-17 JB — 3rd fl',
-    'A1': '96-05 HHE — A1', 'B1': '96-05 HHE — B1', 'B2': '96-05 HHE — B2',
-    'A3': '96-05 HHE — A3', 'A4': '96-05 HHE — A4', 'A5': '96-05 HHE — A5',
-    '3rd fl': '59-17 JB — 3rd fl', '3rd': '59-17 JB — 3rd fl',
-    '10th fl': '59-17 JB — 10th fl', '10th': '59-17 JB — 10th fl',
-    '11th fl': '59-17 JB — 11th fl', '11th': '59-17 JB — 11th fl',
-    '12th fl': '59-17 JB — 12th fl', '12th': '59-17 JB — 12th fl',
-    '96-05 HHE - A3': '96-05 HHE — A3', '96-05 HHE - B1': '96-05 HHE — B1',
-    '96-05 HHE - B2': '96-05 HHE — B2', '96-05 HHE - A4': '96-05 HHE — A4',
-    '96-05 HHE - A5': '96-05 HHE — A5', '96-05 HHE - A1': '96-05 HHE — A1',
-    '59-17 JB - 11th fl': '59-17 JB — 11th fl', '59-17 JB - 12th fl': '59-17 JB — 12th fl',
-    '59-17 JB - 10th fl': '59-17 JB — 10th fl', '59-17 JB - 3rd fl': '59-17 JB — 3rd fl',
-    'A3 Ground Floor Lobby': '96-05 HHE — A3',
-    '96-05 Horace Harding Exwy - A3': '96-05 HHE — A3',
-    '96-05 Horace Harding Exwy - B1': '96-05 HHE — B1',
-    '96-05 Horace Harding Exwy - B2': '96-05 HHE — B2',
+  let area = (item.area || '').trim();
+
+  // Catch all HHE variants — look for phase code anywhere in the string
+  const hhePhase = area.match(/\b(A1|B1|B2|A3|A4|A5)\b/);
+  const isHHE = /96.05|horace harding|HHE/i.test(area);
+  const isJB = /59.17|junction blvd|JB/i.test(area);
+
+  if (isHHE && hhePhase) return {...item, area: `96-05 HHE — ${hhePhase[1]}`};
+  if (isJB) {
+    if (/11th|11TH/i.test(area)) return {...item, area: '59-17 JB — 11th fl'};
+    if (/12th|12TH/i.test(area)) return {...item, area: '59-17 JB — 12th fl'};
+    if (/10th|10TH/i.test(area)) return {...item, area: '59-17 JB — 10th fl'};
+    if (/3rd|3RD/i.test(area))   return {...item, area: '59-17 JB — 3rd fl'};
+  }
+
+  // Short codes
+  const shortMap = {
+    'A1':'96-05 HHE — A1','B1':'96-05 HHE — B1','B2':'96-05 HHE — B2',
+    'A3':'96-05 HHE — A3','A4':'96-05 HHE — A4','A5':'96-05 HHE — A5',
+    '3rd fl':'59-17 JB — 3rd fl','3rd':'59-17 JB — 3rd fl',
+    '10th fl':'59-17 JB — 10th fl','10th':'59-17 JB — 10th fl',
+    '11th fl':'59-17 JB — 11th fl','11th':'59-17 JB — 11th fl',
+    '12th fl':'59-17 JB — 12th fl','12th':'59-17 JB — 12th fl',
   };
-  if (exactMap[area]) return {...item, area: exactMap[area]};
+  if (shortMap[area]) return {...item, area: shortMap[area]};
+
+  // Pipe-separated mixed values — take first segment and re-run
   if (area.includes('|')) {
     const first = area.split('|')[0].trim();
-    if (exactMap[first]) return {...item, area: exactMap[first]};
-    const phaseMatch = first.match(/·\s*(A\d|B\d)/);
-    if (phaseMatch) return {...item, area: `96-05 HHE — ${phaseMatch[1]}`};
+    return normalizeActionArea({...item, area: first});
   }
-  if (area.startsWith('96-05 HHE —') || area.startsWith('59-17 JB —')) return item;
+
   return item;
 }
 
 function listenToActions() {
   if (!db) { liveActions = [...SEED_ACTIONS]; renderActions(); return; }
   db.collection('actions').doc('list').onSnapshot(snap => {
-    if (snap.exists && snap.data().items) { liveActions = snap.data().items.map(normalizeActionArea); }
+    if (snap.exists && snap.data().items) {
+      const raw = snap.data().items;
+      const normalized = raw.map(normalizeActionArea);
+      liveActions = normalized;
+      // If any areas changed, re-save to Firebase to fix them permanently
+      const changed = raw.some((r,i) => r.area !== normalized[i].area);
+      if (changed) db.collection('actions').doc('list').set({items: normalized});
+    }
     else { db.collection('actions').doc('list').set({items: SEED_ACTIONS}); liveActions = [...SEED_ACTIONS]; }
     renderActions();
   }, () => { liveActions = [...SEED_ACTIONS]; renderActions(); });

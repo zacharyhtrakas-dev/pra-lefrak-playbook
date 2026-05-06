@@ -2289,10 +2289,36 @@ const SEED_ACTIONS = [
 
 function normalizeActionArea(item) {
   const area = (item.area || '').trim();
-  const hheMap = {'A1':'96-05 HHE — A1','B1':'96-05 HHE — B1','B2':'96-05 HHE — B2','A3':'96-05 HHE — A3','A4':'96-05 HHE — A4','A5':'96-05 HHE — A5'};
-  const jbMap = {'3rd fl':'59-17 JB — 3rd fl','3rd':'59-17 JB — 3rd fl','10th fl':'59-17 JB — 10th fl','10th':'59-17 JB — 10th fl','11th fl':'59-17 JB — 11th fl','11th':'59-17 JB — 11th fl','12th fl':'59-17 JB — 12th fl','12th':'59-17 JB — 12th fl','59-17 JB · 11TH FLOOR':'59-17 JB — 11th fl','59-17 JB · 12TH FLOOR':'59-17 JB — 12th fl','59-17 JB · 10TH FLOOR':'59-17 JB — 10th fl','59-17 JB · 3RD FLOOR':'59-17 JB — 3rd fl'};
-  if (hheMap[area]) return {...item, area: hheMap[area]};
-  if (jbMap[area]) return {...item, area: jbMap[area]};
+  // Handle exact mixed/legacy strings first
+  const exactMap = {
+    '96-05 HHE · B2 | 59-17 JB · 11TH FLOOR': '96-05 HHE — B2',
+    '96-05 HHE · B1 | 59-17 JB · 11TH FLOOR': '96-05 HHE — B1',
+    '96-05 HHE · A3 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A3',
+    '96-05 HHE · A4 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A4',
+    '96-05 HHE · A5 | 59-17 JB · 11TH FLOOR': '96-05 HHE — A5',
+    '59-17 JB · 11TH FLOOR': '59-17 JB — 11th fl',
+    '59-17 JB · 12TH FLOOR': '59-17 JB — 12th fl',
+    '59-17 JB · 10TH FLOOR': '59-17 JB — 10th fl',
+    '59-17 JB · 3RD FLOOR': '59-17 JB — 3rd fl',
+    'A1': '96-05 HHE — A1', 'B1': '96-05 HHE — B1', 'B2': '96-05 HHE — B2',
+    'A3': '96-05 HHE — A3', 'A4': '96-05 HHE — A4', 'A5': '96-05 HHE — A5',
+    '3rd fl': '59-17 JB — 3rd fl', '3rd': '59-17 JB — 3rd fl',
+    '10th fl': '59-17 JB — 10th fl', '10th': '59-17 JB — 10th fl',
+    '11th fl': '59-17 JB — 11th fl', '11th': '59-17 JB — 11th fl',
+    '12th fl': '59-17 JB — 12th fl', '12th': '59-17 JB — 12th fl',
+  };
+  if (exactMap[area]) return {...item, area: exactMap[area]};
+  // If it contains a pipe (mixed), take the first part and re-normalize
+  if (area.includes('|')) {
+    const first = area.split('|')[0].trim();
+    const remapped = exactMap[first];
+    if (remapped) return {...item, area: remapped};
+    // Extract phase from "96-05 HHE · B2" style
+    const phaseMatch = first.match(/·\s*(A\d|B\d)/);
+    if (phaseMatch) return {...item, area: `96-05 HHE — ${phaseMatch[1]}`};
+  }
+  // Already correct format
+  if (area.startsWith('96-05 HHE —') || area.startsWith('59-17 JB —')) return item;
   return item;
 }
 

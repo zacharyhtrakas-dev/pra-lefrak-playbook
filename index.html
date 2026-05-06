@@ -898,6 +898,7 @@ body{
   <div id="alerts-container">
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — A1:</strong> FDNY inspection May 12.</div></div>
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — A3:</strong> AJA punchlist walkthrough May 11. Substantial Completion target: May 15.</div></div>
+    <div class="alert alert-w" style="border-color:var(--red-border);background:var(--red-bg);color:var(--red)"><span class="alert-icon">🔴</span><div><strong>96-05 HHE — A3 FA pretest BLOCKER:</strong> FA devices delivered 4/28 but not yet installed. Must be installed → pretest passed → FDNY inspection. Confirm installation schedule with Blackbull/Scutum.</div></div>
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — B1/B2/A4:</strong> FDNY inspection pending. PAA #2025-TMFALM-007622-PLAN filed 4/9/26. No date yet. Main blocker for turnover. FA contractor: <strong>Scutum</strong> (formerly Hi Rise).</div></div>
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — B2:</strong> FA pretest incomplete. Additional devices required. Re-pretest TBD. GC: <strong>Blackbull</strong> (Astor &amp; Stone no longer working).</div></div>
     <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>59-17 JB — 10th fl:</strong> GC permits blocked. DCAS &amp; DEP approved drawings 5/4/26, but GC cannot pull permits until Lefrak/Foremost and DEP/DCAS reach agreement on data center access for abatement.</div></div>
@@ -1034,6 +1035,7 @@ body{
   <div class="ph"><div class="ph-title">Closeout Tracker</div><div class="ph-sub">Critical path + substantial completion rules</div></div>
   <div class="sec-lbl">Critical blockers — ranked by urgency</div>
   <div class="card">
+    <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 96-05 HHE — A3 FA pretest</span><span class="rv">FA devices delivered 4/28 but need to be installed before pretest. Pretest must pass before FDNY inspection can proceed. Confirm with Blackbull/Scutum that installation is scheduled.</span></div>
     <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 96-05 HHE — FDNY B1/B2/A4</span><span class="rv">B2/A3/A4: Drawings signed by Troon 4/28, now at MGE for EOR signature. B1: PAA filed 4/9/26 awaiting FDNY approval. Current action: push MGE to sign and send as-builts to Scutum.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 FA pretest</span><span class="rv">Extra devices needed. Schedule re-pretest once in hand. 30-day clock restarts from passing pretest — if FDNY then gives inspection date &gt;30 days after request, Lefrak can self-certify.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 plumbing LOC</span><span class="rv">Foremost to check — plumber needs to sign off permit Q01342765-I1-PL.</span></div>
@@ -1530,10 +1532,11 @@ const DEFAULT_STATUSES = {
     {id:'notice_of_substantial_completion',item:'Notice of Substantial Completion', status:'Not yet issued', cls:'bd', owner:'A. Jhamb (Lefrak)'}
   ],
   'hhe-a3': [
-    {id:'reconstruction',item:'Reconstruction', status:'In progress. Glass scheduled May 6 (BB trying sooner). FA devices delivered 4/28. Furniture relocation by 5/1. Dropbox expected 5/15.', cls:'bi', owner:'Blackbull'},
+    {id:'reconstruction',item:'Reconstruction', status:'In progress. Glass scheduled May 6 (BB trying sooner). Furniture relocation by 5/1. Dropbox expected 5/15.', cls:'bi', owner:'Blackbull'},
+    {id:'a3_fa_pretest',item:'FA Pretest — A3 ⚠ BLOCKER', status:'FA devices need to be installed before pretest can happen. Devices delivered 4/28 — confirm with Blackbull/Scutum that installation is scheduled. Pretest must pass before FDNY inspection.', cls:'bd', owner:'Blackbull / Scutum'},
     {id:'dob_arch_loc_q00919587',item:'DOB Arch LOC — Q00919587', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc_q00919605',item:'DOB Mech LOC — Q00919605', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'Scutum has signed and sealed A3 as-builts. Requesting FDNY inspection Tuesday 5/4/26.', cls:'bw', owner:'MGE → Scutum'},
+    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'FDNY inspection requested 5/5/26. Cannot proceed until FA pretest passes first — devices must be installed.', cls:'bd', owner:'Scutum'},
     {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
     {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'AJA sent updated A3 layout to DFI and coordinated. AJA sent updated quote/cost to Melissa (DCAS) — Melissa accepted. DFI coordination complete.', cls:'bs', owner:'AJA/DFI/Mason'},
     {id:'a3_glass_install',item:'Glass partition installation', status:'Glass scheduled to arrive May 6, 2026 (Blackbull trying to get sooner). Installation to follow delivery.', cls:'bw', owner:'Blackbull'},
@@ -2614,7 +2617,13 @@ ${crossRefSummary}
 PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days (${p.expires})`).join(' | ')||'None'}
 TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None scheduled'}
 
-INSTRUCTIONS: Surface everything — cross-reference all data sources. Never omit a blocker. Blockers and cross-ref flags take priority.
+HARDCODED BLOCKERS (always surface these regardless of other data):
+- 96-05 HHE A3: FA devices delivered 4/28 but NOT YET INSTALLED. Must install → run pretest → pass → THEN FDNY inspection. This is the critical path blocker for A3 SC on May 15.
+- 96-05 HHE B1: PAA pending FDNY approval, cannot request inspection yet.
+- 59-17 JB 10th fl: GC permits blocked pending data center access agreement.
+- GC permits Q00940195 + Q00919587 expire May 20.
+
+INSTRUCTIONS: Surface everything — cross-reference all data sources. Always include the hardcoded blockers above. Never omit a blocker.
 
 Return ONLY valid JSON, no preamble: {"headline":"string","urgent":["..."],"push_today":["who + what"],"watch":["..."],"meetings_today":["..."],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"string"}`;
 

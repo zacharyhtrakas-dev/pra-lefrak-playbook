@@ -1455,112 +1455,6 @@ async function saveToFirebase(collection, data) {
 }
 
 // ── STATUS DATA IN FIREBASE ───────────────────────────────
-const DEFAULT_STATUSES = {
-  // HHE phases
-  'hhe-b1': [
-    {id:'dob_arch_loc_q01225051',item:'DOB Arch LOC — Q01225051', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_mech_loc_q01286750',item:'DOB Mech LOC — Q01286750', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_plumbing_loc',item:'DOB Plumbing LOC', status:'N/A', cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_letter_of_approval',item:'FDNY Letter of Approval — #2025-TMFALM-007622-PLAN', status:'B1: PAA in FDNY system awaiting approval — cannot request inspection until PAA is approved', cls:'bd', owner:'Scutum / Ary'},
-    {id:'electrical_bec_bis_sign_off',item:'Electrical BEC BIS sign-off', status:'Passed — official signoff when all phases done', cls:'bi', owner:'Ary (Blackbull)'},
-    {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
-    {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
-    {id:'arch_as_builts_aja',item:'Arch As-Builts (AJA)', status:'Sent 3/27', cls:'bs', owner:'AJA'},
-    {id:'mep_punchlist_signoff',item:'MEP Punchlist Signoff', status:'Under review with EOR', cls:'bi', owner:'Blackbull/EOR'},
-    {id:'arch_punchlist_signoff',item:'Arch Punchlist Signoff', status:'Under review with AOR', cls:'bi', owner:'Blackbull/AOR'},
-    {id:'loc_gc_mech',item:'LOC — GC + Mech', status:'Received', cls:'bs', owner:'Blackbull'},
-    {id:'fa_pretest_30_day_clock',item:'FA Pretest (30-day clock)', status:'Pretest performed 2/2026', cls:'bs', owner:'Blackbull'},
-    {id:'emergency_light_test',item:'Emergency Light Test', status:'Passed at FA pretest', cls:'bs', owner:'Blackbull'},
-    {id:'notice_of_substantial_completion',item:'Notice of Substantial Completion', status:'Not yet issued', cls:'bd', owner:'A. Jhamb (Lefrak)'}
-  ],
-  'hhe-b2': [
-    {id:'dob_arch_loc_q00940195',item:'DOB Arch LOC — Q00940195', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_mech_loc_q00940285',item:'DOB Mech LOC — Q00940285', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_plumbing_q01342765_i1_pl',item:'DOB Plumbing — Q01342765-I1-PL', status:'Plumber needs to sign off', cls:'bw', owner:'Muhammad (MBC)'},
-    {id:'fdny_2025_tmfalm_00516',item:'FDNY — #2025-TMFALM-00516', status:'CORRECTION 5/4/26: As-builts still with Troon (Foremost gave incorrect info earlier). Troon signing by Tues 5/4, overnight FedEx to MGE. MGE signs Wed 5/5, overnight FedEx to Scutum. Scutum receives Thurs 5/6 and requests FDNY inspection same day.', cls:'bw', owner:'MGE → Scutum'},
-    {id:'electrical_bec_bis_q01186589',item:'Electrical BEC BIS — Q01186589', status:'Passed — awaits all phases', cls:'bi', owner:'Ary (Blackbull)'},
-    {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
-    {id:'fa_pretest',item:'FA Pretest', status:'Additional devices required — re-pretest TBD', cls:'bd', owner:'Blackbull'},
-    {id:'tr_1_dob_post_permit',item:'TR-1 (DOB Post Permit)', status:'WIP', cls:'bw', owner:'Muhammad (MBC)'},
-    {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
-    {id:'arch_as_builts_aja',item:'Arch As-Builts (AJA)', status:'Sent 3/27', cls:'bs', owner:'AJA'},
-    {id:'notice_of_substantial_completion',item:'Notice of Substantial Completion', status:'Not yet issued', cls:'bd', owner:'A. Jhamb (Lefrak)'}
-  ],
-  'hhe-a4': [
-    {id:'dob_arch_loc_q01286541',item:'DOB Arch LOC — Q01286541', status:'Received 3/19', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_mech_loc_q01286552',item:'DOB Mech LOC — Q01286552', status:'Received 4/10', cls:'bs', owner:'Muhammad (MBC)'},
-    {id:'dob_plumbing',item:'DOB Plumbing', status:'N/A', cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_20258_tmfalm_007621',item:'FDNY — #20258-TMFALM-007621', status:'CORRECTION 5/4/26: As-builts still with Troon (Foremost gave incorrect info earlier). Troon signing by Tues 5/4, overnight FedEx to MGE. MGE signs Wed 5/5, overnight FedEx to Scutum. Scutum receives Thurs 5/6 and requests FDNY inspection same day.', cls:'bw', owner:'MGE → Scutum'},
-    {id:'certified_air_balancing_report',item:'Certified Air Balancing Report', status:'Approved 3/27', cls:'bs', owner:'Ary (Blackbull)'},
-    {id:'mep_as_builts_mge',item:'MEP As-Builts (MGE)', status:'WIP', cls:'bw', owner:'MGE'},
-    {id:'arch_as_builts_aja',item:'Arch As-Builts (AJA)', status:'Sent 3/27', cls:'bs', owner:'AJA'},
-    {id:'fa_pretest_30_day_clock',item:'FA Pretest (30-day clock)', status:'Pretest performed 2/2026', cls:'bs', owner:'Blackbull'},
-    {id:'furniture',item:'Furniture', status:'Relocated to A4', cls:'bs', owner:'DEP/DCAS'},
-    {id:'notice_of_substantial_completion',item:'Notice of Substantial Completion', status:'Not yet issued', cls:'bd', owner:'A. Jhamb (Lefrak)'}
-  ],
-  'hhe-a3': [
-    {id:'reconstruction',item:'Reconstruction', status:'In progress. Glass scheduled May 6 (BB trying sooner). Furniture relocation by 5/1. Dropbox expected 5/15.', cls:'bi', owner:'Blackbull'},
-    {id:'a3_fa_pretest',item:'FA Pretest — A3 ⚠ BLOCKER', status:'FA devices need to be installed before pretest can happen. Devices delivered 4/28 — confirm with Blackbull/Scutum that installation is scheduled. Pretest must pass before FDNY inspection.', cls:'bd', owner:'Blackbull / Scutum'},
-    {id:'dob_arch_loc_q00919587',item:'DOB Arch LOC — Q00919587', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'dob_mech_loc_q00919605',item:'DOB Mech LOC — Q00919605', status:'WIP — not yet received', cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_2023_tmfalm_007841',item:'FDNY — #2023-TMFALM-007841', status:'FDNY inspection requested 5/5/26. Cannot proceed until FA pretest passes first — devices must be installed.', cls:'bd', owner:'Scutum'},
-    {id:'furniture_layout',item:'Furniture layout', status:'Accepted by DCAS 4/21/26', cls:'bs', owner:'DEP/DCAS'},
-    {id:'lv_connect_trac_coordination',item:'LV / Connect-trac coordination', status:'AJA sent updated A3 layout to DFI and coordinated. AJA sent updated quote/cost to Melissa (DCAS) — Melissa accepted. DFI coordination complete.', cls:'bs', owner:'AJA/DFI/Mason'},
-    {id:'a3_glass_install',item:'Glass partition installation', status:'Glass scheduled to arrive May 6, 2026 (Blackbull trying to get sooner). Installation to follow delivery.', cls:'bw', owner:'Blackbull'},
-    {id:'a3_punchlist_walk',item:'AJA Punchlist Walk', status:'Confirmed 5/11/26 at 10:30am — AJA creates PL on walk and sends to team (Foremost confirmed 4/28)', cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
-    {id:'a3_sc_date',item:'Substantial Completion Target', status:'May 15, 2026 — SC to be declared', cls:'bw', owner:'Anita Jhamb (Lefrak)'},
-    {id:'acp_5_acp_21',item:'ACP-5 / ACP-21', status:'Foremost to provide ACP-21', cls:'bw', owner:'ECC/D.Jenkins'},
-    {id:'hhe_back_corridor',item:'HHE back corridor — ceiling/HVAC removal', status:'PAUSED 4/28 — Sheranne flagged ACM concern on ceiling grid removal. Donna had sampling done night of 4/28. Results pending few days. ECC involved.', cls:'bd', owner:'Donna Cappa / ECC'}
-  ],
-  'hhe-a5': [
-    {id:'new_lobby_open_active',item:'New lobby open + active', status:'Open since 1/24/26', cls:'bs', owner:'Blackbull (MBC) — formerly Astor & Stone'},
-    {id:'new_lobby_desk_plexiglass',item:'New lobby desk + plexiglass', status:'Complete 4/21/26', cls:'bs', owner:'Lefrak'},
-    {id:'under_counter_storage',item:'Under-counter storage', status:'Pending — later date TBD', cls:'bw', owner:'Lefrak'},
-    {id:'green_wall_dep_signage',item:'Green wall + DEP signage', status:'Donna Cappa asking about installation timeline (email 4/27) — no response yet from Foremost', cls:'bw', owner:'Foremost / Lefrak'}
-  ],
-  'jb-12': [
-    {id:'dep_occupancy',item:'DEP occupancy', status:'Operational since 2/2/26', cls:'bs', owner:''},
-    {id:'arts_tru1253qn24',item:'ARTS — TRU1253QN24', status:'Closed out 4/17/26', cls:'bs', owner:''},
-    {id:'aja_mep_punchlists',item:'AJA + MEP punchlists', status:'AJA punchlist walk scheduled May 11, 2026 at 10:30am', cls:'bw', owner:'AJA'},
-    {id:'fa_pretest_certification',item:'FA Pretest certification', status:'Completed 1/15/26', cls:'bs', owner:'Sent to DCAS'},
-    {id:'dep_dcas_formal_punchlist',item:'DEP/DCAS formal punchlist', status:'Remaining items — Foremost working', cls:'bw', owner:''},
-    {id:'aja_restroom_saddle_slope',item:'AJA restroom saddle/slope', status:'Confirmation pending from AJA', cls:'bw', owner:''},
-    {id:'lock_replacement',item:'Lock replacement', status:'Locks on backorder with Cardona Key Lock Services — awaiting delivery', cls:'bw', owner:'Foremost / Cardona'}
-  ],
-  'jb-11': [
-    {id:'arts_tru1110qn25',item:'ARTS — TRU1110QN25', status:'V5 Variance Approved 4/23/26 — VAR# 2487QN25', cls:'bs', owner:''},
-    {id:'dob_job_numbers',item:'DOB Job Numbers — ALL APPROVED 4/16/26', status:'Elev Lobby GC Q01356141 ✓ · Open Areas GC/MS/SP Q01319665 ✓ · Bathrooms GC/MS/PL/SP Q01287581-4 ✓ (per Muhammad 4/16)', cls:'bi', owner:''},
-    {id:'acp_21_requirement',item:'ACP-21 requirement', status:'1 ACP-21 must be submitted to DOB prior to sign-off', cls:'bw', owner:'ECC/ESG'},
-    {id:'pre_construction_notification',item:'Pre-construction notification', status:'Notice sent by ESG (Javier Catalan) 4/24/26', cls:'bs', owner:'Zach/ESG'},
-    {id:'notice_posted_in_lobby_11th_fl',item:'Notice posted in lobby + 11th fl', status:'Pre-construction notice posted 4/24/26. Updated lobby sign ready but KK instructed Donna to HOLD posting until 5/1 — DEP must enter in their system before sign goes up.', cls:'bw', owner:'KK / Donna Cappa'},
-    {id:'4_week_employee_notice_by_dep',item:'4-week employee notice by DEP', status:'Pending — DEP issues upon receipt of pre-construction notice', cls:'bw', owner:'DEP'},
-    {id:'soft_demo',item:'Soft demo', status:'Underway — bathrooms done, ceiling grid in progress', cls:'bi', owner:'Foremost'},
-    {id:'scope_revision_4_14_call',item:'Scope revision (4/14 call)', status:'FMC/Copy/File/BEPA: walls out of scope; VCT + ceilings + lights + wallpaper added', cls:'bi', owner:''},
-    {id:'paint_confirmed',item:'11th fl paint colors', status:'CONFIRMED 4/28/26 by Paul Belec (DEP). Wall: BM Vanilla Ice Cream BM2154-70 Eggshell. Frame: BM Vanilla Ice Cream BM2154-70 Semi Gloss. Door: Brilliant Blue 2065-30 Semi Gloss. Now building standard going forward.', cls:'bs', owner:'Paul Belec / Foremost'},
-    {id:'dep_low_voltage_shutdown',item:'DEP low voltage shutdown', status:'Commenced', cls:'bs', owner:'Mason'},
-    {id:'abatement',item:'Abatement', status:'Follows 4-week DEP employee notice period', cls:'bm', owner:'ESG/ECC'},
-    {id:'elevator_cross_over_reconstruction',item:'Elevator cross-over reconstruction', status:'Elevator lobby closed 5/15. Soft demo 5/18–5/20. ESG/ECC mobilize 5/28. Abatement 5/29–6/1. Reconstruction starts 6/4. Per Foremost 4/28 email.', cls:'bm', owner:''},
-    {id:'elevator_bypass',item:'Elevator bypass — TEI to bypass 11th fl + remove lanterns/call buttons', status:'Requested by Foremost (Alex) 4/28 — Donna Cappa to confirm with TEI. Required before 5/18 soft demo start', cls:'bd', owner:'Donna Cappa / TEI'},
-    {id:'full_floor_re_occupancy',item:'Full floor re-occupancy (DEP occupies)', status:'DEP occupies floor 11: 9/28–9/29/26 per 4/23/26 schedule. Building power shutdowns 5/16 and 5/23 at 6am.', cls:'bm', owner:''}
-  ],
-  'jb-10': [
-    {id:'arts_drawings',item:'ARTS drawings', status:'Submitted to DEP 4/21/26', cls:'bs', owner:'PRA'},
-    {id:'dep_review_of_arts_drawings',item:'DEP review of ARTS drawings', status:'Awaiting DEP review', cls:'bw', owner:''},
-    {id:'dcas_dep_drawing_approval',item:'DCAS &amp; DEP 10th fl drawing approval', status:'Approved 5/4/26 — GC can now start pulling GC permits', cls:'bs', owner:'DCAS/DEP'},
-    {id:'gc_permits_10th',item:'GC Permit Filing — 10th fl', status:'Drawings approved 5/4/26 — BLOCKED pending Lefrak/Foremost + DEP/DCAS agreement on data center access for abatement', cls:'bd', owner:'GC'},
-    {id:'known_acm_scope',item:'Known ACM scope', status:'Mastic at carpet/VCT, restrooms, corridor, columns', cls:'bi', owner:'Identified 3/31 walkthrough'},
-    {id:'additional_acm_testing_corridor',item:'Additional ACM testing (corridor)', status:'LL conducting week of 4/20/26', cls:'bi', owner:'2016 results to DEP'},
-    {id:'arts_filing',item:'ARTS filing', status:'New filing to be submitted after DEP drawing review', cls:'bm', owner:'ECC/ESG'},
-    {id:'construction',item:'Construction', status:'Not started — follows 11th floor and ARTS approval', cls:'bm', owner:''}
-  ],
-  'jb-3': [
-    {id:'prior_arts_tru1253qn24',item:'Prior ARTS (TRU1253QN24)', status:'Expired 9/23/25 — no longer active', cls:'bm', owner:''},
-    {id:'new_arts_filing',item:'New ARTS filing', status:'To be filed before construction — concurrent with 10th fl', cls:'bm', owner:'ECC/ESG'},
-    {id:'additional_acm_testing_corridor',item:'Additional ACM testing (corridor)', status:'LL conducting week of 4/20/26', cls:'bw', owner:''},
-    {id:'phase_1_construction_crossover_bridge',item:'Phase 1 construction (crossover bridge, elevator lobby, restrooms)', status:'Planned ~9/4/26', cls:'bm', owner:'Two Tone GC'},
-    {id:'phase_2_construction_elevator_lobby_re',item:'Phase 2 construction (elevator lobby + restroom rebuild)', status:'Planned ~10/2/26', cls:'bm', owner:'Black Bull GC'}
-  ]
-};
 
 let liveStatuses = state.statuses; // now managed by state.js
 let liveTimelineStates = state.timelineStates; // now managed by state.js
@@ -1569,12 +1463,6 @@ let recentLogEntries = state.log; // now managed by state.js
 // initRender and initFirebase called at end of script
 
 // Items we know are correct — always override Firebase stale data with these
-const KNOWN_CORRECT = {
-  'jb-11': {
-    'pre_construction_notification': {status:'Sent by ESG (Javier Catalan) 4/24/26', cls:'bs'},
-    'notice_posted_in_lobby_11th_fl': {status:'Posted by Zach 4/24/26 — proof sent to Sheranne (DEP)', cls:'bs'},
-  }
-};
 
 function applyKnownCorrections(statuses) {
   Object.entries(KNOWN_CORRECT).forEach(([sectionKey, items]) => {
@@ -2021,108 +1909,6 @@ const REJECTIONS = {
   ]
 };
 
-const TIMELINE_DEFS = {
-  'hhe-b1b2a4': {
-    label: 'B1/B2/A4 — HHE Ground Floor',
-    steps: [
-      {id:'demo', title:'Make Ready / Demolition', state:'done', date:'Oct–Nov 2024', detail:'Soft demo and make-ready work complete.'},
-      {id:'filings', title:'DOB Filings & Permits', state:'done', date:'Oct 2024–Mar 2025', detail:'Initial permit filings completed. GC permit Q00940195-L1-GC active through 5/20/26.'},
-      {id:'abatement', title:'Abatement', state:'done', date:'Jun–Jul 2025', detail:'Full abatement completed in B1, B2, A4. Double shifts.'},
-      {id:'slab', title:'Slab Demo + New Slab', state:'done', date:'Jul–Sep 2025', detail:'Slab demo and new slab on grade complete.'},
-      {id:'reconstruction', title:'Reconstruction', state:'done', date:'Sep 2025–Jan 2026', detail:'B1/B2/A4 reconstruction substantially complete. 90%.'},
-      {id:'doc_locs', title:'DOB Letters of Completion', state:'done', date:'Mar–Apr 2026', detail:'Arch LOCs received 3/19. Mech LOCs received 4/10. B2 plumbing LOC still pending — plumber to sign off.', rejType:'dob_permit'},
-      {id:'asbuilts', title:'As-Builts & Punchlist Signoffs', state:'warn', date:'Mar 2026–present', detail:'Arch drawings sent 3/27 by AJA. MEP fire alarm drawings still WIP with MGE. MEP + Arch punchlist signoffs under review with EOR/AOR.', rejType:'closeout'},
-      {id:'fa_pretest', title:'FA Pretest (30-day clock)', state:'warn', date:'B1/A4: Feb 2026 · B2: TBD', detail:'B1 and A4 pretests passed 2/2026. B2 pretest failed — additional devices required. Re-pretest must be scheduled. 30-day clock restarts from passing pretest.', rejType:'fdny'},
-      {id:'fdny', title:'FDNY Inspection', state:'blocked', date:'PAA filed 4/9/26', detail:'FDNY PAA filed 4/9/26. Inspection date not yet assigned. This is THE current main blocker. Follow up with Scutum weekly.', rejType:'fdny'},
-      {id:'sc_notice', title:'Substantial Completion Notice', state:'todo', date:'After FDNY + FA clear', detail:'Anita Jhamb (Lefrak) issues SC notice ≥10 business days before anticipated SC date. Full package due 5 business days after notice.'},
-      {id:'dcas_walk', title:'DCAS Walkthrough', state:'todo', date:'5 days after SC date', detail:'DCAS D&PM certifies after walkthrough. DEP rent clock starts per phase upon certification.'},
-      {id:'turnover', title:'Phase Turnover + Rent Starts', state:'todo', date:'TBD', detail:'Each phase turned over separately. DEP begins paying rent from turnover date.'}
-    ]
-  },
-  'hhe-a3': {
-    label: 'A3 — HHE Ground Floor',
-    steps: [
-      {id:'demo', title:'Make Ready / Demo', state:'done', date:'Oct 2024', detail:'Initial make-ready complete.'},
-      {id:'temp_lobby', title:'Temp Lobby Passage Built', state:'done', date:'Jun–Jul 2025', detail:'Temporary lobby passage constructed to allow A3 abatement.'},
-      {id:'abatement', title:'Abatement', state:'done', date:'Jun–Jul 2025', detail:'A3 abatement complete.'},
-      {id:'reconstruction', title:'Reconstruction', state:'active', date:'Sep 2025–present', detail:'A3 reconstruction in progress. A few more weeks remaining. Furniture layout accepted by DCAS 4/21. LV/connect-trac coordination with Mason/DFI underway. Arch (AJA) to send updated layout to DFI.'},
-      {id:'lv_coord', title:'Low Voltage Coordination', state:'warn', date:'In progress', detail:'Ceiling was closed before Mason completed LV work — ceiling will need to be opened again. AJA to send updated furniture layout to DFI. Coordinate early to minimize damage.'},
-      {id:'dob_locs', title:'DOB Letters of Completion', state:'blocked', date:'After reconstruction', detail:'DOB Arch LOC Q00919587 and Mech LOC Q00919605 — both WIP, not yet received. Required after construction is complete.', rejType:'dob_permit'},
-      {id:'fdny', title:'FDNY', state:'todo', date:'After construction', detail:'FDNY #2023-TMFALM-007841. MGE to sign fire alarm drawings and send to Scutum to request FDNY inspection.', rejType:'fdny'},
-      {id:'sc_notice', title:'SC Notice + Turnover', state:'todo', date:'TBD ~May 2026', detail:'Estimated completion ~4/20/26 per schedule. SC notice to follow.'}
-    ]
-  },
-  'hhe-a5': {
-    label: 'A5 — New Building Lobby',
-    steps: [
-      {id:'abatement', title:'Abatement', state:'done', date:'Aug–Sep 2025', detail:'A5 abatement complete.'},
-      {id:'slab', title:'New Slab', state:'done', date:'Sep 2025', detail:'New slab on grade complete.'},
-      {id:'fitout', title:'Fit-Out', state:'warn', date:'Sep 2025–present', detail:'Lobby fit-out 80% complete. New lobby open and active since 1/24/26. Desk + plexiglass complete 4/21/26. Under-counter storage pending (later date TBD). Green wall + DEP signage Day 2 scope outstanding.'},
-      {id:'complete', title:'Full Completion', state:'todo', date:'TBD', detail:'Under-counter storage, green wall, DEP signage to be completed. No hard date set.'}
-    ]
-  },
-  'jb-12': {
-    label: '12th Floor — 59-17 JB',
-    steps: [
-      {id:'arts', title:'ARTS Filing', state:'done', date:'Filed 2024', detail:'TRU1253QN24 — completed and closed out 4/17/26.'},
-      {id:'demo', title:'Soft Demo / Make Ready', state:'done', date:'Early 2025', detail:'Complete.'},
-      {id:'abatement', title:'Abatement', state:'done', date:'2025', detail:'12th floor abatement complete.'},
-      {id:'reconstruction', title:'Reconstruction', state:'done', date:'2025–Jan 2026', detail:'12th floor reconstruction complete. Lights/controls installed 1/26/26.'},
-      {id:'punchlist', title:'Punchlist', state:'warn', date:'Jan 2026–present', detail:'AJA and MEP punchlists issued and completed. DEP/DCAS formal punchlist remaining items — Foremost working to close. AJA restroom saddle/slope confirmation still pending.', rejType:'closeout'},
-      {id:'occupied', title:'DEP Re-Occupancy', state:'done', date:'2/2/26', detail:'DEP fully operational on 12th floor since 2/2/26. ARTS closed out 4/17/26.'}
-    ]
-  },
-  'jb-11': {
-    label: '11th Floor — 59-17 JB (Phase 5)',
-    steps: [
-      {id:'arts_file', title:'ARTS Filing Submitted', state:'done', date:'Nov 18, 2025', detail:'TRU1110QN25 filed with DEP.'},
-      {id:'dob_review', title:'DOB ATRU Review', state:'done', date:'Feb–Mar 2026', detail:'DOB application approved 3/9/26.'},
-      {id:'objection', title:'DEP Objection → Response', state:'done', date:'Mar–Apr 2026', detail:'V5 variance approval received 4/23/26 — VAR# 2487QN25.', rejType:'arts_filing'},
-      {id:'preconstruction', title:'Pre-Construction Notification', state:'done', date:'4/24/26', detail:'ESG (Javier Catalan) sent notice. Zach posted in lobby + 11th floor and sent proof to Sheranne (DEP).'},
-      {id:'dep_notice', title:'DEP 4-Week Employee Notice', state:'warn', date:'Pending after pre-construction notice', detail:'DEP issues 4-week employee notice upon receipt of pre-construction notification. Clock starts from notice date. Abatement cannot start until 4 weeks after notice.'},
-      {id:'demo', title:'Soft Demo / ACM Removal', state:'active', date:'5/15/26 – 6/18/26', detail:'Lobbies/Corridor: 5/15–5/30. Carpet: 5/30–6/13. Restrooms: 6/13–6/18. Per schedule DEP furniture breakdown completed 3/17–3/30/26.'},
-      {id:'lv', title:'Low Voltage Shutdown', state:'done', date:'Started ~3/24/26', detail:'DEP commenced LV shutdown. Mason provided existing condition report.'},
-      {id:'vacate', title:'DEP Vacated Floor 11', state:'done', date:'2/2/26 – 3/6/26', detail:'DEP vacated and left packed boxes labeled for moving. Boxes moved to floors 20 and 4 by 3/10/26.'},
-      {id:'abatement', title:'Abatement (ACM Removal)', state:'todo', date:'5/15/26 – 6/18/26', detail:'ESG/ECC to perform abatement. Follows 4-week DEP employee notice. ACP-20/21 must be posted on site per V5 conditions.'},
-      {id:'air_clearance', title:'Air Clearance Testing', state:'todo', date:'After abatement', detail:'ECC to perform air clearance testing before reconstruction begins.'},
-      {id:'reconstruction', title:'Reconstruction', state:'todo', date:'6/18/26 – 8/21/26', detail:'Lobbies/Corridor: 6/18–7/31. Restrooms: 5/18–7/2. Ceiling Grid: 6/18–7/24. Ceiling Tile + Fixtures: 7/24–8/21. Carpet: 5/18–7/14.'},
-      {id:'punchlist', title:'Punchlist + SC Letter', state:'todo', date:'8/21/26 – 9/2/26', detail:'DEP/DCAS inspect 8/21–8/24. Punchlist issued 8/24–8/25. Punchlist completion by 9/1/26. SC Letter executed 9/1–9/2/26.', rejType:'closeout'},
-      {id:'occupied', title:'DEP Re-Occupies Floor 11', state:'todo', date:'9/23/26 – 9/29/26', detail:'Furniture reinstall + LV connections: 8/25–9/23. Internal walkthrough 9/23. Union rep walkthrough 9/23. Move into final locations 9/23–9/28. DEP OCCUPIES FLOOR 11: 9/28–9/29/26.'}
-    ]
-  },
-  'jb-10': {
-    label: '10th Floor — 59-17 JB (Phase 6B)',
-    steps: [
-      {id:'walkthrough', title:'Scope Walkthrough', state:'done', date:'3/31/26', detail:'PRA + DEP walked 10th floor to identify ACM scope.'},
-      {id:'arts_drawings', title:'ARTS Drawings Submitted to DEP', state:'done', date:'4/21/26', detail:'ARTS drawings submitted to DEP by PRA. Scope: mastic at carpet/VCT, restrooms, corridor, columns.'},
-      {id:'dep_review', title:'DEP Drawing Review', state:'active', date:'4/21/26–present', detail:'Awaiting DEP review. Per schedule ARTS filing for 10th/3rd runs 2/23/26 – 6/12/26.', rejType:'arts_filing'},
-      {id:'arts_file', title:'ARTS Filing to DOB', state:'todo', date:'By 6/12/26 per schedule', detail:'New ARTS filing to be submitted after DEP approves drawings.', rejType:'arts_filing'},
-      {id:'arts_approval', title:'ARTS Approval', state:'todo', date:'TBD', detail:'', rejType:'arts_filing'},
-      {id:'notice', title:'Pre-Construction Notification', state:'todo', date:'After approval', detail:'Same process as 11th floor.'},
-      {id:'dep_pack', title:'DEP Packing to Vacate', state:'todo', date:'8/4/26 – 8/21/26', detail:'Per schedule DEP starts packing 8/4/26.'},
-      {id:'demo', title:'Soft Demo / ACM Removal', state:'todo', date:'10/23/26 – 11/10/26', detail:'Corridor: 10/23–10/25. Carpet: 10/25–11/6. Restrooms: 11/6–11/10. DEP vacates 9/29–9/30/26 (after Floor 11 completes).'},
-      {id:'abatement', title:'Abatement', state:'todo', date:'10/23/26 – 11/10/26', detail:'ESG/ECC. Follows DEP vacating floor.'},
-      {id:'reconstruction', title:'Reconstruction', state:'todo', date:'11/11/26 – 1/25/27', detail:'Restrooms: 11/11–12/23. Ceiling Grid: 11/11–12/9. Ceiling Tile + Fixtures: 12/10–12/31. Carpet: 12/10–1/25/27.'},
-      {id:'occupied', title:'DEP Re-Occupies Floor 10', state:'todo', date:'3/10/27 – 3/12/27', detail:'Punchlist: 1/26–3/2/27. SC Letter: 3/1–3/2/27. Furniture reinstall: 1/29–2/26/27. DEP returns 3/1–3/12/27. DEP OCCUPIES FLOOR 10: 3/10–3/12/27.'}
-    ]
-  },
-  'jb-3': {
-    label: '3rd Floor — 59-17 JB (Phase 6A)',
-    steps: [
-      {id:'acm_test', title:'Additional ACM Testing', state:'active', date:'Week of 4/20/26', detail:'LL conducting additional ACM testing in 3rd floor corridor. 2016 results to be sent to DEP.'},
-      {id:'arts_drawings', title:'ARTS Drawings + Filing', state:'todo', date:'Concurrent with 10th fl — by 6/12/26', detail:'New ARTS filing required. Previous TRU1253QN24 expired 9/23/25. Per schedule LL Notifies Floor 3 Tenant for upcoming construction: 3/2/26–8/24/26 (already done).', rejType:'arts_filing'},
-      {id:'arts_file', title:'ARTS Filing', state:'todo', date:'By 6/12/26', detail:'', rejType:'arts_filing'},
-      {id:'arts_approval', title:'ARTS Approval', state:'todo', date:'TBD', detail:'', rejType:'arts_filing'},
-      {id:'phase1_demo', title:'Transfer Corridor — Soft Demo', state:'todo', date:'9/4/26 – 9/6/26', detail:'3 days. Follows Floor 11 completion.'},
-      {id:'phase1_abate', title:'Transfer Corridor — ACM Removal', state:'todo', date:'9/11/26 – 9/13/26', detail:'3 days. ESG/ECC.'},
-      {id:'phase1_build', title:'Transfer Corridor — Construction', state:'todo', date:'9/14/26 – 9/30/26', detail:'3 weeks. Completes 9/30/26.'},
-      {id:'phase2_demo', title:'Elevator Lobby — Soft Demo', state:'todo', date:'10/2/26 – 10/4/26', detail:'3 days.'},
-      {id:'phase2_abate', title:'Elevator Lobby + Restrooms — ACM Removal', state:'todo', date:'10/9/26 – 10/18/26', detail:'Elevator Lobby ACM: 10/9–10/11. Men Restroom ACM: 10/16–10/18. Women Restroom ACM: 10/16–10/18.'},
-      {id:'phase2_build', title:'Elevator Lobby + Restrooms — Reconstruction', state:'todo', date:'10/19/26 – 11/30/26', detail:'Elevator Lobby: 6 wks 10/19–11/21. Mens Bathroom: 6 wks 10/19–11/21. Womens Bathroom: 6 wks 10/19–11/21.'},
-      {id:'occupied', title:'Floor 3 Completes', state:'todo', date:'11/24/26 – 12/3/26', detail:'Floor 3 Elevator Lobby Completes: 11/24/26. Floor 3 Restroom Opens: 11/24/26. Punchlist completion: 12/2/26. SC Letter: 12/3/26.'}
-    ]
-  }
-};
 
 function buildTimelines() {
   Object.entries(TIMELINE_DEFS).forEach(([key, def]) => {
@@ -2251,26 +2037,6 @@ function toggleRej(el) {
 let liveActions = state.actions; // now managed by state.js
 let actionFilter = 'open';
 
-const SEED_ACTIONS = [
-  {id:'a1', action:'Follow up with Scutum on FDNY inspection date for B1/B2/A4', owner:'Zach / Scutum', area:'96-05 HHE — B1', due:'2026-05-01', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a2', action:'Get additional FA devices for B2 and schedule re-pretest', owner:'Blackbull / Ary', area:'96-05 HHE — B2', due:'2026-05-01', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a3', action:'Chase B2 plumber to sign off permit Q01342765-I1-PL', owner:'Muhammad (MBC)', area:'96-05 HHE — B2', due:'2026-04-30', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a4', action:'Follow up with MGE on MEP as-builts for B1, B2, A4', owner:'Zach / MGE', area:'96-05 HHE — B1', due:'2026-05-01', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a5', action:'AJA to send updated A3 furniture layout to DFI for LV coordination', owner:'AJA / DFI', area:'96-05 HHE — A3', due:'2026-04-28', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a6', action:'Post 11th fl pre-construction notice in lobby + 11th floor, photograph, send proof to Sheranne (DEP)', owner:'Zach Trakas', area:'59-17 JB — 11th fl', due:'2026-04-24', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a7', action:'Confirm DEP issued 4-week employee notice for 11th floor and track start date', owner:'Zach / DEP', area:'59-17 JB — 11th fl', due:'2026-04-28', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a8', action:'GC permits Q00940195 and Q00919587 expire 5/20/26 — confirm renewal or closeout plan with Foremost', owner:'Zach / Foremost', area:'96-05 HHE — B1', due:'2026-05-05', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a9', action:'Submit 1 ACP-21 to DOB before 11th fl sign-off per V5 variance conditions', owner:'ECC/ESG', area:'59-17 JB — 11th fl', due:'2026-08-01', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a10', action:'LL to send 2016 ACM results for 3rd fl corridor to DEP', owner:'Lefrak / Foremost', area:'59-17 JB — 3rd fl', due:'2026-04-28', status:'open', source:'system', created:'Apr 24, 2026'},
-  {id:'a11', action:'A3: FDNY inspection requested 5/5/26 — confirm Scutum submitted and track inspection date', owner:'Zach / Scutum', area:'96-05 HHE — A3', due:'2026-05-07', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a12', action:'Prepare for A3 punchlist walkthrough with AJA on May 11 at 10:30am', owner:'Zach / AJA', area:'96-05 HHE — A3', due:'2026-05-11', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a13', action:'Declare Substantial Completion for A3 on May 15 — issue SC notice ≥10 business days prior', owner:'Anita Jhamb (Lefrak)', area:'96-05 HHE — A3', due:'2026-05-15', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a14', action:'Confirm FDNY inspection for A1 on May 12 — track and attend', owner:'Zach / Scutum', area:'96-05 HHE — A1', due:'2026-05-12', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a15', action:'Notify GC to start pulling permits for 10th floor (DCAS & DEP approved drawings 5/4/26)', owner:'Zach / GC', area:'59-17 JB — 10th fl', due:'2026-05-07', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a16', action:'B2 plumbing LOC Q01342765-I1-PL — Foremost to check and get plumber to sign off', owner:'Foremost / Muhammad (MBC)', area:'96-05 HHE — B2', due:'2026-05-08', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a17', action:'B2 structural LOC — pending sign-off, follow up with MBC', owner:'Muhammad (MBC)', area:'96-05 HHE — B2', due:'2026-05-08', status:'open', source:'system', created:'May 5, 2026'},
-  {id:'a18', action:'Biweekly DEP/PRA meeting: Thursday May 14 at 11am — prep notes beforehand', owner:'Zach Trakas', area:'Both buildings', due:'2026-05-14', status:'open', source:'system', created:'May 5, 2026'},
-];
 
 function normalizeActionArea(item) {
   // Sanitize action text — strip internal IDs and fix vague openers
@@ -2522,17 +2288,6 @@ async function addActionsFromAI(nextSteps, area) {
 }
 
 // ── BRIEFING ENGINE ───────────────────────────────────────
-const PERMIT_EXPIRY = [
-  {permit:'Q00940195-L1-GC (B1/B2/A4 GC)', expires:'2026-05-20', area:'96-05 HHE'},
-  {permit:'Q00919587-I1-GC (A3 GC)', expires:'2026-05-20', area:'96-05 HHE'},
-];
-const WEEKLY_MEETINGS = [
-  {day:1, time:'12:30 PM', name:'Weekly Sign-Off — 96-05 HHE'},
-  {day:1, time:'varies', name:'ACM Meeting (if scheduled)'},
-  {day:2, time:'10:30 AM', name:'GC Update — HHE + JB'},
-  {day:2, time:'1:30 PM', name:'Main DEP/DCAS/Lefrak Meeting'},
-  {day:4, time:'11:00 AM', name:'INTERNAL DEP/PRA Meeting (biweekly Thursdays — next: May 14)'},
-];
 
 async function generateDonnaDraft() {
   const btn = document.getElementById('donna-btn');
@@ -2677,56 +2432,6 @@ function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateSt
 }
 
 // ── CONTACTS ──────────────────────────────────────────────
-const DEFAULT_CONTACTS = [
-  {id:'c1', name:'Zachary Trakas', role:'Project Coordinator', org:'PRA', email:'Ztrakas@pra-consulting.com', notes:'(516) 350-7385 · Also TURI email for 59-17 Procore'},
-  {id:'c2', name:'KK — Krishnakant Maurya', role:'Senior Manager', org:'PRA', email:'kmaurya@pra-consulting.com', notes:'ACM meeting organizer. Zach\'s direct manager.'},
-  {id:'c3', name:'Matthew Barlow', role:'Director', org:'PRA', email:'mbarlow@pra-consulting.com', notes:'Go-to for rejection handling + process escalation'},
-  {id:'c4', name:'Cynthia Poulton', role:'Exec Director D&PM Real Estate', org:'DCAS / DEP', email:'Cpoulton@dcas.nyc.gov', notes:'(212) 386-0317'},
-  {id:'c5', name:'Melissa Rivera-Ferguson', role:'PM Real Estate Services', org:'DCAS / DEP', email:'Merferguson@dcas.nyc.gov', notes:''},
-  {id:'c6', name:'Sheranne Wickham', role:'Director EHS / Asbestos Lead & Mold — DEP', org:'DCAS / DEP', email:'SheranneW@dep.nyc.gov', notes:'(C) 347-203-2058 | (O) 718-595-7241. Receives proof of pre-construction notice. Flagged ACM concern on HHE back corridor 4/28. Key ACM/environmental contact.'},
-  {id:'c7', name:'David Jenkins', role:'Senior Managing Director', org:'Foremost', email:'DJenkins@foremostconstructionny.com', notes:'(212) 708-6228 · Foremost is Lefrak\'s internal commercial construction subsidiary'},
-  {id:'c8', name:'Alejandro Orellana', role:'Project Manager', org:'Foremost', email:'AOrellana@foremostconstructionny.com', notes:'Foremost — Lefrak internal commercial construction'},
-  {id:'c9', name:'Kyle Josefson', role:'Project Coordinator', org:'Foremost', email:'KJosefson@foremostconstructionny.com', notes:'Foremost — Lefrak internal commercial construction'},
-  {id:'c10', name:'Anita Jhamb', role:'SC notice issuer', org:'Lefrak', email:'A.Jhamb@lefrak.com', notes:'Issues Substantial Completion notices. Lefrak corporate.'},
-  {id:'c10b', name:'Mike Leary', role:'Lefrak', org:'Lefrak', email:'', notes:''},
-  {id:'c10c', name:'Meredith Jackness', role:'Lefrak', org:'Lefrak', email:'', notes:''},
-  {id:'c11', name:'Donna Cappa', role:'Building Manager — both buildings', org:'Lefrak', email:'', notes:'Weekly update recipient. On-site building manager for 96-05 HHE and 59-17 JB.'},
-  {id:'c12', name:'Clayton Long', role:'Principal — ECC', org:'ECC', email:'', notes:'ECC prepares ACM drawings and ARTS filings, submits filings to DOB/DEP, and coordinates scope with ESG. Clayton is PRA\'s main ECC contact. Works hand-in-hand with ESG on every abatement project.'},
-  {id:'c13', name:'Javier Catalan', role:'Project Manager — ESG (covering maternity leave)', org:'ESG', email:'', notes:'ESG performs the physical abatement work and writes the means & methods / abatement protocol. Javier is covering while Lisa Javier is on maternity leave. Runs the 1:30pm Monday ACM meeting. Also handles air monitoring and pre-construction notifications.'},
-  {id:'c13b', name:'Lisa Javier', role:'Project Manager — ESG (on maternity leave)', org:'ESG', email:'', notes:'Usually leads ESG\'s work on this project. On maternity leave — Javier Catalan is covering. ESG is responsible for abatement execution, means & methods, air monitoring, and pre-construction notifications.'},
-  {id:'c14', name:'Ary Neto', role:'PM — Blackbull', org:'Consultants / GCs', email:'ary@blackbullbuilders.com', notes:'Blackbull PM. Electrical, BEC sign-off, balancing reports. GC for HHE B1/B2/A3/A4.'},
-  {id:'c14b', name:'Anthony Johnson', role:'Principal Architect — AJA', org:'AJA', email:'', notes:'Lead architect on the project. AJA prepares and stamps arch drawings, as-builts, and responses to DOB/DEP objections. Design or material changes go through AJA first before DEP/DCAS approval.'},
-  {id:'c14c', name:'Janki Patel', role:'Architect — AJA', org:'AJA', email:'', notes:'Second in command at AJA. Day-to-day coordination on drawings, punchlist walks, and as-built preparation.'},
-  {id:'c17', name:'Cardona Key Lock Services', role:'Locksmith / Vendor', org:'Consultants / GCs', email:'', notes:'Lock replacement vendor for 59-17 JB 12th floor. Locks currently on backorder — awaiting delivery from vendor.'},
-  {id:'c18', name:'Paul Belec', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'pbelec@dep.nyc.gov', notes:'DEP contact on HHE and JB. Confirmed A3 paint colors as building standard going forward.'},
-  {id:'c19', name:'Awymarie Riollano', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'ariollano@dep.nyc.gov', notes:'On the DEP weekly Tuesday meeting.'},
-  {id:'c20', name:'Elisa Velazquez', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'EVelazquez@dep.nyc.gov', notes:'DEP contact on renovation project.'},
-  {id:'c21', name:'Clifton Oates', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'coates@dep.nyc.gov', notes:'DEP contact. Out of office returning 5/4/26.'},
-  {id:'c22', name:'Mary Lam', role:'Architect — NYC DEP Facilities', org:'DCAS / DEP', email:'MaryL@dep.nyc.gov', notes:'DEP architect. Flagged 11th fl paint standard as Vanilla Ice Cream BM2154-70 (different from what Foremost submitted).'},
-  {id:'c23', name:'Vitaly Tretyakov', role:'DCAS', org:'DCAS / DEP', email:'VTretyakov@dcas.nyc.gov', notes:'DCAS on DEP renovation project weekly meeting.'},
-  {id:'c24', name:'Brian Hopwood', role:'Project Manager — Foremost', org:'Foremost', email:'BHopwood@foremostconstructionny.com', notes:'Foremost PM on 11th floor coordination.'},
-  {id:'c25', name:'Nino Pjetri', role:'Superintendent — Blackbull', org:'Consultants / GCs', email:'npjetri@blackbullbuilders.com', notes:'Blackbull superintendent on 11th floor.'},
-  {id:'c26', name:'Frank Nikac', role:'Superintendent — Blackbull', org:'Consultants / GCs', email:'FNikac@blackbullbuilders.com', notes:'Blackbull superintendent on HHE and JB.'},
-  {id:'c27', name:'Costa Ioannou', role:'ESG — Air Monitoring', org:'ESG', email:'esgcosta@nyasbestos.com', notes:'ESG team member alongside Javier Catalan on abatement work.'},
-  {id:'c28', name:'Tomas Villegas', role:'ESG — Abatement', org:'ESG', email:'tomas@nyasbestos.com', notes:'ESG abatement team on 11th floor.'},
-  {id:'c29', name:'Aldo Ciccotelli', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'ACiccotelli@cosentini.com', notes:'Cosentini Associates MEP engineers. On 11th floor DOB filing thread.'},
-  {id:'c30', name:'Andre Camacho', role:'Lefrak Commercial Property Management', org:'Lefrak', email:'acamacho@lefrakcommercial.com', notes:'Lefrak property management. On 11th floor coordination thread.'},
-  {id:'c31', name:'Sue Dennis', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'SueD@dep.nyc.gov', notes:'DEP contact. CC on paint confirmation thread.'},
-  {id:'c32', name:'Oscar Gonzalez', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'OscarG@dep.nyc.gov', notes:'DEP contact. CC on paint confirmation thread.'},
-  {id:'c33', name:'Tanvir Ahmed', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'TAhmed@dep.nyc.gov', notes:'DEP contact. Added Mary Lam to the paint thread.'},
-  {id:'c34', name:'Sheranne Wickham', role:'Director, EHS / Asbestos Lead & Mold', org:'DCAS / DEP', email:'SheranneW@dep.nyc.gov', notes:'(C) 347-203-2058 | (O) 718-595-7241. Key DEP contact for pre-construction notifications and ACM concerns. Flagged ACM risk on HHE back corridor ceiling removal 4/28.'},
-  {id:'c35', name:'Alex A', role:'Superintendent — Astor & Stone', org:'Consultants / GCs', email:'alex@astorstone.com', notes:'Formerly Astor & Stone — now with Blackbull. GC for HHE A5 and JB 11th floor open areas.'},
-  {id:'c36', name:'Jimmy T', role:'Astor & Stone', org:'Consultants / GCs', email:'jimmy@astorstone.com', notes:'Formerly Astor & Stone — Blackbull assumed their scope.'},
-  {id:'c37', name:'John Barbagiannis', role:'Astor & Stone', org:'Consultants / GCs', email:'john@astorstone.com', notes:'Formerly Astor & Stone — Blackbull assumed their scope.'},
-  {id:'c38', name:'Ary Neto', role:'PM — Blackbull', org:'Consultants / GCs', email:'ary@blackbullbuilders.com', notes:'Blackbull PM. Also goes by Ary. On HHE and JB coordination threads.'},
-  {id:'c39', name:'Traven Tong', role:'Architect — Bauer Dermel', org:'Consultants / GCs', email:'', notes:'Bauer Dermel Architects. Added to 11th floor paint thread by David Jenkins 4/29.'},
-  {id:'c40', name:'Debbie Cepeda', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'', notes:'Cosentini Associates MEP engineers. On 11th floor filing threads.'},
-  {id:'c41', name:'Chris Angi', role:'Engineer — Cosentini Associates', org:'Consultants / GCs', email:'', notes:'Cosentini Associates MEP engineers. On 11th floor filing threads.'},
-  {id:'c42', name:'Joe Mazzarelli', role:'DEP — Maintenance', org:'DCAS / DEP', email:'', notes:'DEP maintenance contact (per Clifton Oates out-of-office).'},
-  {id:'c43', name:'Gonzalez, Oscar', role:'DEP — Facilities Management', org:'DCAS / DEP', email:'OscarG@dep.nyc.gov', notes:'DEP facilities contact.'},
-  {id:'c15', name:'Muhammad', role:'Expeditor — MBC', org:'Consultants / GCs', email:'', notes:'DOB permit filings + LOCs for all HHE phases.'},
-  {id:'c16', name:'Felix Urena', role:'ARTS Applicant — ESG', org:'ESG', email:'', notes:'Listed on TRU1110QN25 V5 Variance Approval · 1324 Lexington Ave NY 10128'}
-];
 
 let liveContacts = state.contacts; // now managed by state.js
 
@@ -3628,13 +3333,6 @@ function addProcessLinksToTimeline() {
 }
 
 // ── MEETINGS DATA ─────────────────────────────────────────
-const DEFAULT_MEETINGS = [
-  {id:'mtg-mon-1230',day:'Monday',time:'12:30 pm',name:'Weekly Sign-Off — 96-05 Ground Floor',detail:'Run by PRA. Permits + closeout items across all 96-05 phases. Foremost permit matrix — permit numbers reliable, statuses sometimes wrong.',tags:['96-05 HHE only','PRA leads','Permit matrix ref'],prep:['Review Foremost permit matrix — flag status discrepancies vs DOB/BIS','FDNY status: B2/A3/A4 — has MGE signed fire alarm drawings yet? B1 — has FDNY approved the PAA yet?','Update HHE closeout spreadsheet with anything closed since last week']},
-  {id:'mtg-mon-130',day:'Monday',time:'1:30 pm',name:'59-17 / 96-05 — DEP — ACM Next Steps',detail:'Run by ESG (Javier Catalan, covering for Lisa Javier on maternity leave). ECC (Clayton Long) also on the call. Covers abatement scope, drawings, phasing, filings, strategy. PRA role: receive updates, flag concerns, ask questions. KK organizes from PRA side.',tags:['Both buildings','ESG runs it','ECC attends','KK organizes'],prep:['Review latest ECC/ESG update on 10th+3rd ARTS filing status','Check 11th fl abatement schedule — any changes from Foremost?','Prepare questions for Clayton on scope/timeline']},
-  {id:'mtg-tue-1030',day:'Tuesday',time:'10:30 am',name:'96-05 HHE + 59-17 JB — GC Update',detail:'GC updates for all projects. Blackbull on for all phases (note: Astor & Stone no longer working — Blackbull assumed their scope everywhere).',tags:['Both buildings','GC updates'],prep:['Know 11th fl schedule status — elevator bypass confirmed? Soft demo 5/18 ready?','Know A3 glass arrival date and punchlist walk status (5/11 with AJA)','Any Blackbull RFIs in Procore pending response?']},
-  {id:'mtg-tue-130',day:'Tuesday',time:'1:30 pm',name:'Main DEP / DCAS / Lefrak / Foremost Meeting',detail:'All ongoing projects and concerns. 10 min to 3 hrs. Zach sends minutes per building via Stepflo after the call.',tags:['All parties','Zach sends minutes','Stepflo'],prep:['Open Stepflo — set up draft minutes for both buildings before the call','Review open action items from prior week\'s minutes','Draft Donna Cappa weekly update — finalize after the call','Anticipate Foremost needing a push — come with specific documented asks']},
-  {id:'mtg-thu-biweekly',day:'Thursday',time:'11:00 am',name:'INTERNAL DEP / PRA Meeting (Biweekly)',detail:'Biweekly Thursday meeting. Organizer: Meredith Jackness. Microsoft Teams. 1 hour. Next occurrence: May 14, 2026. Repeats every other week.',tags:['Internal DEP/PRA','Biweekly','Teams'],prep:['Review open items from prior session','Align on priorities for the coming two weeks']},
-];
 
 let liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS));
 
@@ -3691,14 +3389,6 @@ function openAddMeeting() {
 }
 
 // ── PROCESS LIBRARY DATA ───────────────────────────────────
-const DEFAULT_PROCESSES = [
-  {id:'proc-fdny',icon:'🚒',title:'FDNY Fire Alarm Inspection + As-Built Submission',subtitle:'Applies to: B1, B2, A3, A4 — 96-05 HHE',status:'active',statusLabel:'In Progress',tags:'fdny inspection fire alarm paa b1 b2 a3 a4 hhe as-built',desc:'FDNY must inspect and approve the fire alarm system before a Letter of Approval (LOA) can be issued. The fire alarm drawings (including as-built riser diagram where applicable) must be submitted to the Fire Alarm Inspection Unit. Key insight for B2/A3/A4: drawing changes were minor (under 10 devices/floor), so a PAA is NOT required.',steps:[{num:1,title:'Fire alarm drawings signed by electrical contractor (Troon)',detail:'Troon (electrical and FA contractor) reviews and signs the fire alarm drawings — which include a riser diagram where applicable. Status as of 4/28/26: Troon signed drawings for B2, A3, and A4 and FedEx\'d back to MGE.',owner:'Troon (elec/FA contractor)'},{num:2,title:'MEP engineer (MGE) signs and seals fire alarm drawings',detail:'MGE (MEP engineers, EOR) signs and seals the fire alarm drawings. Must be signed by the licensed design professional who is applicant of record. Current status: Drawings at MGE — received from Troon 4/28.',owner:'MGE (EOR)'},{num:3,title:'As-built sent to Scutum — they call for FDNY inspection',detail:'Once signed by MGE, drawings go to Scutum. Scutum submits to FDNY and calls for inspection. IMPORTANT: Scutum has NO control until MGE delivers signed drawings. Do not push Scutum until MGE step is confirmed complete.',owner:'Scutum'},{num:4,title:'PAA decision tree + 30-day self-cert rule',detail:'NO PAA: up to 10 devices added/floor, up to 10 not installed, DGPs inconsistent, system not downgraded. PAA OPTIONAL: under 10 devices — can file for certainty but not required. B2/A3/A4 taking no-PAA route. PAA REQUIRED: 10+ devices added/removed, control panel relocated, system type changed, work floors changed, any ARCS modification. B1: PAA filed 4/9/26 awaiting FDNY approval — inspection cannot be requested until approved. 30-DAY SELF-CERT RULE: If FDNY gives an inspection date MORE than 30 days after the request date, Lefrak may self-certify the fire alarm IF 30 days have also passed since the pretest was passed — self-cert is sufficient for closeout. If the date given is within 30 days of the request date, Lefrak must pass the FDNY inspection (no self-cert).',owner:'Scutum → FDNY'},{num:5,title:'FDNY inspection occurs',detail:'Inspector reviews fire alarm drawings and as-built documentation on-site. Tests system. Has discretion to accept minor deviations if reflected in as-built.',owner:'FDNY Inspector'},{num:6,title:'FDNY issues Letter of Approval (LOA)',detail:'Upon passing, FDNY issues LOA. Transmitted to DOB electronically.',owner:'FDNY → DOB'},{num:7,title:'DOB LOC can now be issued',detail:'With FDNY LOA plus all other sign-offs, Muhammad files for LOC.',owner:'Muhammad (MBC) → DOB'}],notes:[{type:'danger',text:'B1: PAA filed 4/9/26 in FDNY system awaiting approval. Cannot request inspection until approved.'},{type:'info',text:'To corner Alex: are drawings signed and sealed by MGE? Has Scutum submitted to FDNY? What is the exact hold-up?'}]},
-  {id:'proc-arts',icon:'🧪',title:'ARTS Filing — ACM Abatement Authorization',subtitle:'Applies to: 59-17 JB — all floors',status:'active',statusLabel:'Active — 11th fl done, 10th+3rd in progress',tags:'arts abatement acm filing dob dep variance tru jb 11th 10th 3rd asbestos ecc esg',desc:'ARTS is the DOB/DEP filing required before any ACM abatement can begin. ECC prepares drawings and files. ESG executes abatement. Both work in close coordination.',steps:[{num:1,title:'ACM testing + scope confirmation',detail:'Bulk sampling/testing to identify all ACM in scope. DEP confirms scope. Additional testing may be required if new materials identified.',owner:'ECC (Clayton Long) + DEP'},{num:2,title:'ECC prepares ARTS drawings',detail:'ECC drafts abatement scope drawings showing ACM locations, quantities, and removal methods. PRA reviews before DEP submission.',owner:'ECC (Clayton Long)'},{num:3,title:'DEP reviews drawings',detail:'DEP reviews and approves ARTS drawings before filing. Can take weeks. Currently active for 10th+3rd floors (drawings submitted 4/21/26).',owner:'DEP / DCAS'},{num:4,title:'ARTS filing submitted to DOB',detail:'ECC files via DOB ARTS portal. Felix Urena is listed ARTS applicant. DOB assigns a TRU number.',owner:'ECC + Felix Urena'},{num:5,title:'DOB/DEP review — objections possible',detail:'Multiple rounds possible. Variance requests (V1–V5) may be required. 11th floor required V5 variance (approved 4/23/26, VAR# 2487QN25).',owner:'ECC → DOB/DEP'},{num:6,title:'ARTS approval — pre-construction notification required',detail:'ESG sends pre-construction notification. Zach posts notice in lobby + floor. Proof sent to Sheranne Wickham (DEP). DEP issues 4-week employee notice — abatement cannot start until 4 weeks after notice.',owner:'ESG (Javier Catalan) + Zach (PRA)'},{num:7,title:'ESG performs abatement',detail:'ESG executes abatement per approved means & methods. Air monitoring throughout. ACP-20/ACP-21 posted on site.',owner:'ESG (Javier Catalan)'},{num:8,title:'Air clearance + ARTS closeout',detail:'ECC performs air clearance testing. Must pass before reconstruction begins.',owner:'ECC (Clayton Long)'}],notes:[]},
-  {id:'proc-design-change',icon:'📐',title:'Design or Material Change — DEP/DCAS Approval',subtitle:'AJA proposes → DEP approves → DCAS approves → proceed',status:'ref',statusLabel:'Reference',tags:'design material change architect aja dep dcas approval drawing',desc:'When a design or material change is needed, it must go through AJA first, then receive DEP and DCAS approval before work proceeds.',steps:[{num:1,title:'Architect (AJA) proposes the change',detail:'All design or material changes must be proposed by AJA (Anthony Johnson, principal; Janki Patel, day-to-day). Nothing moves forward until AJA formally proposes it.',owner:'AJA (Anthony Johnson / Janki Patel)'},{num:2,title:'DEP reviews and approves',detail:'AJA\'s proposal goes to DEP for formal approval. DEP may request modifications.',owner:'DEP'},{num:3,title:'DCAS approves — work can proceed',detail:'DCAS signs off. Once both DEP and DCAS approved, change is authorized. AJA issues updated drawings and files with DOB if required.',owner:'DCAS → AJA → Muhammad (MBC) if DOB filing needed'}],notes:[{type:'info',text:'PRA role: ensure no GC or Foremost proceeds on a verbal change without written DEP/DCAS approval on record.'}]},
-  {id:'proc-design',icon:'✏️',title:'Design Change / Drawing Revision — DOB Route',subtitle:'When to file a PAA vs. as-built only',status:'ref',statusLabel:'Reference',tags:'design change drawing revision paa affidavit minor amendment dob',desc:'When actual construction deviates from approved plans, the deviation must be documented correctly.',steps:[{num:1,title:'Identify the change and assess severity',detail:'Document exactly what changed from approved plans. How many devices added/removed? Did control panels move? Did work floors change?',owner:'MEP engineer / GC + PRA'},{num:2,title:'Route A: Minor change → As-built only (no PAA)',detail:'Per FDNY Bulletin 12-11-2023: up to 10 devices/floor added = as-built only. This is the route for B2, A3, A4.',owner:'Design professional'},{num:3,title:'Route B: Major change → PAA required',detail:'PAA required for: 10+ devices added/removed, control panel relocated, system type changed, work floors changed, any ARCS modification.',owner:'Design professional → DOB'}],notes:[]},
-  {id:'proc-permit',icon:'📋',title:'Permit Renewal / Extension Process',subtitle:'B1/B2/A4 GC (exp 5/20/26) · A3 GC (exp 5/20/26)',status:'warn',statusLabel:'⚠ Expiring soon',tags:'permit renewal expiry extension dob gc q00940195 q00919587 blackbull',desc:'Two GC permits expire 5/20/26. Confirm renewal plan immediately.',steps:[{num:1,title:'Confirm if renewal is needed',detail:'If all physical work is complete, renewal may not be required. If work is still ongoing, renewal is mandatory before expiration. Confirm with Muhammad (MBC) and Foremost.',owner:'Muhammad (MBC) + Foremost'},{num:2,title:'File renewal application with DOB',detail:'Muhammad files via DOB NOW. Requires updated insurance, worker\'s comp. Blackbull must provide updated documentation.',owner:'Muhammad (MBC) + Blackbull'},{num:3,title:'DOB issues renewed permit',detail:'Typically a few days to 2 weeks. Must be posted on site.',owner:'DOB → Muhammad (MBC)'}],notes:[{type:'danger',text:'Q00940195-L1-GC (B1/B2/A4) and Q00919587-I1-GC (A3) both expire 5/20/26. Confirm renewal plan this week.'}]},
-  {id:'proc-sc',icon:'✅',title:'Substantial Completion + DOB Letter of Completion (LOC)',subtitle:'Applies to: all HHE phases + JB floors at completion',status:'ref',statusLabel:'Reference',tags:'substantial completion loc letter of completion dob closeout sign-off mep punchlist',desc:'The LOC closes out a construction permit. SC is the contractual milestone that the space is ready for occupancy.',steps:[{num:1,title:'All physical work complete — punchlist issued',detail:'GC declares SC. DEP/DCAS and PRA do a formal walkthrough and issue a punchlist.',owner:'GC + DEP/DCAS + PRA'},{num:2,title:'Collect all required sign-offs',detail:'Required: (1) MEP fire alarm drawings signed by MGE, (2) Arch as-builts signed by AJA, (3) FDNY LOA, (4) BEC/Electrical sign-off, (5) Air balancing report, (6) DOB plumbing sign-off, (7) FA pretest certification, (8) Emergency lighting test.',owner:'MGE + AJA + FDNY + BEC + Testing labs'},{num:3,title:'Muhammad (MBC) files for LOC with DOB',detail:'Once all sign-offs collected, Muhammad files via DOB NOW.',owner:'Muhammad (MBC) → DOB'},{num:4,title:'Substantial Completion letter executed',detail:'Anita Jhamb (Lefrak) issues SC notice. DEP/DCAS signs off. Triggers warranty period and DEP re-occupancy.',owner:'Anita Jhamb (Lefrak) + DEP/DCAS'}],notes:[]}
-];
 
 let liveProcesses = JSON.parse(JSON.stringify(DEFAULT_PROCESSES));
 
@@ -3752,78 +3442,6 @@ function filterProcesses(query) {
 
 // ── SCHEDULE DATA ─────────────────────────────────────────
 
-const SCHEDULE_PHASES = [
-  {
-    key:'jb-11', label:'Phase 5 — Floor 11', building:'59-17 JB',
-    overall:{start:'2/2/26',finish:'9/29/26',pct:43},
-    tasks:[
-      {id:'t_11_vacate',name:'DEP Vacates Floor 11',start:'2/2/26',finish:'3/6/26',pct:100},
-      {id:'t_11_boxes',name:'Move DEP Boxes to Floors 20+4',start:'3/9/26',finish:'3/10/26',pct:100},
-      {id:'t_11_condition',name:'Landlord Documents Existing Condition',start:'3/11/26',finish:'3/16/26',pct:100},
-      {id:'t_11_furniture',name:'Landlord Breakdown + Remove Furniture',start:'3/17/26',finish:'3/30/26',pct:100},
-      {id:'t_11_3notice',name:'LL Notifies Floor 3 Tenant',start:'3/2/26',finish:'8/24/26',pct:100},
-      {id:'t_11_arts_scope',name:'DEP Confirms 10th/3rd Scope for ARTS',start:'2/16/26',finish:'2/20/26',pct:100},
-      {id:'t_11_arts_file',name:'LL Submits ARTS for 10th+3rd',start:'2/23/26',finish:'6/12/26',pct:0},
-      {id:'t_11_demo_lobby',name:'Soft Demo — Lobbies + Corridor',start:'5/15/26',finish:'5/30/26',pct:0},
-      {id:'t_11_demo_carpet',name:'Soft Demo — Carpet',start:'5/30/26',finish:'6/13/26',pct:0},
-      {id:'t_11_demo_restroom',name:'Soft Demo — Restrooms',start:'6/13/26',finish:'6/18/26',pct:0},
-      {id:'t_11_recon_lobby',name:'Reconstruction — Lobbies + Corridor',start:'6/18/26',finish:'7/31/26',pct:0},
-      {id:'t_11_recon_restroom',name:'Reconstruction — Restrooms',start:'5/18/26',finish:'7/2/26',pct:0},
-      {id:'t_11_recon_ceiling1',name:'Installation — Ceiling Grid',start:'6/18/26',finish:'7/24/26',pct:0},
-      {id:'t_11_recon_ceiling2',name:'Installation — Ceiling Tile + Fixtures',start:'7/24/26',finish:'8/21/26',pct:0},
-      {id:'t_11_carpet',name:'Carpet Construction',start:'5/18/26',finish:'7/14/26',pct:0},
-      {id:'t_11_inspect',name:'DEP/DCAS Inspect',start:'8/21/26',finish:'8/24/26',pct:0},
-      {id:'t_11_punchlist',name:'Punchlist Completion',start:'8/25/26',finish:'9/1/26',pct:0},
-      {id:'t_11_sc',name:'DEP/DCAS Signoff + SC Letter',start:'9/1/26',finish:'9/2/26',pct:0},
-      {id:'t_11_reinstall',name:'Furniture Reinstall + LV Connections',start:'8/25/26',finish:'9/23/26',pct:0},
-      {id:'t_11_occupy',name:'DEP OCCUPIES FLOOR 11',start:'9/28/26',finish:'9/29/26',pct:0,milestone:true},
-    ]
-  },
-  {
-    key:'jb-3', label:'Phase 6A — Floor 3', building:'59-17 JB',
-    overall:{start:'9/4/26',finish:'12/16/26',pct:0},
-    tasks:[
-      {id:'t_3_corridor_demo',name:'Transfer Corridor — Soft Demo',start:'9/4/26',finish:'9/6/26',pct:0},
-      {id:'t_3_corridor_acm',name:'Transfer Corridor — ACM Removal',start:'9/11/26',finish:'9/13/26',pct:0},
-      {id:'t_3_corridor_build',name:'Transfer Corridor — Construction',start:'9/14/26',finish:'9/30/26',pct:0},
-      {id:'t_3_lobby_demo',name:'Elevator Lobby — Soft Demo',start:'10/2/26',finish:'10/4/26',pct:0},
-      {id:'t_3_lobby_acm',name:'Elevator Lobby — ACM Removal',start:'10/9/26',finish:'10/11/26',pct:0},
-      {id:'t_3_men_demo',name:'Men Restroom — Soft Demo',start:'10/14/26',finish:'10/16/26',pct:0},
-      {id:'t_3_men_acm',name:'Men Restroom — ACM Removal',start:'10/16/26',finish:'10/18/26',pct:0},
-      {id:'t_3_women_demo',name:'Women Restroom — Soft Demo',start:'10/14/26',finish:'10/16/26',pct:0},
-      {id:'t_3_women_acm',name:'Women Restroom — ACM Removal',start:'10/16/26',finish:'10/18/26',pct:0},
-      {id:'t_3_lobby_build',name:'Elevator Lobby Construction',start:'10/19/26',finish:'11/21/26',pct:0},
-      {id:'t_3_men_build',name:'Mens Bathroom Construction',start:'10/19/26',finish:'11/21/26',pct:0},
-      {id:'t_3_women_build',name:'Womens Bathroom Construction',start:'10/19/26',finish:'11/21/26',pct:0},
-      {id:'t_3_lobby_complete',name:'FLOOR 3 — ELEVATOR LOBBY COMPLETES',start:'11/24/26',finish:'11/24/26',pct:0,milestone:true},
-      {id:'t_3_restroom_open',name:'FLOOR 3 — RESTROOM OPENS',start:'11/24/26',finish:'11/24/26',pct:0,milestone:true},
-      {id:'t_3_sc',name:'SC Letter Executed',start:'12/3/26',finish:'12/3/26',pct:0},
-    ]
-  },
-  {
-    key:'jb-10', label:'Phase 6B — Floor 10', building:'59-17 JB',
-    overall:{start:'9/29/26',finish:'3/12/27',pct:0},
-    tasks:[
-      {id:'t_10_pack',name:'DEP Packing to Vacate',start:'8/4/26',finish:'8/21/26',pct:0},
-      {id:'t_10_vacate',name:'DEP Vacates Floor 10',start:'9/29/26',finish:'9/30/26',pct:0},
-      {id:'t_10_boxes',name:'Move DEP Boxes',start:'9/30/26',finish:'10/2/26',pct:0},
-      {id:'t_10_condition',name:'Landlord Documents Existing Condition',start:'10/2/26',finish:'10/9/26',pct:0},
-      {id:'t_10_furniture',name:'Landlord Breakdown + Remove Furniture',start:'10/9/26',finish:'10/23/26',pct:0},
-      {id:'t_10_demo_corridor',name:'Soft Demo/ACM — Corridor',start:'10/23/26',finish:'10/25/26',pct:0},
-      {id:'t_10_demo_carpet',name:'Soft Demo/ACM — Carpet',start:'10/25/26',finish:'11/6/26',pct:0},
-      {id:'t_10_demo_restroom',name:'Soft Demo/ACM — Restrooms',start:'11/6/26',finish:'11/10/26',pct:0},
-      {id:'t_10_recon_restroom',name:'Reconstruction — Restrooms',start:'11/11/26',finish:'12/23/26',pct:0},
-      {id:'t_10_ceiling1',name:'Installation — Ceiling Grid',start:'11/11/26',finish:'12/9/26',pct:0},
-      {id:'t_10_ceiling2',name:'Installation — Ceiling Tile + Fixtures',start:'12/10/26',finish:'12/31/26',pct:0},
-      {id:'t_10_carpet',name:'Carpet Installation',start:'12/10/26',finish:'1/25/27',pct:0},
-      {id:'t_10_inspect',name:'DEP/DCAS Inspect',start:'1/26/27',finish:'1/26/27',pct:0},
-      {id:'t_10_punchlist',name:'Punchlist Completion',start:'1/29/27',finish:'2/4/27',pct:0},
-      {id:'t_10_reinstall',name:'Furniture Reinstall + LV Reconnection',start:'1/29/27',finish:'2/26/27',pct:0},
-      {id:'t_10_sc',name:'SC Letter Executed',start:'3/1/27',finish:'3/2/27',pct:0},
-      {id:'t_10_occupy',name:'DEP OCCUPIES FLOOR 10',start:'3/10/27',finish:'3/12/27',pct:0,milestone:true},
-    ]
-  }
-];
 
 let liveSchedule = {}; // Firebase overrides: {phaseKey: {taskId: {start, finish, pct, notes}}}
 

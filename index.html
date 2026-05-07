@@ -1316,78 +1316,45 @@ body{
   </div>
 </div>
 
-<script>
-// NOTE: Scutum rebranded to Scutum — all references updated 5/5/26
-// API calls go through /api/claude proxy — key is in Vercel environment variables
+<script type="module">
+import { DEFAULT_STATUSES, SEED_ACTIONS, DEFAULT_CONTACTS, DEFAULT_PROCESSES, DEFAULT_MEETINGS, SCHEDULE_PHASES, TIMELINE_DEFS, PERMIT_EXPIRY, WEEKLY_MEETINGS, HHE_PHASE_ORDER, JB_FLOOR_ORDER, HARDCODED_BLOCKERS, API_URL, FIREBASE_CONFIG } from './data.js';
+import { state, getProjectState, initListeners, saveStatuses, saveActions, saveContacts, logUpdate, saveTimelineState, saveScheduleTask, addAction, updateAction, completeAction as stateCompleteAction, dismissAction as stateDismissAction, applyStatusChanges, updateStatusRow, addContact, updateContact, deleteContact as stateDeleteContact } from './state.js';
+import { generateBriefing, generateDonnaDraft, submitToAI, applyAIChanges, askQuestion } from './ai.js';
+// NOTE: Scutum formerly Hi Rise — all references updated 5/5/26
 
-const firebaseConfig = {
-  apiKey:"AIzaSyChxeIV679J__iFyeYdVnu0wjHic_J9Tdc",
-  authDomain:"pra-playbook-bdff6.firebaseapp.com",
-  projectId:"pra-playbook-bdff6",
-  storageBucket:"pra-playbook-bdff6.firebasestorage.app",
-  messagingSenderId:"231877160609",
-  appId:"1:231877160609:web:8d6f6a6b61adc9cab8cae0"
-};
+// Firebase config loaded from data.js
 
-// ── FIREBASE ──────────────────────────────────────────────
-let db;
+// ── FIREBASE INIT (config from data.js, listeners from state.js) ──
+let db; // kept for legacy compat — state.db is the real reference
 
 function initFirebase() {
-  // Detect file:// — Firebase won't connect, use localStorage instead
   const isFileProtocol = window.location.protocol === 'file:';
-  
-  if (isFileProtocol) {
-    console.log('Running from file:// — using localStorage for persistence');
-    setSyncStatus('local');
-    useLocalStorage();
-    return;
-  }
-
+  if (isFileProtocol) { setSyncStatus('local'); useLocalStorage(); return; }
   try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    db = firebase.firestore();
-    db.enablePersistence({synchronizeTabs: true}).catch(() => {});
-    const fbTimeout = setTimeout(() => {
-      console.warn('Firebase timeout — falling back to localStorage');
-      setSyncStatus('local');
-      useLocalStorage();
-    }, 20000);  // increased to 20s
-    db.collection('statuses').doc('current').get().then(() => {
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    const fbInstance = firebase.firestore();
+    fbInstance.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+    db = fbInstance; // legacy compat
+    const fbTimeout = setTimeout(() => { setSyncStatus('local'); useLocalStorage(); }, 20000);
+    fbInstance.collection('statuses').doc('current').get().then(() => {
       clearTimeout(fbTimeout);
       setSyncStatus('ok');
-      listenToStatuses();
-      listenToLog();
-      listenToContacts();
-      listenToActions();
-  // Auto-generate briefing on first load
-  setTimeout(() => {
-    if(document.getElementById('briefing-placeholder')) generateBriefing();
-  }, 1200);
-      listenToSchedule();
-      listenToMeetings();
-      listenToProcesses();
-      listenToProcessOverlays();
-      listenToMeetingOverlays();
-    }).catch(() => {
-      clearTimeout(fbTimeout);
-      setSyncStatus('local');
-      useLocalStorage();
-    });
-    // Auto-navigate to briefing on meeting days
-    setTimeout(() => {
-      const day = new Date().getDay();
-      if (day === 1 || day === 2) {
-        goto('briefing', document.querySelector('.nav-item'));
-        generateBriefing();
-      }
-    }, 2500);
-  } catch(e) {
-    console.error('Firebase init failed:', e);
-    setSyncStatus('local');
-    useLocalStorage();
-  }
+      // Use new state.js listeners — single source of truth
+      initListeners(fbInstance, () => {
+        listenToProcesses();
+        listenToMeetings();
+        listenToSchedule();
+        listenToMeetingOverlays();
+        listenToProcessOverlays();
+        setTimeout(() => { if(document.getElementById('briefing-placeholder')) loadAndRenderBriefing(); }, 1200);
+      });
+      // Auto-navigate to briefing on meeting days
+      setTimeout(() => {
+        const day = new Date().getDay();
+        if (day === 1 || day === 2) { goto('briefing', document.querySelector('.nav-item')); loadAndRenderBriefing(); }
+      }, 2500);
+    }).catch(() => { clearTimeout(fbTimeout); setSyncStatus('local'); useLocalStorage(); });
+  } catch(e) { console.error('Firebase init failed:', e); setSyncStatus('local'); useLocalStorage(); }
 }
 
 // ── LOCALSTORAGE FALLBACK (works from file://) ─────────────
@@ -1595,9 +1562,9 @@ const DEFAULT_STATUSES = {
   ]
 };
 
-let liveStatuses = JSON.parse(JSON.stringify(DEFAULT_STATUSES));
-let liveTimelineStates = {}; // Firebase-stored timeline step overrides
-let recentLogEntries = []; // For AI context enrichment
+let liveStatuses = state.statuses; // now managed by state.js
+let liveTimelineStates = state.timelineStates; // now managed by state.js
+let recentLogEntries = state.log; // now managed by state.js
 
 // initRender and initFirebase called at end of script
 
@@ -1629,29 +1596,8 @@ function applyKnownCorrections(statuses) {
 }
 
 function listenToStatuses() {
-  if (!db) { renderAllTables(); return; }
-
-  db.collection('statuses').doc('current').onSnapshot(snap => {
-    if (snap.exists) {
-      const data = snap.data();
-      // Merge Firebase data, but only for keys that exist in defaults
-      Object.keys(data).forEach(k => { if (DEFAULT_STATUSES[k]) liveStatuses[k] = data[k]; });
-    } else {
-      // Nothing in Firebase yet — seed it with defaults
-      db.collection('statuses').doc('current').set(JSON.parse(JSON.stringify(DEFAULT_STATUSES)));
-    }
-    renderAllTables();
-    triggerCrossRef();
-  }, () => renderAllTables());
-  // Listen to timeline state overrides
-  db.collection('timeline_states').doc('current').onSnapshot(snap => {
-    if (snap.exists) liveTimelineStates = snap.data() || {};
-    buildTimelines();
-  });
-  // Listen to recent log for AI context
-  db.collection('updates').orderBy('timestamp','desc').limit(10).onSnapshot(snap => {
-    recentLogEntries = snap.docs.map(d => d.data());
-  });
+  // Now handled by state.js initListeners — this is a no-op
+  renderAllTables();
 }
 
 function renderAllTables() {
@@ -2302,7 +2248,7 @@ function toggleRej(el) {
 }
 
 // ── ACTION ITEMS ──────────────────────────────────────────
-let liveActions = [];
+let liveActions = state.actions; // now managed by state.js
 let actionFilter = 'open';
 
 const SEED_ACTIONS = [
@@ -2392,7 +2338,7 @@ function listenToActions() {
   }, () => { liveActions = [...SEED_ACTIONS]; renderActions(); });
 }
 
-async function saveActionsToFirebase() {
+async function saveActions() {
   saveToLocalStorage('pra_actions', liveActions);
   updateActionBadge();
   if (!db || window.location.protocol === 'file:') { setSyncStatus('local'); return; }
@@ -2532,7 +2478,7 @@ async function saveAction() {
   const data = { action, owner:document.getElementById('am-owner').value.trim(), due:document.getElementById('am-due').value, area:document.getElementById('am-area').value, status:'open', source:'manual' };
   if (editId) { liveActions = liveActions.map(a=>a.id===editId?{...a,...data}:a); }
   else { liveActions = [...liveActions, {id:'act_'+Date.now(), ...data, created:today}]; }
-  await saveActionsToFirebase();
+  await saveActions();
   closeActionModal();
 }
 
@@ -2540,7 +2486,7 @@ async function completeAction() {
   const editId = document.getElementById('action-edit-id').value;
   if (!editId) return;
   liveActions = liveActions.map(a=>a.id===editId?{...a,status:'done',completedDate:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}:a);
-  await saveActionsToFirebase();
+  await saveActions();
   closeActionModal();
 }
 
@@ -2549,7 +2495,7 @@ async function quickCompleteAction(id) {
   if (!a) return;
   const newStatus = a.status==='done' ? 'open' : 'done';
   liveActions = liveActions.map(x=>x.id===id?{...x,status:newStatus}:x);
-  await saveActionsToFirebase();
+  await saveActions();
 }
 
 function closeActionModal() { document.getElementById('action-modal').style.display='none'; }
@@ -2557,7 +2503,7 @@ function closeActionModal() { document.getElementById('action-modal').style.disp
 async function dismissAction(id) {
   if (!confirm('Dismiss this action item? It will be removed from the list.')) return;
   liveActions = liveActions.filter(x => x.id !== id);
-  await saveActionsToFirebase();
+  await saveActions();
   showToast('Action dismissed');
 }
 
@@ -2572,7 +2518,7 @@ async function addActionsFromAI(nextSteps, area) {
     due:dueStr, status:'open', source:'ai', created:today
   }));
   liveActions = [...liveActions, ...newActions];
-  await saveActionsToFirebase();
+  await saveActions();
 }
 
 // ── BRIEFING ENGINE ───────────────────────────────────────
@@ -2617,9 +2563,13 @@ Format: Dear Donna,\n\n59-17 Junction Blvd\n• [2-3 bullet points]\n\n96-05 Hor
   }
 }
 
-async function generateBriefing() {
-  // Wait briefly for Firebase to be ready
-  await new Promise(r => setTimeout(r, 400));
+async function loadAndRenderBriefing() {
+  return generateBriefingUI();
+}
+// Alias for button onclick
+const generateBriefing = generateBriefingUI;
+
+async function generateBriefingUI() {
   const btn = document.getElementById('briefing-btn');
   btn.disabled=true; btn.textContent='Generating...';
   const container = document.getElementById('briefing-container');
@@ -2652,43 +2602,24 @@ async function generateBriefing() {
 
     const recentCtx = recentLogEntries.slice(0,8).map(e=>`[${e.date}] ${e.area}: ${e.headline}${e.detail?' — '+e.detail.substring(0,120):''}`).join('\n');
 
-    // Build cross-ref flags
-    const crossRefFlags = window._crossRefFlags || runCrossRef();
-    const crossRefSummary = crossRefFlags.length
-      ? crossRefFlags.map(f => `[${f.type.toUpperCase()}] ${f.msg}`).join('\n')
-      : 'No cross-reference flags';
-
-    const prompt = `You are PRA Consulting PMO AI. Generate a sharp daily briefing for Zachary Trakas for ${todayStr}.
-
-TWO BUILDINGS ONLY: 96-05 HHE (ground floor phases A1/B1/B2/A3/A4/A5) and 59-17 JB (floors 3/10/11/12).
-
-CURRENT STATUS — ALL OPEN/BLOCKED/PENDING ITEMS:
-${statusSummary||'All items green'}
-
-OPEN ACTION ITEMS (${openActions.length} total, ${overdueActions.length} overdue):
-${actionsSummary||'None'}
-
-RECENT UPDATES LOG (last 8):
-${recentCtx||'None'}
-
-CROSS-REFERENCE FLAGS (inconsistencies detected across data sources — ALWAYS surface these):
-${crossRefSummary}
-
-PERMIT WARNINGS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days (${p.expires})`).join(' | ')||'None'}
-TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None scheduled'}
-
-HARDCODED BLOCKERS (always surface these regardless of other data):
-- 96-05 HHE A3: FA devices delivered 4/28 but NOT YET INSTALLED. Must install → run pretest → pass → THEN FDNY inspection. This is the critical path blocker for A3 SC on May 15.
-- 96-05 HHE B1: PAA pending FDNY approval, cannot request inspection yet.
-- 59-17 JB 10th fl: GC permits blocked pending data center access agreement.
-- GC permits Q00940195 + Q00919587 expire May 20.
-
-INSTRUCTIONS: Surface everything — cross-reference all data sources. Always include the hardcoded blockers above. Never omit a blocker.
-
-Return ONLY valid JSON, no preamble, no code fences. Keep ALL strings under 100 chars. Max 5 items per array. JSON structure:
-{"headline":"string","urgent":["string"],"push_today":["string"],"watch":["string"],"positive":"string"}`;
-
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,stream:false,messages:[{role:'user',content:prompt}]})});
+    // Use ai.js generateBriefing — single source of truth for briefing logic
+    const { briefing: b_raw, projectState: ps, todayMeetings: todayMeetings } = await generateBriefing();
+    const b = b_raw;
+    const permitWarnings = ps.permitWarnings;
+    const overdueActions = ps.overdueActions;
+    renderBriefing(b, permitWarnings, overdueActions, todayMeetings, todayStr);
+    btn.disabled=false; btn.textContent='Refresh briefing';
+    // Trigger cross-ref after briefing
+    window._crossRefFlags = ps.xrefFlags;
+    updateCrossRefBadge(ps.xrefFlags);
+    return;
+  } catch(e) {
+    document.getElementById('briefing-container').innerHTML = `<div class="card" style="color:var(--red);font-size:13px;padding:16px">${escH(e.message||'Briefing failed — try again')}</div>`;
+    btn.disabled=false; btn.textContent='Refresh briefing';
+    return;
+  }
+  // dead code below kept for structure — ai.js handles everything above
+  const resp_unused = null; const
 
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
@@ -2797,7 +2728,7 @@ const DEFAULT_CONTACTS = [
   {id:'c16', name:'Felix Urena', role:'ARTS Applicant — ESG', org:'ESG', email:'', notes:'Listed on TRU1110QN25 V5 Variance Approval · 1324 Lexington Ave NY 10128'}
 ];
 
-let liveContacts = [...DEFAULT_CONTACTS];
+let liveContacts = state.contacts; // now managed by state.js
 
 function listenToContacts() {
   if (!db) { renderContacts(); return; }
@@ -3453,10 +3384,21 @@ async function submitFeedback(type) {
 
 async function applyChanges() {
   if(!pendingResult) return;
-  const today=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  const log=pendingResult.log_entry||{};
-  const statusUpdates=pendingResult.status_updates||[];
-  const timelineUpdates=pendingResult.timeline_updates||[];
+  try {
+    const results = await applyAIChanges(pendingResult);
+    if (results.statusUpdates) renderAllTables();
+    if (results.actionsAdded) renderActions();
+    if (results.contactsAdded) renderContacts();
+    if (results.timelineUpdates) buildTimelines();
+    const parts = [];
+    if(results.statusUpdates) parts.push(`${results.statusUpdates} status update${results.statusUpdates>1?'s':''}`);
+    if(results.actionsAdded) parts.push(`${results.actionsAdded} action${results.actionsAdded>1?'s':''} added`);
+    if(results.contactsAdded) parts.push(`${results.contactsAdded} contact${results.contactsAdded>1?'s':''} added`);
+    showToast('✓ Applied' + (parts.length ? ' — ' + parts.join(', ') : ''));
+    clearAI();
+    triggerCrossRef();
+  } catch(e) { showToast('Apply failed: ' + (e.message||'unknown error')); }
+}
 
   // Auto-detect and add any new contacts mentioned
   await detectAndAddNewContacts(pendingResult);
@@ -4173,40 +4115,13 @@ async function submitAsk() {
   btn.disabled = true; btn.textContent = '…';
   resultEl.innerHTML = `<div class="ask-answer"><div class="ask-answer-text" style="color:var(--text3)">Searching the playbook...</div></div>`;
   try {
-    const context = buildPlaybookContext();
-    const prompt = `You are an assistant for a construction PMO playbook for PRA Consulting managing two NYC DEP/DCAS projects:
-- 96-05 Horace Harding Exwy (HHE) — ground floor lobby phases B1/B2/A3/A4/A5
-- 59-17 Junction Blvd (JB) — upper floors 3rd/10th/11th/12th
-
-PLAYBOOK DATA:
-${context}
-
-USER QUESTION: ${q}
-
-INSTRUCTIONS:
-- Answer ONLY from the playbook data above. Do not use outside knowledge.
-- If data is insufficient, set canAnswer to false and explain what is missing.
-- For every fact, cite the source using [SOURCE: section — item].
-- Be concise. Lead with the answer.
-
-Respond ONLY with valid JSON (no backticks):
-{"canAnswer":true,"answer":"answer with [SOURCE: ...] citations","insufficientReason":"if canAnswer false","sources":[{"section":"STATUS — B2 — 96-05 HHE","item":"FDNY inspection","value":"current status text"}],"confidence":"high"}`;
-
-    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
-    const data = await resp.json();
-    if (!data.content) throw new Error(data.error?.message||'API error');
-    const parsed = safeParseJSON(data.content.map(c=>c.text||'').join(''));
-
-    const confBadge = {'high':'<span style="background:var(--green-dim);color:var(--green);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">High confidence</span>','medium':'<span style="background:var(--amber-dim);color:var(--amber);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">Medium confidence</span>','low':'<span style="background:var(--red-bg);color:var(--red);font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600">Low confidence</span>'}[parsed.confidence||'medium']||'';
-
-    if (!parsed.canAnswer) {
-      resultEl.innerHTML = `<div class="ask-answer"><div style="font-size:12px;color:var(--text3);margin-bottom:8px">Q: <strong style="color:var(--text)">${escH(q)}</strong></div><div class="ask-insufficient"><strong>⚠ Not enough information in the playbook to answer this.</strong><br><br>${escH(parsed.insufficientReason||'')}</div></div>`;
-    } else {
-      const srcs = (parsed.sources||[]).map(s=>`<div class="ask-source-item" data-lk="1">${s.section||''} — ${s.item||''}<div class="ask-source-detail">${escH((s.value||'').substring(0,120))}</div></div>`).join('');
-      resultEl.innerHTML = `<div class="ask-answer"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px"><div style="font-size:12px;color:var(--text3)">Q: <strong style="color:var(--text)">${escH(q)}</strong></div>${confBadge}</div><div class="ask-answer-text brief-lk">${escH(parsed.answer||'')}</div>${srcs?`<div class="ask-sources"><div class="ask-sources-lbl">📎 Sources (tap to search)</div>${srcs}</div>`:''}</div>`;
-      resultEl.querySelectorAll('.brief-lk').forEach(el=>{ el.innerHTML = linkify(el.textContent); });
-    }
-    askHistory.unshift({q, a:(parsed.answer||parsed.insufficientReason||'').substring(0,100)});
+    const answer = await askQuestion(q);
+    resultEl.innerHTML = `<div class="ask-answer">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Q: <strong style="color:var(--text)">${escH(q)}</strong></div>
+      <div class="ask-answer-text brief-lk">${escH(answer)}</div>
+    </div>`;
+    resultEl.querySelectorAll('.brief-lk').forEach(el=>{ el.innerHTML = linkify(el.textContent); });
+    askHistory.unshift({q, a:answer.substring(0,100)});
     renderAskHistory();
   } catch(e) {
     resultEl.innerHTML = `<div class="ask-answer"><div style="color:var(--red);font-size:13px">Error: ${escH(e.message)}</div></div>`;
@@ -4469,6 +4384,32 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 function initRender() {
+  // Listen to state.js events and re-render UI
+  window.addEventListener('pra:statuses-updated', () => {
+    liveStatuses = state.statuses; // sync legacy var
+    renderAllTables();
+    triggerCrossRef();
+  });
+  window.addEventListener('pra:actions-updated', () => {
+    liveActions = state.actions; // sync legacy var
+    renderActions();
+    updateActionBadge();
+  });
+  window.addEventListener('pra:log-updated', () => {
+    recentLogEntries = state.log; // sync legacy var
+    renderLog(state.log);
+  });
+  window.addEventListener('pra:contacts-updated', () => {
+    liveContacts = state.contacts; // sync legacy var
+    renderContacts();
+  });
+  window.addEventListener('pra:timeline-updated', () => {
+    liveTimelineStates = state.timelineStates; // sync legacy var
+    buildTimelines();
+  });
+  window.addEventListener('pra:sync-updated', (e) => {
+    setSyncStatus(e.detail);
+  });
   // Permit expiry countdown
   const permitEl = document.getElementById('permit-countdown');
   if(permitEl) {

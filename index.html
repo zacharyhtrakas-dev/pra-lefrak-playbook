@@ -2327,6 +2327,14 @@ const SEED_ACTIONS = [
 ];
 
 function normalizeActionArea(item) {
+  // Also sanitize action text — strip any leaked internal item IDs
+  if (item.action) {
+    item = {...item, action: item.action
+      .replace(/\(itemId:\s*[a-z0-9_]+\)/gi, '')
+      .replace(/\b[a-z]+_[a-z]+_[a-z0-9_]{6,}\b/g, '')
+      .replace(/\s{2,}/g, ' ').trim()
+    };
+  }
   let area = (item.area || '').trim();
 
   // Catch all HHE variants — look for phase code anywhere in the string
@@ -3039,88 +3047,63 @@ function runCrossRef() {
   const flags = [];
   const today = new Date(); today.setHours(0,0,0,0);
 
-  // 1. Blocked/red status items with no open action item
+  // 1. Only flag RED (bd) blocked items with no open action item
+  // Skip items that are clearly informational or milestone-type
+  const skipItems = ['new lobby','under-counter','green wall','dep signage','furniture','acp-5','acp-21 req','notice of substantial','full floor re-occupancy','dep occupancy'];
   Object.entries(liveStatuses).forEach(([key, rows]) => {
     rows.forEach(row => {
-      if (row.cls !== 'bd' && row.cls !== 'bw') return;
+      if (row.cls !== 'bd') return; // Only hard blockers
+      const itemLower = (row.item||'').toLowerCase();
+      if (skipItems.some(s => itemLower.includes(s))) return;
       const areaPrefix = key.startsWith('hhe') ? '96-05 HHE' : '59-17 JB';
       const hasAction = liveActions.some(a =>
         a.status !== 'done' &&
         (a.area||'').includes(areaPrefix) &&
-        (a.action||'').toLowerCase().includes(row.item.toLowerCase().substring(0,12))
+        (a.action||'').toLowerCase().includes(itemLower.substring(0,10))
       );
       if (!hasAction) {
-        flags.push({
-          type: 'missing_action',
-          area: key,
-          item: row.item,
-          status: row.status,
-          msg: `No open action item for blocked/pending: "${row.item}" (${key})`
-        });
+        flags.push({ type:'missing_action', area:key, item:row.item, status:row.status,
+          msg:`No action item for blocker: "${row.item}" (${key})` });
       }
     });
   });
 
-  // 2. Action items referencing a phase/floor that has gone green — may be stale
-  liveActions.forEach(a => {
-    if (a.status === 'done') return;
-    const areaKey = Object.keys(liveStatuses).find(k => {
-      if (k.startsWith('hhe') && (a.area||'').includes('HHE')) return true;
-      if (k.startsWith('jb') && (a.area||'').includes('JB')) return true;
-      return false;
-    });
-    if (!areaKey) return;
-    const rows = liveStatuses[areaKey] || [];
-    const allGreen = rows.length > 0 && rows.every(r => r.cls === 'bs');
-    if (allGreen) {
-      flags.push({
-        type: 'stale_action',
-        actionId: a.id,
-        msg: `Action "${(a.action||'').substring(0,60)}" may be stale — all items for ${areaKey} are green`
-      });
-    }
-  });
-
-  // 3. Log entries that mention a status item but no update was applied
-  recentLogEntries.slice(0, 10).forEach(entry => {
+  // 2. Log says done but status still red/amber — limit to high-confidence keywords
+  const doneKeywords = ['passed','approved','received','signed','complete','done','closed','issued'];
+  recentLogEntries.slice(0,6).forEach(entry => {
     const detail = ((entry.headline||'') + ' ' + (entry.detail||'')).toLowerCase();
-    const area = entry.area || '';
-    const areaKey = area.includes('hhe') || area.includes('HHE') || area.includes('96-05')
-      ? Object.keys(liveStatuses).find(k => k.startsWith('hhe') && area.toLowerCase().includes(k.split('-')[1]))
-      : Object.keys(liveStatuses).find(k => k.startsWith('jb') && area.toLowerCase().includes(k.split('-')[1]));
+    if (!doneKeywords.some(k => detail.includes(k))) return;
+    const areaKey = Object.keys(liveStatuses).find(k =>
+      (entry.area||'').toLowerCase().includes(k.replace('hhe-','').replace('jb-',''))
+    );
     if (!areaKey) return;
-    // Check if log mentions a known item but status is still pending
     (liveStatuses[areaKey]||[]).forEach(row => {
-      const itemWord = (row.item||'').toLowerCase().split(' ')[0];
-      if (itemWord.length < 4) return;
-      if (detail.includes(itemWord) && (detail.includes('passed') || detail.includes('approved') || detail.includes('received') || detail.includes('complete') || detail.includes('done')) && (row.cls === 'bw' || row.cls === 'bd')) {
-        flags.push({
-          type: 'log_status_mismatch',
-          area: areaKey,
-          item: row.item,
-          msg: `Log entry suggests "${row.item}" may be complete, but status still shows ${row.cls==='bd'?'blocked':'pending'} — verify and update`
-        });
+      if (row.cls !== 'bd' && row.cls !== 'bw') return;
+      const itemWord = (row.item||'').toLowerCase().split(/[\s—]/)[0];
+      if (itemWord.length < 5) return;
+      if (detail.includes(itemWord)) {
+        flags.push({ type:'log_status_mismatch', area:areaKey, item:row.item,
+          msg:`Log suggests "${row.item}" may be done — verify and update status` });
       }
     });
   });
 
-  // 4. Overdue actions with no corresponding log entry in past 7 days
+  // 3. Overdue actions with no log entry in 7 days — limit to 5 most critical
   const sevenDaysAgo = new Date(today); sevenDaysAgo.setDate(sevenDaysAgo.getDate()-7);
-  liveActions.filter(a => a.status !== 'done' && a.due && new Date(a.due) < today).forEach(a => {
-    const hasRecentLog = recentLogEntries.some(e => {
-      const logDate = new Date(e.date);
-      return logDate >= sevenDaysAgo && ((e.area||'').includes(a.area||'') || (e.headline||'').toLowerCase().includes((a.action||'').toLowerCase().substring(0,15)));
-    });
-    if (!hasRecentLog) {
-      flags.push({
-        type: 'overdue_no_log',
-        actionId: a.id,
-        msg: `Overdue action with no recent log update: "${(a.action||'').substring(0,60)}" (due ${a.due})`
+  liveActions
+    .filter(a => a.status !== 'done' && a.due && new Date(a.due) < today)
+    .slice(0, 5)
+    .forEach(a => {
+      const hasRecentLog = recentLogEntries.some(e => {
+        const logDate = new Date(e.date);
+        return logDate >= sevenDaysAgo && (e.headline||'').toLowerCase().includes((a.action||'').toLowerCase().substring(0,12));
       });
-    }
-  });
+      if (!hasRecentLog) {
+        flags.push({ type:'overdue_no_log', actionId:a.id,
+          msg:`Overdue, no recent update: "${(a.action||'').substring(0,60)}" (due ${a.due})` });
+      }
+    });
 
-  // Store flags in memory for briefing and overview to consume
   window._crossRefFlags = flags;
   updateCrossRefBadge(flags);
   return flags;
@@ -3227,7 +3210,7 @@ function removeFile(){attachedFile=null;attachedFileData=null;document.getElemen
 // ── AI ASSISTANT ──────────────────────────────────────────
 const SYSTEM_PROMPT = `You are an elite PMO AI embedded in a live project management playbook for PRA Consulting. You serve Zachary Trakas, project coordinator for Lefrak/DEP construction projects in Queens, NY.
 
-CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation, no code fences. Start with { end with }. Keep all string values CONCISE — max 150 chars each. Do not write paragraphs inside JSON strings.
+CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation, no code fences. Start with { end with }. Keep all string values CONCISE — max 150 chars each. Do not write paragraphs inside JSON strings. NEVER include internal item IDs (like electrical_bec_bis_q01186589) or technical field names in action item text or any user-facing text — use plain English only.
 
 ═══════════════════════════════════════
 INTELLIGENCE RULES — READ FIRST

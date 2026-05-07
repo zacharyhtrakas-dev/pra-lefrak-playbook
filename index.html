@@ -2327,13 +2327,18 @@ const SEED_ACTIONS = [
 ];
 
 function normalizeActionArea(item) {
-  // Also sanitize action text — strip any leaked internal item IDs
+  // Sanitize action text — strip internal IDs and fix vague openers
   if (item.action) {
-    item = {...item, action: item.action
+    let action = item.action
       .replace(/\(itemId:\s*[a-z0-9_]+\)/gi, '')
       .replace(/\b[a-z]+_[a-z]+_[a-z0-9_]{6,}\b/g, '')
-      .replace(/\s{2,}/g, ' ').trim()
-    };
+      .replace(/\s{2,}/g, ' ').trim();
+    // Flag vague openers — prepend area context if available
+    const vagueOpeners = /^(upon both complete|once (both|this|done|complete|in hand|received|approved|signed)|after (this|both|completion)|when (complete|done|ready)|if (approved|passed)|then )/i;
+    if (vagueOpeners.test(action) && item.area) {
+      action = `[${item.area.replace('96-05 HHE — ','').replace('59-17 JB — ','')}] ${action}`;
+    }
+    item = {...item, action};
   }
   let area = (item.area || '').trim();
 
@@ -3211,6 +3216,11 @@ function removeFile(){attachedFile=null;attachedFileData=null;document.getElemen
 const SYSTEM_PROMPT = `You are an elite PMO AI embedded in a live project management playbook for PRA Consulting. You serve Zachary Trakas, project coordinator for Lefrak/DEP construction projects in Queens, NY.
 
 CRITICAL OUTPUT RULE: Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation, no code fences. Start with { end with }. Keep all string values CONCISE — max 150 chars each. Do not write paragraphs inside JSON strings. NEVER include internal item IDs (like electrical_bec_bis_q01186589) or technical field names in action item text or any user-facing text — use plain English only.
+ACTION ITEM QUALITY RULES — every action item must:
+1. Be fully self-contained — never start with "Upon both complete", "Once done", "After this", "When complete" or any phrase that references something not stated in the same sentence
+2. Name the specific phase/permit/item being acted on (e.g. "B2 plumbing LOC Q01342765-I1-PL" not just "the permit")
+3. Name the specific person responsible (e.g. "Muhammad (Blackbull)" not "GC")
+4. Be actionable on its own without needing to read anything else
 
 ═══════════════════════════════════════
 INTELLIGENCE RULES — READ FIRST

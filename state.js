@@ -227,15 +227,13 @@ export async function saveContacts() {
 }
 
 export async function logUpdate(entry) {
-  // Always update local state immediately
   state.log = [entry, ...state.log].slice(0, 50);
   if (!state.db) return;
   setSyncStatus('saving');
   try {
-    await state.db.collection('updates').add({
-      ...entry,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    // Use window.firebase if available (loaded via CDN script tag)
+    const ts = window.firebase?.firestore?.FieldValue?.serverTimestamp?.() || new Date().toISOString();
+    await state.db.collection('updates').add({ ...entry, timestamp: ts });
     setSyncStatus('ok');
   } catch(e) { setSyncStatus('err'); }
 }

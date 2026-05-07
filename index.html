@@ -4060,6 +4060,39 @@ function initRender() {
 
 initRender();
 initFirebase();
+
+// ── EXPOSE ALL FUNCTIONS GLOBALLY ────────────────────────────
+// ES modules don't expose functions to window by default.
+// HTML onclick attributes need global access.
+Object.assign(window, {
+  goto, mobileGoto, subShow, toggleMorePanel, showToast,
+  generateBriefing, generateBriefingUI, loadAndRenderBriefing, generateDonnaDraft,
+  filterActions, renderActions, openAddAction, openEditAction, saveAction, completeAction,
+  quickCompleteAction, dismissAction, closeActionModal,
+  submitToAI, clearAI, applyChanges, submitFeedback, renderAIResponse,
+  handleFileSelect, handleDrop, processFile, removeFile, showFilePrev,
+  openEditModal, closeEditModal, setEditCls, saveEditModal,
+  openAddContact, openEditContact, saveContact, deleteContact, closeContactModal, filterContacts,
+  openAddMeeting, saveMeetings, renderMeetings,
+  saveProcesses, renderProcesses, filterProcesses, toggleProc,
+  renderSchedule, toggleSchedulePhase, openDateEdit, openPctEdit, cancelDateEdit,
+  confirmDateEdit, exportSchedulePDF, handleSchedulePDFUpload, applyScheduleUpdate,
+  renderScheduleUploadPreview,
+  manualStepUpdate, toggleRej,
+  askQuick, submitAsk,
+  searchKeyword, runSearch, initSearch,
+  confirmReset, setSyncStatus, updateActionBadge,
+  escH, linkify, linkifyRaw,
+  buildTimelines, buildMasterTimeline, buildLiveStatusGrid, renderAllTables,
+  renderLog, renderContacts, renderBriefing, renderCrossRefPanel,
+  triggerCrossRef, updateCrossRefBadge, runCrossRef,
+  listenToStatuses, listenToActions, listenToContacts, listenToLog,
+  listenToMeetings, listenToProcesses, listenToSchedule,
+  listenToMeetingOverlays, listenToProcessOverlays,
+  saveToFirebase, useLocalStorage,
+  addActionsFromAI, normalizeActionArea,
+  openEditAction,
+});
 </script>
 </body>
 </html>

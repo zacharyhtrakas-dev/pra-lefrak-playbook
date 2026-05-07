@@ -1640,13 +1640,13 @@ const DEFAULT_CONTACTS = [
   {id:'c5',  name:'Melissa Rivera-Ferguson', role:'PM Real Estate Services',                  org:'DCAS / DEP',      email:'merferguson@dcas.nyc.gov',            notes:''},
   {id:'c6',  name:'Sheranne Wickham',        role:'Director EHS / Asbestos Lead & Mold',      org:'DCAS / DEP',      email:'shera nnew@dep.nyc.gov',              notes:'(C) 347-203-2058 | (O) 718-595-7241. Receives proof of pre-construction notice. Flagged ACM concern on HHE back corridor 4/28.'},
   {id:'c7',  name:'David Jenkins',           role:'Senior Managing Director',                  org:'Foremost',        email:'djenkins@foremostconstructionny.com', notes:'(212) 708-6228'},
-  {id:'c8',  name:'Alejandro Orellana',      role:'Project Manager',                          org:'Foremost',        email:'aorellana@foremostconstructionny.com',notes:''},
+  {id:'c8',  name:'Alejandro Orellana',      role:'Project Manager — Organizer GC Update',   org:'Foremost',        email:'AOrellana@foremostconstructionny.com',notes:''},
   {id:'c9',  name:'Kyle Josefson',           role:'Project Coordinator',                      org:'Foremost',        email:'kjosefson@foremostconstructionny.com',notes:''},
   {id:'c10', name:'Brian Hopwood',           role:'Project Manager',                          org:'Foremost',        email:'bhopwood@foremostconstructionny.com', notes:'11th floor coordination.'},
   {id:'c11', name:'Anita Jhamb',             role:'SC Notice Issuer',                         org:'Lefrak',          email:'a.jhamb@lefrak.com',                  notes:'Issues Substantial Completion notices.'},
-  {id:'c12', name:'Mike Leary',              role:'Lefrak',                                   org:'Lefrak',          email:'',                                    notes:''},
-  {id:'c13', name:'Meredith Jackness',       role:'Lefrak',                                   org:'Lefrak',          email:'mjackness@lefrakcommercial.com',       notes:'Organizes biweekly DEP/PRA meeting.'},
-  {id:'c14', name:'Donna Cappa',             role:'Building Manager — both buildings',        org:'Lefrak',          email:'',                                    notes:'Weekly update recipient. On-site building manager for 96-05 HHE and 59-17 JB.'},
+  {id:'c12', name:'Mike Leary',              role:'Lefrak',                                   org:'Lefrak',          email:'MLeary@lefrakcommercial.com',                                    notes:''},
+  {id:'c13', name:'Meredith Jackness', role:'Lefrak — Organizer DEP/PRA Biweekly', org:'Lefrak', email:'MJackness@lefrakcommercial.com',       notes:'Organizes biweekly DEP/PRA meeting.'},
+  {id:'c14', name:'Donna Cappa',             role:'Building Manager — both buildings',        org:'Lefrak',          email:'DCappa@lefrakcommercial.com',                                    notes:'Weekly update recipient. On-site building manager for 96-05 HHE and 59-17 JB.'},
   {id:'c15', name:'Andre Camacho',           role:'Lefrak Commercial Property Management',    org:'Lefrak',          email:'acamacho@lefrakcommercial.com',        notes:''},
   {id:'c16', name:'Clayton Long',            role:'Principal',                                org:'ECC',             email:'',                                    notes:'ECC prepares ACM drawings + ARTS filings. Works with ESG on every abatement project.'},
   {id:'c17', name:'Javier Catalan',          role:'Project Manager (covering Lisa Javier)',   org:'ESG',             email:'',                                    notes:'ESG performs abatement, writes means & methods, air monitoring. Runs Mon 1:30pm ACM meeting.'},
@@ -1660,7 +1660,7 @@ const DEFAULT_CONTACTS = [
   {id:'c25', name:'Frank Nikac',             role:'Superintendent',                           org:'Blackbull (MBC)', email:'fnikac@blackbullbuilders.com',         notes:'HHE and JB.'},
   {id:'c26', name:'Anthony Johnson',         role:'Principal Architect',                      org:'AJA',             email:'',                                    notes:'Lead architect. AJA prepares/stamps arch drawings, as-builts, DOB/DEP responses.'},
   {id:'c27', name:'Janki Patel',             role:'Architect',                                org:'AJA',             email:'',                                    notes:'Day-to-day coordination on drawings, punchlist walks, as-builts.'},
-  {id:'c28', name:'Traven Tong',             role:'Architect',                                org:'Bauer Dermel',    email:'',                                    notes:'Added to 11th floor paint thread 4/29.'},
+  {id:'c28', name:'Traven Tong',             role:'Architect',                                org:'Sydness Architects',email:'travent@sydnessarchitects.com',                                    notes:'Added to 11th floor paint thread 4/29.'},
   {id:'c29', name:'Paul Belec',              role:'DEP Facilities Management',                org:'DCAS / DEP',      email:'pbelec@dep.nyc.gov',                  notes:'Confirmed A3 paint colors as building standard.'},
   {id:'c30', name:'Awymarie Riollano',       role:'DEP Facilities Management',                org:'DCAS / DEP',      email:'ariollano@dep.nyc.gov',               notes:'On DEP weekly Tuesday meeting.'},
   {id:'c31', name:'Elisa Velazquez',         role:'DEP Facilities Management',                org:'DCAS / DEP',      email:'evelazquez@dep.nyc.gov',              notes:''},
@@ -2996,7 +2996,54 @@ async function generateBriefingUI() {
     // Build open actions by building
     const actionsByArea = openActions.reduce((acc,a)=>{
       const area = a.area||'General';
-      if(!acc[area]) acc[area]=[];
+      if(!acc[area]) acc[area]=[
+  // ── NEW FROM CALENDAR ──
+  // Lefrak Commercial
+  {id:'cx1',  name:'John Fitzsimmons',    role:'Lefrak Commercial',             org:'Lefrak',          email:'JFitzsimmons@lefrakcommercial.com', notes:'On ACM Next Steps and DEP Renovation meetings.'},
+  {id:'cx2',  name:'David Gleeson',       role:'Lefrak Commercial',             org:'Lefrak',          email:'DGleeson@lefrakcommercial.com',     notes:'On INTERNAL DEP/PRA biweekly meeting.'},
+  {id:'cx3',  name:'Michael Fabean',      role:'Lefrak Commercial',             org:'Lefrak',          email:'MFabean@lefrakcommercial.com',      notes:'On INTERNAL DEP/PRA biweekly meeting.'},
+  // Foremost
+  {id:'cx4',  name:'Carolina Caro',       role:'Project Coordinator',           org:'Foremost',        email:'ccaro@blackbullbuilders.com',       notes:'On GC Update meeting. Note: email is @blackbullbuilders.'},
+  // DCAS
+  {id:'cx5',  name:'Bethany Waters',      role:'DCAS',                          org:'DCAS / DEP',      email:'bwaters4@dcas.nyc.gov',             notes:'On DEP Renovation Project Weekly Review.'},
+  // PRA
+  {id:'cx6',  name:'Salvatore Mazzeo',    role:'Project Manager',               org:'PRA',             email:'smazzeo@pra-consulting.com',        notes:'On DEP Renovation and INTERNAL DEP/PRA meetings.'},
+  {id:'cx7',  name:'Maria Teresa Olmo',   role:'Organizer — PRA Monthly Meeting',org:'PRA',            email:'mtolmo@pra-consulting.com',         notes:'Organizes PRA Company Monthly Team Meeting.'},
+  {id:'cx8',  name:'Adam Shawki',         role:'PRA Staff',                     org:'PRA',             email:'ashawki@pra-consulting.com',        notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx9',  name:'Andon Cimi',          role:'PRA Staff',                     org:'PRA',             email:'acimi@pra-consulting.com',          notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx10', name:'Carl Hakansson',      role:'PRA Staff',                     org:'PRA',             email:'chakansson@pra-consulting.com',     notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx11', name:'Charles Cross',       role:'PRA Staff',                     org:'PRA',             email:'ccross@pra-consulting.com',         notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx12', name:'David Bearden',       role:'PRA Staff',                     org:'PRA',             email:'dbearden@pra-consulting.com',       notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx13', name:'David Neissani',      role:'PRA Staff',                     org:'PRA',             email:'dneissani@pra-consulting.com',      notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx14', name:'Elena Keung',         role:'PRA Staff',                     org:'PRA',             email:'ekeung@pra-consulting.com',         notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx15', name:'Eric Fahnestock',     role:'PRA Staff',                     org:'PRA',             email:'efahnestock@pra-consulting.com',    notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx16', name:'Giuseppe Mazzeo',     role:'PRA Staff',                     org:'PRA',             email:'gmazzeo@pra-consulting.com',        notes:'PRA Monthly Meeting invitee. Also appears as giuseppe.mazzeo@turicorp.com.'},
+  {id:'cx17', name:'Kyle Scott Naddell',  role:'PRA Staff',                     org:'PRA',             email:'knaddell@pra-consulting.com',       notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx18', name:'Manoj Ramkisan Musale',role:'PRA Staff',                    org:'PRA',             email:'mmusale@pra-consulting.com',        notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx19', name:'Marc Gottlieb',       role:'PRA Staff',                     org:'PRA',             email:'mgottlieb@pra-consulting.com',      notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx20', name:'Matthew Pan',         role:'PRA Staff',                     org:'PRA',             email:'mpan@pra-consulting.com',           notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx21', name:'Omkar Anil Wable',    role:'PRA Staff',                     org:'PRA',             email:'owable@pra-consulting.com',         notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx22', name:'Pedro Cruz',          role:'PRA Staff',                     org:'PRA',             email:'pcruz@pra-consulting.com',          notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx23', name:'Prashant Bhagchandani',role:'PRA Staff',                    org:'PRA',             email:'pbhagchandani@pra-consulting.com',  notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx24', name:'Prashant Patel',      role:'PRA Staff',                     org:'PRA',             email:'ppatel@pra-consulting.com',         notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx25', name:'Saptarshi Pandey',    role:'PRA Staff',                     org:'PRA',             email:'spandey@pra-consulting.com',        notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx26', name:'Sopan Desai',         role:'PRA Staff',                     org:'PRA',             email:'sdesai@pra-consulting.com',         notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx27', name:'Udey Mudgal',         role:'PRA Staff',                     org:'PRA',             email:'umudgal@pra-consulting.com',        notes:'PRA Monthly Meeting invitee.'},
+  {id:'cx28', name:'Valentin Le-Bastart-de-Villeneuve',role:'PRA Staff',       org:'PRA',             email:'vdevilleneuve@pra-consulting.com',  notes:'PRA Monthly Meeting invitee.'},
+  // Vendors / Others
+  {id:'cx29', name:'Brian Pasechnick',    role:'Vendor',                        org:'Omdex Inc',       email:'brian@omdexinc.com',               notes:'On GC Update meeting.'},
+  {id:'cx30', name:'Jackie Smith',        role:'Realty Operations',             org:'Realty Operations',email:'JSmith@realtyoperations.com',     notes:'On GC Update meeting.'},
+  {id:'cx31', name:'Joseph Gavin',        role:'Mason247',                      org:'Vendors',         email:'jgavin@mason247.com',              notes:'On GC Update meeting.'},
+  {id:'cx32', name:'Julianne Poplaski',   role:'Security 101',                  org:'Vendors',         email:'jpoplaski@security101.com',        notes:'On GC Update meeting.'},
+  {id:'cx33', name:'Matthew Ruopoli',     role:'Architect',                     org:'Sydness Architects',email:'matthewr@sydnessarchitects.com', notes:'On GC Update meeting.'},
+  {id:'cx34', name:'Michael Rea',         role:'Realty Operations',             org:'Realty Operations',email:'MReaJr@realtyoperations.com',     notes:'On GC Update meeting.'},
+  {id:'cx35', name:'Nelson Caceres',      role:'COS VCS',                       org:'Vendors',         email:'ncaceres@cosvcs.com',              notes:'On GC Update meeting.'},
+  {id:'cx36', name:'Thomas Fields',       role:'Engineer — MGE',                org:'MGE',             email:'Thomas.Fields@mgedpc.net',         notes:'On GC Update meeting. MGE is the EOR/MEP engineer.'},
+  {id:'cx37', name:'Vincent Biondi',      role:'COS VCS',                       org:'Vendors',         email:'VBiondi@cosvcs.com',               notes:'On GC Update meeting.'},
+  {id:'cx38', name:'William Silva',       role:'Astor & Stone',                 org:'Consultants / GCs',email:'william@astorstone.com',          notes:'Astor & Stone — Blackbull assumed their scope.'},
+  // Update existing contacts with confirmed emails
+
+
       acc[area].push(`${a.action}${a.owner?' ('+a.owner+')':''}${a.due?' — due '+a.due:''}`);
       return acc;
     },{});
@@ -3333,18 +3380,27 @@ let selectedOutcome = 'done';
 
 // Seed events from known project data
 const SEED_MICRO_EVENTS = [
-  {id:'me1', title:'AJA Punchlist Walkthrough — 96-05 HHE A3', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — A3', notes:'AJA creates punchlist on walk and sends to team. Foremost confirmed.', status:'upcoming', created:'2026-05-07'},
-  {id:'me2', title:'FDNY Inspection — 96-05 HHE A1', type:'inspection', date:'2026-05-12', time:'', area:'96-05 HHE — A1', notes:'Confirm with Scutum. Track outcome.', status:'upcoming', created:'2026-05-07'},
-  {id:'me3', title:'Existing Conditions Walkthrough with DEP — B1/B2/A4', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — B1/B2/A4', notes:'Existing conditions walkthrough with DEP at 10am for B1, B2, A4 spaces.', status:'upcoming', created:'2026-05-07'},
-  {id:'me4', title:'INTERNAL DEP/PRA Biweekly Meeting', type:'meeting', date:'2026-05-14', time:'11:00', area:'Both buildings', notes:'Meredith Jackness organizer. Microsoft Teams. Every other Thursday.', status:'upcoming', created:'2026-05-07'},
-  {id:'me5', title:'A3 Substantial Completion — declare SC', type:'milestone', date:'2026-05-15', time:'', area:'96-05 HHE — A3', notes:'SC to be declared. Notice must be issued ≥10 business days prior.', status:'upcoming', created:'2026-05-07'},
-  {id:'me6', title:'GC Permits Expiry — Q00940195 + Q00919587', type:'milestone', date:'2026-05-20', time:'', area:'96-05 HHE', notes:'B1/B2/A4 and A3 GC permits expire. Confirm renewal or closeout plan with Foremost immediately.', status:'upcoming', created:'2026-05-07'},
-  {id:'me7', title:'11th fl — Soft Demo', type:'milestone', date:'2026-05-18', time:'', area:'59-17 JB — 11th fl', notes:'Soft demo planned 5/18-5/20.', status:'upcoming', created:'2026-05-07'},
-  {id:'me8', title:'11th fl — ACM Abatement begins (ESG)', type:'milestone', date:'2026-05-29', time:'', area:'59-17 JB — 11th fl', notes:'Abatement planned ~5/29-6/1.', status:'upcoming', created:'2026-05-07'},
-  {id:'me9', title:'FDNY Inspection — 96-05 HHE A3 (FA)', type:'inspection', date:'2026-06-10', time:'18:00', area:'96-05 HHE — A3', notes:'FDNY FA inspection for A3. Requested 5/5/26. Confirm time with Scutum.', status:'upcoming', created:'2026-05-07'},
-  {id:'me10', title:'Weekly Sign-Off — 96-05 HHE', type:'meeting', date:'2026-05-12', time:'12:30', area:'96-05 HHE', notes:'Weekly Monday 12:30pm sign-off meeting.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
-  {id:'me11', title:'Main DEP/DCAS/Lefrak Meeting', type:'meeting', date:'2026-05-12', time:'13:30', area:'Both buildings', notes:'Tuesday 1:30pm main meeting. Zach sends minutes via Stepflo.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
-  {id:'me12', title:'GC Update — HHE + JB', type:'meeting', date:'2026-05-12', time:'10:30', area:'Both buildings', notes:'Tuesday 10:30am GC update.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
+  // ── INSPECTIONS ──
+  {id:'me2',  title:'FDNY Inspection — 96-05 HHE A1', type:'inspection', date:'2026-05-12', time:'', area:'96-05 HHE — A1', notes:'Confirm with Scutum. Track outcome.', status:'upcoming', created:'2026-05-07'},
+  {id:'me9',  title:'FDNY FA Inspection — 96-05 HHE A3', type:'inspection', date:'2026-06-10', time:'18:00', area:'96-05 HHE — A3', notes:'FDNY FA inspection for A3. Requested 5/5/26. Confirm time with Scutum.', status:'upcoming', created:'2026-05-07'},
+  // ── WALKTHROUGHS ──
+  {id:'me1',  title:'AJA Punchlist Walkthrough — 96-05 HHE A3', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — A3', notes:'AJA creates punchlist on walk and sends to team. Foremost confirmed.', status:'upcoming', created:'2026-05-07'},
+  {id:'me3',  title:'Existing Conditions Walkthrough with DEP — B1/B2/A4', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — B1/B2/A4', notes:'Existing conditions walkthrough with DEP for B1, B2, A4 spaces. 1 hour.', status:'upcoming', created:'2026-05-07'},
+  // ── MILESTONES ──
+  {id:'me5',  title:'A3 Substantial Completion — declare SC', type:'milestone', date:'2026-05-15', time:'', area:'96-05 HHE — A3', notes:'SC to be declared. Notice must be issued ≥10 business days prior.', status:'upcoming', created:'2026-05-07'},
+  {id:'me6',  title:'GC Permits Expiry — Q00940195 + Q00919587', type:'milestone', date:'2026-05-20', time:'', area:'96-05 HHE', notes:'B1/B2/A4 and A3 GC permits expire. Confirm renewal or closeout plan with Foremost immediately.', status:'upcoming', created:'2026-05-07'},
+  {id:'me7',  title:'11th fl — Soft Demo begins', type:'milestone', date:'2026-05-18', time:'', area:'59-17 JB — 11th fl', notes:'Soft demo planned 5/18-5/20.', status:'upcoming', created:'2026-05-07'},
+  {id:'me8',  title:'11th fl — ACM Abatement begins (ESG)', type:'milestone', date:'2026-05-29', time:'', area:'59-17 JB — 11th fl', notes:'Abatement planned ~5/29-6/1.', status:'upcoming', created:'2026-05-07'},
+  // ── WEEKLY RECURRING — MONDAYS ──
+  {id:'me10', title:'Weekly Call Sign Offs — 96-05 Ground Floor', type:'meeting', date:'2026-05-11', time:'12:30', area:'96-05 HHE', notes:'Organizer: Meredith Jackness. Repeats weekly. 10 invitees. Microsoft Teams.', status:'upcoming', created:'2026-05-07', recurring:'weekly', recurringDay:1},
+  {id:'me13', title:'59-17 / 96-05 — DEP — ACM Next Steps', type:'meeting', date:'2026-05-11', time:'13:30', area:'Both buildings', notes:'Organizer: KK Maurya. Repeats weekly until Dec 28, 2026. 19 invitees incl. ESG/ECC/Lefrak/Foremost.', status:'upcoming', created:'2026-05-07', recurring:'weekly', recurringDay:1},
+  // ── WEEKLY RECURRING — TUESDAYS ──
+  {id:'me11', title:'96-05 HHE 1st Floor and 59-17 JB — GC Update', type:'meeting', date:'2026-05-12', time:'10:00', area:'Both buildings', notes:'Organizer: Alejandro Orellana. Repeats weekly until Dec 30, 2026. 31 invitees.', status:'upcoming', created:'2026-05-07', recurring:'weekly', recurringDay:2},
+  {id:'me12', title:'DEP Renovation Project Weekly Review', type:'meeting', date:'2026-05-12', time:'13:30', area:'59-17 JB', notes:'Organizer: KK Maurya. Repeats weekly until Jul 31, 2026. Location: 59-17 Junction Blvd. 25 invitees.', status:'upcoming', created:'2026-05-07', recurring:'weekly', recurringDay:2},
+  // ── BIWEEKLY — THURSDAYS ──
+  {id:'me4',  title:'INTERNAL DEP/PRA Biweekly Meeting', type:'meeting', date:'2026-05-14', time:'11:00', area:'Both buildings', notes:'Organizer: Meredith Jackness. Biweekly Thursdays. Microsoft Teams. 16 invitees.', status:'upcoming', created:'2026-05-07', recurring:'biweekly', recurringDay:4},
+  // ── MONTHLY ──
+  {id:'me14', title:'PRA Company Monthly Team Meeting', type:'meeting', date:'2026-05-13', time:'08:15', area:'PRA Internal', notes:'Organizer: Maria Teresa Olmo. 2nd Wednesday of each month, 8:15-9:00am. 28 invitees — PRA staff only.', status:'upcoming', created:'2026-05-07', recurring:'monthly-2nd-wed'},
 ];
 
 function microKey(d) {

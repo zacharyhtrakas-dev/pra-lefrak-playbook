@@ -2575,7 +2575,36 @@ const WEEKLY_MEETINGS = [
   {day:4, time:'11:00 AM', name:'INTERNAL DEP/PRA Meeting (biweekly Thursdays — next: May 14)'},
 ];
 
-async function generateBriefing() {
+async function generateDonnaDraft() {
+  const btn = document.getElementById('donna-btn');
+  const container = document.getElementById('donna-draft-container');
+  if (!btn || !container) return;
+  btn.disabled = true; btn.textContent = 'Generating...';
+  container.innerHTML = `<div class="ai-dots"><span></span><span></span><span></span></div>`;
+  try {
+    const statusSummary = Object.entries(liveStatuses).map(([k,rows])=>{
+      const issues = rows.filter(r=>r.cls==='bd'||r.cls==='bw');
+      return issues.length ? `${k}: ${issues.map(r=>r.item+': '+r.status.substring(0,80)).join('; ')}` : null;
+    }).filter(Boolean).join('\n');
+    const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:
+        `Write a brief weekly update email to Donna Cappa (Lefrak building manager) from Zach Trakas (PRA).
+Format: Dear Donna,\n\n59-17 Junction Blvd\n• [2-3 bullet points]\n\n96-05 Horace Harding Exwy\n• [2-3 bullet points]\n\nBest,\nZach\n\nCurrent issues:\n${statusSummary}\n\nKeep it professional, factual, under 150 words total. Plain text only.`
+      }]})
+    });
+    const data = await resp.json();
+    const text = (data.content||[]).map(c=>c.text||'').join('').trim();
+    container.innerHTML = `<div style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--surface2);padding:14px;border-radius:8px;line-height:1.75;max-height:280px;overflow-y:auto;border:1px solid var(--border)">${escH(text)}</div>
+      <button class="btn btn-g" style="margin-top:8px;font-size:12px" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);showToast('Copied!')">📋 Copy</button>`;
+    btn.textContent = 'Regenerate'; btn.disabled = false;
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red);font-size:12px">Failed to generate — try again</div>`;
+    btn.textContent = 'Generate draft'; btn.disabled = false;
+  }
+}
+
+
   // Wait for Firebase to be ready
   if (db && Object.keys(liveStatuses).every(k => liveStatuses[k] === (DEFAULT_STATUSES[k] || liveStatuses[k]))) {
     await new Promise(r => setTimeout(r, 600));
@@ -2645,7 +2674,8 @@ HARDCODED BLOCKERS (always surface these regardless of other data):
 
 INSTRUCTIONS: Surface everything — cross-reference all data sources. Always include the hardcoded blockers above. Never omit a blocker.
 
-Return ONLY valid JSON, no preamble: {"headline":"string","urgent":["..."],"push_today":["who + what"],"watch":["..."],"meetings_today":["..."],"donna_draft":"Dear Donna,\\n\\n59-17 JB\\n• ...\\n\\n96-05 HHE\\n• ...\\n\\nBest,\\nZach","positive":"string"}`;
+Return ONLY valid JSON, no preamble, no code fences. Keep ALL strings under 100 chars. Max 5 items per array. JSON structure:
+{"headline":"string","urgent":["string"],"push_today":["string"],"watch":["string"],"positive":"string"}`;
 
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,stream:false,messages:[{role:'user',content:prompt}]})});
 
@@ -2685,19 +2715,18 @@ function renderBriefing(b, permitWarnings, overdueActions, todayMeetings, dateSt
   if (b.push_today?.length) {
     html+=`<div class="card"><div class="card-title">📞 Push today</div>${b.push_today.map(p=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start"><span style="color:var(--gold);flex-shrink:0;font-weight:700;margin-top:1px">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}</div>`;
   }
-  if (todayMeetings.length || b.meetings_today?.length) {
-    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><strong style="font-family:'DM Mono',monospace;font-size:12px">${escH(m.time)}</strong> <span style="color:var(--text3);margin:0 4px">·</span> <span class="brief-lk">${escH(m.name)}</span></div>`).join('')}${(b.meetings_today||[]).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)">→ <span class="brief-lk">${escH(n)}</span></div>`).join('')}</div>`;
+  if (todayMeetings.length) {
+    html+=`<div class="card"><div class="card-title">📅 Today's meetings</div>${todayMeetings.map(m=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><strong style="font-family:'DM Mono',monospace;font-size:12px">${escH(m.time)}</strong> <span style="color:var(--text3);margin:0 4px">·</span> <span class="brief-lk">${escH(m.name)}</span></div>`).join('')}</div>`;
   }
   if (b.watch?.length) {
     html+=`<div class="card"><div class="card-title">👁 Watch this week</div>${b.watch.map(w=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start"><span style="color:var(--text4);flex-shrink:0;margin-top:2px">○</span><span class="brief-lk">${escH(w)}</span></div>`).join('')}</div>`;
   }
-  if (b.donna_draft) {
-    html+=`<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
-      <span>📧 Donna Cappa weekly update</span>
-      <button class="btn btn-a btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('donna-draft-txt').textContent);showToast('Copied to clipboard!')">📋 Copy</button>
-    </div>
-    <div id="donna-draft-txt" style="font-size:12.5px;white-space:pre-wrap;color:var(--text2);background:var(--surface2);padding:14px;border-radius:8px;line-height:1.75;max-height:320px;overflow-y:auto;border:1px solid var(--border)">${escH(b.donna_draft)}</div></div>`;
-  }
+  // Donna draft — generate on demand to save tokens
+  html += `<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+    <span>📧 Donna Cappa weekly update</span>
+    <button class="btn btn-a btn-sm" id="donna-btn" onclick="generateDonnaDraft()">Generate draft</button>
+  </div>
+  <div id="donna-draft-container" style="margin-top:8px"></div></div>`;
   document.getElementById('briefing-container').innerHTML = html;
   // Post-process: linkify .brief-lk spans after HTML is safely set
   document.querySelectorAll('#briefing-container .brief-lk').forEach(el => {

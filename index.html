@@ -3184,7 +3184,7 @@ function runCrossRef() {
       if (itemWord.length < 5) return;
       if (detail.includes(itemWord)) {
         flags.push({ type:'log_status_mismatch', area:areaKey, item:row.item,
-          msg:`Log suggests "${row.item}" may be done — verify and update status` });
+          msg:`${areaKey}: log suggests "${row.item}" may be done — verify and update status` });
       }
     });
   });

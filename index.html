@@ -2810,6 +2810,31 @@ async function generateBriefingUI() {
 
     const recentCtx = recentLogEntries.slice(0,8).map(e=>`[${e.date}] ${e.area}: ${e.headline}${e.detail?' — '+e.detail.substring(0,120):''}`).join('\n');
 
+    const crossRefFlags = window._crossRefFlags || runCrossRef();
+    const crossRefSummary = crossRefFlags.length ? crossRefFlags.map(f=>`[${f.type}] ${f.msg}`).join('\n') : 'None';
+
+    const prompt = `Generate a sharp daily briefing for Zachary Trakas (PRA Consulting PMO) — ${todayStr}.
+
+HARDCODED BLOCKERS (always surface):
+- 96-05 HHE A3: FA devices delivered 4/28 NOT YET INSTALLED. Install → pretest → FDNY inspection. SC target May 15 at risk.
+- 96-05 HHE B1: PAA #2025-TMFALM-007622-PLAN awaiting FDNY approval.
+- 59-17 JB 10th fl: GC permits blocked pending data center access agreement.
+- GC permits Q00940195 + Q00919587 expire May 20.
+
+STATUS — BLOCKED/PENDING:
+${statusSummary||'All items green'}
+
+OPEN ACTIONS (${openActions.length} open, ${overdueActions.length} overdue):
+${actionsSummary||'None'}
+
+CROSS-REF FLAGS: ${crossRefSummary}
+RECENT LOG: ${recentCtx||'None'}
+PERMITS: ${permitWarnings.map(p=>`${p.permit} expires in ${p.daysLeft} days`).join(' | ')||'None'}
+TODAY MEETINGS: ${todayMeetings.map(m=>`${m.time} ${m.name}`).join(', ')||'None'}
+
+Return ONLY valid JSON, no fences. Strings under 100 chars, max 5 items per array:
+{"headline":"string","urgent":["string"],"push_today":["who + what"],"watch":["string"],"positive":"string"}`;
+
     const resp = await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);

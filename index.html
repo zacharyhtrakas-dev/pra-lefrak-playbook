@@ -3688,14 +3688,14 @@ function listenToMicroEvents() {
   db.collection('micro_events').doc('events').onSnapshot(snap => {
     if (snap.exists && snap.data().items?.length) {
       const saved = snap.data().items;
-      // Always apply seed corrections — seed is the source of truth for seeded IDs
-      const seedById = Object.fromEntries(SEED_MICRO_EVENTS.map(e => [e.id, e]));
-      microEvents = saved.map(e => seedById[e.id] ? {...e, ...seedById[e.id]} : e);
-      // Add any seed events not yet in Firebase
-      SEED_MICRO_EVENTS.forEach(se => { if (!microEvents.find(e => e.id === se.id)) microEvents.push(se); });
-      // If anything changed, re-save
-      const changed = JSON.stringify(microEvents) !== JSON.stringify(saved);
-      if (changed) db.collection('micro_events').doc('events').set({items: microEvents});
+      // Always apply seed corrections — seed overrides saved data for seeded IDs
+      const seedById = {};
+      SEED_MICRO_EVENTS.forEach(e => { seedById[e.id] = e; });
+      // Start with seed events as base, then layer in non-seed saved events
+      const savedNonSeed = saved.filter(e => !seedById[e.id]);
+      microEvents = [...SEED_MICRO_EVENTS, ...savedNonSeed];
+      // Re-save to Firebase to fix stale data
+      db.collection('micro_events').doc('events').set({items: microEvents});
     } else {
       microEvents = [...SEED_MICRO_EVENTS];
       db.collection('micro_events').doc('events').set({items: SEED_MICRO_EVENTS});

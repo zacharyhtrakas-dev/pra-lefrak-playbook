@@ -378,6 +378,67 @@ body{
 .fb-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
 .fb-lbl{font-size:12px;font-weight:700;color:var(--navy);width:100%;margin-bottom:3px}
 
+/* ── MICRO SCHEDULE ── */
+.micro-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.micro-view-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:9px;padding:3px}
+.micro-view-tab{padding:5px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:inherit;transition:all .13s}
+.micro-view-tab.on{background:var(--surface);color:var(--navy);box-shadow:var(--shadow-sm)}
+.micro-nav{display:flex;align-items:center;gap:6px}
+.micro-nav-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .13s}
+.micro-nav-btn:hover{background:var(--surface2)}
+.micro-period-label{font-size:14px;font-weight:600;color:var(--navy);min-width:160px;text-align:center}
+.micro-today-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border2);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text2)}
+.micro-today-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.micro-add-btn{padding:6px 14px;border-radius:8px;background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:inherit;margin-left:auto}
+.micro-day{display:flex;flex-direction:column;gap:3px}
+.micro-event{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface);margin-bottom:6px;cursor:pointer;transition:all .13s}
+.micro-event:hover{box-shadow:var(--shadow-sm);border-color:var(--border2)}
+.micro-event.ev-done{opacity:.55}
+.micro-event.ev-cancelled{opacity:.4}
+.micro-event.ev-meeting{border-left:3px solid var(--blue)}
+.micro-event.ev-inspection{border-left:3px solid var(--red)}
+.micro-event.ev-delivery{border-left:3px solid var(--gold)}
+.micro-event.ev-milestone{border-left:3px solid var(--green)}
+.micro-event.ev-walkthrough{border-left:3px solid var(--teal)}
+.micro-event-time{font-size:11px;font-weight:700;color:var(--text3);font-family:'DM Mono',monospace;min-width:48px;margin-top:2px}
+.micro-event-body{flex:1;min-width:0}
+.micro-event-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.micro-event-meta{font-size:11px;color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.micro-event-area{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--surface2);color:var(--text3);font-family:'DM Mono',monospace;font-weight:600}
+.ev-status-done{background:var(--green-dim);color:var(--green);font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700}
+.ev-status-cancelled{background:var(--surface3);color:var(--text3);font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700}
+.micro-week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.micro-week-day{border:1px solid var(--border);border-radius:10px;padding:8px;min-height:110px;background:var(--surface)}
+.micro-week-day.today{border-color:var(--gold);background:var(--gold-bg)}
+.micro-week-day-hdr{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.micro-week-day-num{font-size:16px;font-weight:700;color:var(--navy)}
+.micro-week-event{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.micro-month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.micro-month-hdr{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.micro-month-hdr-cell{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;text-align:center;padding:4px 0}
+.micro-month-day{border:1px solid var(--border);border-radius:7px;padding:5px;min-height:72px;background:var(--surface);cursor:pointer}
+.micro-month-day:hover{background:var(--surface2)}
+.micro-month-day.today{border-color:var(--gold);background:var(--gold-bg)}
+.micro-month-day.other-month{opacity:.35}
+.micro-month-day-num{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.micro-month-event{font-size:9px;padding:1px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.mc-meeting{background:var(--blue-dim);color:var(--blue)}
+.mc-inspection{background:var(--red-dim);color:var(--red)}
+.mc-delivery{background:var(--gold-bg);color:var(--gold-dim)}
+.mc-milestone{background:var(--green-dim);color:var(--green)}
+.mc-walkthrough{background:var(--teal-bg);color:var(--teal)}
+.mc-other{background:var(--surface3);color:var(--text2)}
+.ev-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;display:flex;align-items:center;justify-content:center}
+.ev-modal{background:var(--surface);border-radius:var(--rl);padding:22px 24px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.ev-field{margin-bottom:10px}
+.ev-field label{font-size:11.5px;color:var(--text2);display:block;margin-bottom:3px;font-weight:500}
+.ev-field input,.ev-field select,.ev-field textarea{width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:7px;font-size:13px;font-family:inherit;background:var(--bg);color:var(--text)}
+.ev-field textarea{min-height:60px;resize:vertical}
+.ev-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
+.ev-type-btn{padding:7px 4px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface);font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .13s;font-family:inherit}
+.ev-type-btn.on{border-color:var(--navy);background:var(--navy);color:#fff}
+@media(max-width:768px){.micro-week-grid{grid-template-columns:repeat(7,minmax(0,1fr))}.micro-week-event{font-size:9px}}
+
 /* ── BACK TO TOP ── */
 #back-to-top{
   position:fixed;bottom:90px;right:18px;width:38px;height:38px;border-radius:50%;
@@ -832,9 +893,10 @@ body{
     <div class="nav-item" onclick="goto('jb',this)"><span class="nav-icon">🏗</span>59-17 JB</div>
 
     <div class="nav-lbl" style="margin-top:8px">Views</div>
-    <div class="nav-item active" onclick="goto('overview',this)"><span class="nav-icon">📊</span>Overview</div>
+    <div class="nav-item" onclick="goto('overview',this)"><span class="nav-icon">📊</span>Overview</div>
+    <div class="nav-item" onclick="goto('micro',this)"><span class="nav-icon">🗓</span>Micro Schedule<span class="nav-badge" id="nav-micro-badge" style="display:none;background:var(--gold)">!</span></div>
     <div class="nav-item" onclick="goto('timeline',this)"><span class="nav-icon">🗺</span>Process Timeline</div>
-    <div class="nav-item" onclick="goto('schedule',this)"><span class="nav-icon">📅</span>Schedule</div>
+    <div class="nav-item" onclick="goto('schedule',this)"><span class="nav-icon">📅</span>Macro Schedule</div>
     <div class="nav-item" onclick="goto('ask',this)"><span class="nav-icon">💬</span>Ask a Question</div>
     <div class="nav-item" onclick="goto('search',this)"><span class="nav-icon">🔍</span>Search / Filter</div>
 
@@ -914,6 +976,137 @@ body{
     <span id="permit-countdown" style="font-size:10px;color:var(--red);font-family:'DM Mono',monospace;font-weight:700"></span>
   </div>
   <div class="card"><div class="phase-grid" id="status-grid"></div></div>
+</div>
+
+<!-- MICRO SCHEDULE PAGE -->
+<div id="page-micro" class="page">
+  <div class="ph" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div>
+      <div class="ph-eyebrow">Project Calendar</div>
+      <div class="ph-title">🗓 Micro Schedule</div>
+      <div class="ph-sub">Inspections · Deliveries · Meetings · Milestones · Walkthroughs</div>
+    </div>
+  </div>
+  <div class="micro-toolbar">
+    <div class="micro-view-tabs">
+      <button class="micro-view-tab on" onclick="microSetView('day',this)">Day</button>
+      <button class="micro-view-tab" onclick="microSetView('week',this)">Week</button>
+      <button class="micro-view-tab" onclick="microSetView('month',this)">Month</button>
+    </div>
+    <div class="micro-nav">
+      <button class="micro-nav-btn" onclick="microNav(-1)">‹</button>
+      <div class="micro-period-label" id="micro-period-label">—</div>
+      <button class="micro-nav-btn" onclick="microNav(1)">›</button>
+    </div>
+    <button class="micro-today-btn" onclick="microGoToday()">Today</button>
+    <button class="micro-add-btn" onclick="openAddEvent()">+ Add event</button>
+  </div>
+  <div id="micro-container"></div>
+</div>
+
+<!-- EVENT ADD/EDIT MODAL -->
+<div id="ev-modal-overlay" class="ev-modal-overlay" style="display:none" onclick="if(event.target===this)closeEvModal()">
+  <div class="ev-modal">
+    <div class="ev-modal-title" id="ev-modal-title">Add Event</div>
+    <input type="hidden" id="ev-edit-id">
+    <div class="ev-field">
+      <label>Title *</label>
+      <input id="ev-title" type="text" placeholder="e.g. FDNY inspection B1 — A4 spaces">
+    </div>
+    <div class="ev-field">
+      <label>Type</label>
+      <div class="ev-type-grid">
+        <button class="ev-type-btn on" data-type="meeting" onclick="selectEvType('meeting',this)">📅 Meeting</button>
+        <button class="ev-type-btn" data-type="inspection" onclick="selectEvType('inspection',this)">🔍 Inspection</button>
+        <button class="ev-type-btn" data-type="walkthrough" onclick="selectEvType('walkthrough',this)">🚶 Walkthrough</button>
+        <button class="ev-type-btn" data-type="delivery" onclick="selectEvType('delivery',this)">📦 Delivery</button>
+        <button class="ev-type-btn" data-type="milestone" onclick="selectEvType('milestone',this)">🏁 Milestone</button>
+        <button class="ev-type-btn" data-type="other" onclick="selectEvType('other',this)">📌 Other</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="ev-field">
+        <label>Date *</label>
+        <input id="ev-date" type="date">
+      </div>
+      <div class="ev-field">
+        <label>Time (optional)</label>
+        <input id="ev-time" type="time" placeholder="e.g. 14:00">
+      </div>
+    </div>
+    <div class="ev-field">
+      <label>Area / Phase</label>
+      <select id="ev-area">
+        <optgroup label="96-05 HHE">
+          <option value="96-05 HHE — A1">96-05 HHE — A1</option>
+          <option value="96-05 HHE — B1">96-05 HHE — B1</option>
+          <option value="96-05 HHE — B2">96-05 HHE — B2</option>
+          <option value="96-05 HHE — A3">96-05 HHE — A3</option>
+          <option value="96-05 HHE — A4">96-05 HHE — A4</option>
+          <option value="96-05 HHE — A5">96-05 HHE — A5</option>
+          <option value="96-05 HHE — B1/B2/A4">96-05 HHE — B1/B2/A4</option>
+          <option value="96-05 HHE">96-05 HHE — All</option>
+        </optgroup>
+        <optgroup label="59-17 JB">
+          <option value="59-17 JB — 3rd fl">59-17 JB — 3rd fl</option>
+          <option value="59-17 JB — 10th fl">59-17 JB — 10th fl</option>
+          <option value="59-17 JB — 11th fl">59-17 JB — 11th fl</option>
+          <option value="59-17 JB — 12th fl">59-17 JB — 12th fl</option>
+          <option value="59-17 JB">59-17 JB — All</option>
+        </optgroup>
+        <option value="Both buildings">Both buildings</option>
+        <option value="">General</option>
+      </select>
+    </div>
+    <div class="ev-field">
+      <label>Notes</label>
+      <textarea id="ev-notes" placeholder="Any relevant details, attendees, requirements…"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:space-between;margin-top:14px">
+      <button class="btn btn-danger" id="ev-delete-btn" onclick="deleteEvent()" style="display:none;font-size:12px">Delete</button>
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn btn-g" onclick="closeEvModal()">Cancel</button>
+        <button class="btn btn-a" onclick="saveEvent()">Save event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT COMPLETION MODAL -->
+<div id="ev-complete-overlay" class="ev-modal-overlay" style="display:none" onclick="if(event.target===this)closeCompleteModal()">
+  <div class="ev-modal" style="width:440px">
+    <div class="ev-modal-title">⏰ Event time reached</div>
+    <div id="ev-complete-title" style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px"></div>
+    <div id="ev-complete-meta" style="font-size:12px;color:var(--text3);margin-bottom:14px"></div>
+    <div class="ev-field">
+      <label>Outcome</label>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="ev-type-btn on" id="outcome-done" onclick="selectOutcome('done',this)" style="flex:1;padding:10px">✓ Done</button>
+        <button class="ev-type-btn" id="outcome-cancelled" onclick="selectOutcome('cancelled',this)" style="flex:1;padding:10px">✗ Cancelled</button>
+        <button class="ev-type-btn" id="outcome-rescheduled" onclick="selectOutcome('rescheduled',this)" style="flex:1;padding:10px">↻ Rescheduled</button>
+      </div>
+    </div>
+    <div class="ev-field">
+      <label>Update note (logged to the system)</label>
+      <textarea id="ev-complete-note" placeholder="What happened? Any next steps, outcomes, decisions made…" style="min-height:80px"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button class="btn btn-g" onclick="closeCompleteModal()">Skip for now</button>
+      <button class="btn btn-a" onclick="submitEventCompletion()">Review & apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT COMPLETION REVIEW MODAL -->
+<div id="ev-review-overlay" class="ev-modal-overlay" style="display:none">
+  <div class="ev-modal">
+    <div class="ev-modal-title">Review changes</div>
+    <div id="ev-review-content" style="font-size:13px;color:var(--text2);margin-bottom:14px;background:var(--surface2);padding:12px;border-radius:8px;line-height:1.6"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button class="btn btn-g" onclick="document.getElementById('ev-review-overlay').style.display='none';document.getElementById('ev-complete-overlay').style.display='flex'">Edit</button>
+      <button class="btn btn-a" onclick="applyEventCompletion()">Apply changes</button>
+    </div>
+  </div>
 </div>
 
 <!-- TIMELINE PAGE -->
@@ -1405,12 +1598,12 @@ const DEFAULT_STATUSES = {
   ],
   'jb-10': [
     {id:'arts_drawings',     item:'ARTS drawings',                         status:'Submitted to DEP 4/21/26',                                              cls:'bs', owner:'PRA'},
-    {id:'dep_review',        item:'DEP review of ARTS drawings',           status:'Awaiting DEP review',                                                    cls:'bw', owner:'DEP'},
+    {id:'dep_review',        item:'DEP review of ARTS drawings',           status:'BLOCKED pending data center access agreement between Lefrak/Foremost and DEP/DCAS — cannot proceed until resolved. Raising at Tue 1:30pm meeting.', cls:'bd', owner:'DEP / Lefrak / Foremost'},
     {id:'dcas_dep_approval', item:'DCAS & DEP drawing approval',           status:'Approved 5/4/26',                                                       cls:'bs', owner:'DCAS / DEP'},
-    {id:'gc_permits',        item:'GC permit filing',                      status:'BLOCKED — approved 5/4/26 but cannot pull until Lefrak/Foremost + DEP/DCAS agree on data center access for abatement', cls:'bd', owner:'GC'},
+    {id:'gc_permits',        item:'GC permit filing',                      status:'BLOCKED — cannot pull permits until data center access agreement resolved', cls:'bd', owner:'GC'},
     {id:'acm_scope',         item:'Known ACM scope',                       status:'Mastic at carpet/VCT, restrooms, corridor, columns',                    cls:'bi', owner:''},
     {id:'acm_testing',       item:'Additional ACM testing (corridor)',     status:'LL conducting week of 4/20/26',                                          cls:'bw', owner:''},
-    {id:'arts_filing',       item:'ARTS filing',                           status:'To be filed after DEP drawing review and data center agreement',         cls:'bm', owner:'ECC / ESG'},
+    {id:'arts_filing',       item:'ARTS filing',                           status:'Pending — follows data center access agreement and DEP drawing review',  cls:'bm', owner:'ECC / ESG'},
     {id:'construction',      item:'Construction',                          status:'Not started — follows abatement and ARTS approval',                      cls:'bm', owner:''},
   ],
   'jb-3': [
@@ -1788,7 +1981,7 @@ function initFirebase() {
       clearTimeout(fbTimeout); setSyncStatus('ok');
       listenToStatuses(); listenToLog(); listenToContacts(); listenToActions();
       listenToSchedule(); listenToMeetings(); listenToProcesses();
-      listenToProcessOverlays(); listenToMeetingOverlays();
+      listenToProcessOverlays(); listenToMeetingOverlays(); listenToMicroEvents();
       setTimeout(() => { if(document.getElementById('briefing-placeholder')) generateBriefingUI(); }, 1200);
       setTimeout(() => { const d=new Date().getDay(); if(d===1||d===2){goto('briefing',document.querySelector('.nav-item'));generateBriefingUI();} }, 2500);
     }).catch(() => { clearTimeout(fbTimeout); setSyncStatus('local'); useLocalStorage(); });
@@ -3130,7 +3323,380 @@ async function saveEditModal() {
   showToast('✓ Status updated');
 }
 
-// ── AI CONTEXT ENRICHMENT ─────────────────────────────────
+// ── MICRO SCHEDULE ENGINE ─────────────────────────────────────
+let microEvents = [];
+let microView = 'day'; // day | week | month
+let microDate = new Date(); // current reference date
+let pendingEventCompletion = null;
+let selectedEvType = 'meeting';
+let selectedOutcome = 'done';
+
+// Seed events from known project data
+const SEED_MICRO_EVENTS = [
+  {id:'me1', title:'AJA Punchlist Walkthrough — 96-05 HHE A3', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — A3', notes:'AJA creates punchlist on walk and sends to team. Foremost confirmed.', status:'upcoming', created:'2026-05-07'},
+  {id:'me2', title:'FDNY Inspection — 96-05 HHE A1', type:'inspection', date:'2026-05-12', time:'', area:'96-05 HHE — A1', notes:'Confirm with Scutum. Track outcome.', status:'upcoming', created:'2026-05-07'},
+  {id:'me3', title:'Existing Conditions Walkthrough with DEP — B1/B2/A4', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — B1/B2/A4', notes:'Existing conditions walkthrough with DEP at 10am for B1, B2, A4 spaces.', status:'upcoming', created:'2026-05-07'},
+  {id:'me4', title:'INTERNAL DEP/PRA Biweekly Meeting', type:'meeting', date:'2026-05-14', time:'11:00', area:'Both buildings', notes:'Meredith Jackness organizer. Microsoft Teams. Every other Thursday.', status:'upcoming', created:'2026-05-07'},
+  {id:'me5', title:'A3 Substantial Completion — declare SC', type:'milestone', date:'2026-05-15', time:'', area:'96-05 HHE — A3', notes:'SC to be declared. Notice must be issued ≥10 business days prior.', status:'upcoming', created:'2026-05-07'},
+  {id:'me6', title:'GC Permits Expiry — Q00940195 + Q00919587', type:'milestone', date:'2026-05-20', time:'', area:'96-05 HHE', notes:'B1/B2/A4 and A3 GC permits expire. Confirm renewal or closeout plan with Foremost immediately.', status:'upcoming', created:'2026-05-07'},
+  {id:'me7', title:'11th fl — Soft Demo', type:'milestone', date:'2026-05-18', time:'', area:'59-17 JB — 11th fl', notes:'Soft demo planned 5/18-5/20.', status:'upcoming', created:'2026-05-07'},
+  {id:'me8', title:'11th fl — ACM Abatement begins (ESG)', type:'milestone', date:'2026-05-29', time:'', area:'59-17 JB — 11th fl', notes:'Abatement planned ~5/29-6/1.', status:'upcoming', created:'2026-05-07'},
+  {id:'me9', title:'FDNY Inspection — 96-05 HHE A3 (FA)', type:'inspection', date:'2026-06-10', time:'18:00', area:'96-05 HHE — A3', notes:'FDNY FA inspection for A3. Requested 5/5/26. Confirm time with Scutum.', status:'upcoming', created:'2026-05-07'},
+  {id:'me10', title:'Weekly Sign-Off — 96-05 HHE', type:'meeting', date:'2026-05-12', time:'12:30', area:'96-05 HHE', notes:'Weekly Monday 12:30pm sign-off meeting.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
+  {id:'me11', title:'Main DEP/DCAS/Lefrak Meeting', type:'meeting', date:'2026-05-12', time:'13:30', area:'Both buildings', notes:'Tuesday 1:30pm main meeting. Zach sends minutes via Stepflo.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
+  {id:'me12', title:'GC Update — HHE + JB', type:'meeting', date:'2026-05-12', time:'10:30', area:'Both buildings', notes:'Tuesday 10:30am GC update.', status:'upcoming', created:'2026-05-07', recurring:'weekly'},
+];
+
+function microKey(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function microDateFromStr(s) {
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+
+function getEventsForDate(dateStr) {
+  return microEvents.filter(e => e.date === dateStr).sort((a,b) => (a.time||'99:99').localeCompare(b.time||'99:99'));
+}
+
+function getEventsForRange(startDate, endDate) {
+  const start = microKey(startDate);
+  const end = microKey(endDate);
+  return microEvents.filter(e => e.date >= start && e.date <= end);
+}
+
+function typeColor(type) {
+  return {meeting:'mc-meeting',inspection:'mc-inspection',delivery:'mc-delivery',milestone:'mc-milestone',walkthrough:'mc-walkthrough'}[type]||'mc-other';
+}
+function typeIcon(type) {
+  return {meeting:'📅',inspection:'🔍',walkthrough:'🚶',delivery:'📦',milestone:'🏁',other:'📌'}[type]||'📌';
+}
+function typeBorderClass(type) {
+  return {meeting:'ev-meeting',inspection:'ev-inspection',walkthrough:'ev-walkthrough',delivery:'ev-delivery',milestone:'ev-milestone'}[type]||'';
+}
+
+function formatMicroTime(time) {
+  if (!time) return 'All day';
+  const [h,m] = time.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 || 12;
+  return `${hr}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function microSetView(v, btn) {
+  microView = v;
+  document.querySelectorAll('.micro-view-tab').forEach(t => t.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  renderMicro();
+}
+
+function microNav(dir) {
+  if (microView === 'day') microDate.setDate(microDate.getDate() + dir);
+  else if (microView === 'week') microDate.setDate(microDate.getDate() + dir * 7);
+  else microDate.setMonth(microDate.getMonth() + dir);
+  renderMicro();
+}
+
+function microGoToday() {
+  microDate = new Date();
+  renderMicro();
+}
+
+function renderMicro() {
+  const label = document.getElementById('micro-period-label');
+  const container = document.getElementById('micro-container');
+  if (!label || !container) return;
+
+  if (microView === 'day') {
+    const ds = microKey(microDate);
+    const today = microKey(new Date());
+    const isToday = ds === today;
+    label.textContent = microDate.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
+    const events = getEventsForDate(ds);
+    let html = '';
+    if (!events.length) {
+      html = `<div class="card" style="text-align:center;padding:32px;color:var(--text3)"><div style="font-size:28px;margin-bottom:10px">📭</div><div>No events scheduled${isToday?' today':''}</div><button class="btn btn-a" style="margin-top:12px;font-size:12px" onclick="openAddEvent('${ds}')">+ Add event</button></div>`;
+    } else {
+      html = events.map(e => renderEventRow(e)).join('');
+    }
+    container.innerHTML = html;
+
+  } else if (microView === 'week') {
+    const startOfWeek = new Date(microDate);
+    startOfWeek.setDate(microDate.getDate() - microDate.getDay());
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    label.textContent = `${startOfWeek.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${endOfWeek.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+    const today = microKey(new Date());
+    let html = '<div class="micro-week-grid">';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startOfWeek); d.setDate(startOfWeek.getDate() + i);
+      const ds = microKey(d);
+      const evs = getEventsForDate(ds);
+      const isT = ds === today;
+      html += `<div class="micro-week-day${isT?' today':''}" onclick="microDate=new Date('${ds}T12:00:00');microSetView('day',document.querySelector('.micro-view-tab'))">
+        <div class="micro-week-day-hdr">
+          <span>${['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()]}</span>
+          <span class="micro-week-day-num">${d.getDate()}</span>
+        </div>
+        ${evs.map(e=>`<div class="micro-week-event ${typeColor(e.type)}" title="${escH(e.title)}" onclick="event.stopPropagation();openEditEvent('${e.id}')">${typeIcon(e.type)} ${escH(e.title.substring(0,20))}</div>`).join('')}
+        ${evs.length===0?`<div style="font-size:9px;color:var(--text4);margin-top:4px;text-align:center">—</div>`:''}
+      </div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+  } else {
+    // Month view
+    const y = microDate.getFullYear(), m = microDate.getMonth();
+    label.textContent = microDate.toLocaleDateString('en-US', {month:'long', year:'numeric'});
+    const firstDay = new Date(y, m, 1);
+    const lastDay = new Date(y, m+1, 0);
+    const today = microKey(new Date());
+    let html = '<div class="micro-month-hdr">' + ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="micro-month-hdr-cell">${d}</div>`).join('') + '</div><div class="micro-month-grid">';
+    // Pad start
+    for (let i = 0; i < firstDay.getDay(); i++) {
+      const d = new Date(y, m, -firstDay.getDay()+1+i);
+      html += `<div class="micro-month-day other-month"><div class="micro-month-day-num">${d.getDate()}</div></div>`;
+    }
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const d = new Date(y, m, day);
+      const ds = microKey(d);
+      const evs = getEventsForDate(ds);
+      const isT = ds === today;
+      html += `<div class="micro-month-day${isT?' today':''}" onclick="microDate=new Date(${y},${m},${day},12);microSetView('day',document.querySelector('.micro-view-tab'))">
+        <div class="micro-month-day-num">${day}</div>
+        ${evs.slice(0,3).map(e=>`<div class="micro-month-event ${typeColor(e.type)}" title="${escH(e.title)}">${typeIcon(e.type)} ${escH(e.title.substring(0,16))}</div>`).join('')}
+        ${evs.length>3?`<div class="micro-month-event mc-other">+${evs.length-3} more</div>`:''}
+      </div>`;
+    }
+    // Pad end
+    const endPad = 6 - lastDay.getDay();
+    for (let i = 1; i <= endPad; i++) {
+      html += `<div class="micro-month-day other-month"><div class="micro-month-day-num">${i}</div></div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  }
+}
+
+function renderEventRow(e) {
+  const isDone = e.status === 'done';
+  const isCancelled = e.status === 'cancelled';
+  return `<div class="micro-event ${typeBorderClass(e.type)}${isDone?' ev-done':''}${isCancelled?' ev-cancelled':''}" onclick="openEditEvent('${e.id}')">
+    <div class="micro-event-time">${formatMicroTime(e.time)}</div>
+    <div class="micro-event-body">
+      <div class="micro-event-title">${typeIcon(e.type)} ${escH(e.title)}</div>
+      <div class="micro-event-meta">
+        ${e.area?`<span class="micro-event-area">${escH(e.area)}</span>`:''}
+        ${isDone?'<span class="ev-status-done">✓ Done</span>':isCancelled?'<span class="ev-status-cancelled">Cancelled</span>':''}
+        ${e.notes?`<span style="color:var(--text3)">${escH(e.notes.substring(0,60))}${e.notes.length>60?'…':''}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── EVENT CRUD ───────────────────────────────────────────────
+function openAddEvent(dateStr) {
+  document.getElementById('ev-modal-title').textContent = 'Add Event';
+  document.getElementById('ev-edit-id').value = '';
+  document.getElementById('ev-title').value = '';
+  document.getElementById('ev-date').value = dateStr || microKey(microDate);
+  document.getElementById('ev-time').value = '';
+  document.getElementById('ev-area').value = '';
+  document.getElementById('ev-notes').value = '';
+  document.getElementById('ev-delete-btn').style.display = 'none';
+  selectedEvType = 'meeting';
+  document.querySelectorAll('.ev-type-btn').forEach(b => b.classList.toggle('on', b.dataset.type === 'meeting'));
+  document.getElementById('ev-modal-overlay').style.display = 'flex';
+  document.getElementById('ev-title').focus();
+}
+
+function openEditEvent(id) {
+  const e = microEvents.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById('ev-modal-title').textContent = 'Edit Event';
+  document.getElementById('ev-edit-id').value = id;
+  document.getElementById('ev-title').value = e.title;
+  document.getElementById('ev-date').value = e.date;
+  document.getElementById('ev-time').value = e.time || '';
+  document.getElementById('ev-area').value = e.area || '';
+  document.getElementById('ev-notes').value = e.notes || '';
+  document.getElementById('ev-delete-btn').style.display = 'inline-flex';
+  selectedEvType = e.type || 'meeting';
+  document.querySelectorAll('.ev-type-btn').forEach(b => b.classList.toggle('on', b.dataset.type === selectedEvType));
+  document.getElementById('ev-modal-overlay').style.display = 'flex';
+}
+
+function selectEvType(type, btn) {
+  selectedEvType = type;
+  document.querySelectorAll('.ev-type-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function closeEvModal() {
+  document.getElementById('ev-modal-overlay').style.display = 'none';
+}
+
+async function saveEvent() {
+  const title = document.getElementById('ev-title').value.trim();
+  const date = document.getElementById('ev-date').value;
+  if (!title || !date) { showToast('Title and date are required'); return; }
+  const editId = document.getElementById('ev-edit-id').value;
+  const ev = {
+    id: editId || 'mev_'+Date.now(),
+    title, type: selectedEvType, date,
+    time: document.getElementById('ev-time').value || '',
+    area: document.getElementById('ev-area').value || '',
+    notes: document.getElementById('ev-notes').value.trim(),
+    status: 'upcoming',
+    created: microKey(new Date()),
+  };
+  if (editId) {
+    const existing = microEvents.find(x => x.id === editId);
+    ev.status = existing?.status || 'upcoming';
+    microEvents = microEvents.map(x => x.id === editId ? ev : x);
+  } else {
+    microEvents = [...microEvents, ev];
+  }
+  await saveMicroEvents();
+  closeEvModal();
+  renderMicro();
+  showToast('✓ Event saved');
+}
+
+async function deleteEvent() {
+  const id = document.getElementById('ev-edit-id').value;
+  if (!id || !confirm('Delete this event?')) return;
+  microEvents = microEvents.filter(x => x.id !== id);
+  await saveMicroEvents();
+  closeEvModal();
+  renderMicro();
+  showToast('Event deleted');
+}
+
+// ── EVENT COMPLETION FLOW ────────────────────────────────────
+function selectOutcome(outcome, btn) {
+  selectedOutcome = outcome;
+  document.querySelectorAll('#ev-complete-overlay .ev-type-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function closeCompleteModal() {
+  document.getElementById('ev-complete-overlay').style.display = 'none';
+  pendingEventCompletion = null;
+}
+
+async function submitEventCompletion() {
+  const note = document.getElementById('ev-complete-note').value.trim();
+  const ev = pendingEventCompletion;
+  if (!ev) return;
+  const reviewContent = `
+    <strong>Event:</strong> ${escH(ev.title)}<br>
+    <strong>Outcome:</strong> ${selectedOutcome}<br>
+    <strong>Area:</strong> ${escH(ev.area||'—')}<br>
+    <strong>Note to log:</strong> ${escH(note||'(none)')}<br><br>
+    This will mark the event as <strong>${selectedOutcome}</strong> and log an update to the system.
+  `;
+  document.getElementById('ev-review-content').innerHTML = reviewContent;
+  document.getElementById('ev-complete-overlay').style.display = 'none';
+  document.getElementById('ev-review-overlay').style.display = 'flex';
+}
+
+async function applyEventCompletion() {
+  const ev = pendingEventCompletion;
+  if (!ev) return;
+  const note = document.getElementById('ev-complete-note').value.trim();
+  // Mark event done/cancelled
+  microEvents = microEvents.map(x => x.id === ev.id ? {...x, status: selectedOutcome, completionNote: note} : x);
+  await saveMicroEvents();
+  // Log to update system
+  if (note) {
+    const today = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    await saveToFirebase('updates', {
+      date: today, area: ev.area||'General',
+      headline: `${ev.title} — ${selectedOutcome}`,
+      detail: note, person: 'Zach Trakas', source: 'micro-schedule'
+    });
+  }
+  document.getElementById('ev-review-overlay').style.display = 'none';
+  pendingEventCompletion = null;
+  renderMicro();
+  showToast(`✓ Event marked ${selectedOutcome}`);
+}
+
+// ── FIREBASE SYNC ─────────────────────────────────────────────
+function listenToMicroEvents() {
+  if (!db) { microEvents = [...SEED_MICRO_EVENTS]; renderMicro(); return; }
+  db.collection('micro_events').doc('events').onSnapshot(snap => {
+    if (snap.exists && snap.data().items?.length) {
+      const saved = snap.data().items;
+      // Always apply seed corrections — seed is the source of truth for seeded IDs
+      const seedById = Object.fromEntries(SEED_MICRO_EVENTS.map(e => [e.id, e]));
+      microEvents = saved.map(e => seedById[e.id] ? {...e, ...seedById[e.id]} : e);
+      // Add any seed events not yet in Firebase
+      SEED_MICRO_EVENTS.forEach(se => { if (!microEvents.find(e => e.id === se.id)) microEvents.push(se); });
+      // If anything changed, re-save
+      const changed = JSON.stringify(microEvents) !== JSON.stringify(saved);
+      if (changed) db.collection('micro_events').doc('events').set({items: microEvents});
+    } else {
+      microEvents = [...SEED_MICRO_EVENTS];
+      db.collection('micro_events').doc('events').set({items: SEED_MICRO_EVENTS});
+    }
+    renderMicro();
+    checkEventAlerts();
+    updateMicroBadge();
+  }, () => { microEvents = [...SEED_MICRO_EVENTS]; renderMicro(); });
+}
+
+async function saveMicroEvents() {
+  if (!db) return;
+  try { await db.collection('micro_events').doc('events').set({items: microEvents}); }
+  catch(e) { console.error('Micro save failed', e); }
+}
+
+// ── ALERT CHECKING ────────────────────────────────────────────
+function checkEventAlerts() {
+  const now = new Date();
+  microEvents.forEach(ev => {
+    if (ev.status !== 'upcoming') return;
+    if (!ev.time) return;
+    const [h,m] = ev.time.split(':').map(Number);
+    const evDate = microDateFromStr(ev.date);
+    evDate.setHours(h, m, 0, 0);
+    const diff = evDate - now;
+    // Trigger if within 5 minutes past the event time (0 to -5 min)
+    if (diff >= -5 * 60000 && diff <= 5 * 60000) {
+      triggerEventCompletion(ev);
+    }
+  });
+}
+
+function triggerEventCompletion(ev) {
+  // Don't re-trigger if already showing
+  if (document.getElementById('ev-complete-overlay').style.display === 'flex') return;
+  if (document.getElementById('ev-review-overlay').style.display === 'flex') return;
+  pendingEventCompletion = ev;
+  selectedOutcome = 'done';
+  document.getElementById('ev-complete-title').textContent = ev.title;
+  document.getElementById('ev-complete-meta').textContent = `${formatMicroTime(ev.time)} · ${ev.area||''} · ${ev.type}`;
+  document.getElementById('ev-complete-note').value = '';
+  document.querySelectorAll('#ev-complete-overlay .ev-type-btn').forEach(b => b.classList.toggle('on', b.id === 'outcome-done'));
+  document.getElementById('ev-complete-overlay').style.display = 'flex';
+}
+
+function updateMicroBadge() {
+  const today = microKey(new Date());
+  const todayEvents = getEventsForDate(today).filter(e => e.status === 'upcoming');
+  const badge = document.getElementById('nav-micro-badge');
+  if (badge) { badge.textContent = todayEvents.length || ''; badge.style.display = todayEvents.length ? 'inline-flex' : 'none'; }
+}
+
+// Check for alerts every minute
+setInterval(checkEventAlerts, 60000);
+
+
 function buildRecentContext() {
   if (!recentLogEntries.length && !(window._crossRefFlags||[]).length) return '';
   const entries = recentLogEntries.slice(0,5).map(e =>
@@ -3149,30 +3715,42 @@ function runCrossRef() {
   const flags = [];
   const today = new Date(); today.setHours(0,0,0,0);
 
-  // 1. Only flag RED (bd) blocked items with no open action item
-  // Skip items that are clearly informational or milestone-type
-  const skipItems = ['new lobby','under-counter','green wall','dep signage','furniture','acp-5','acp-21 req','notice of substantial','full floor re-occupancy','dep occupancy'];
+  // Only flag items that are BOTH blocked AND clearly need human follow-up
+  // Skip anything upcoming, informational, or process-flow expected
+  const skipItems = [
+    'new lobby','under-counter','green wall','dep signage','furniture',
+    'acp-5','acp-21','notice of substantial','full floor re-occupancy',
+    'dep occupancy','arts filing','construction','scope revision',
+    'dep review','additional acm','prior arts','new arts','phase 1','phase 2',
+    'elevator crossover','soft demo','lv shutdown','abatement','air clearance',
+    'reconstruction','occupied','dob jobs','gc permit filing'
+  ];
+
+  // 1. Hard blockers with no matching open action item — only flag specific ones
   Object.entries(liveStatuses).forEach(([key, rows]) => {
     rows.forEach(row => {
-      if (row.cls !== 'bd') return; // Only hard blockers
+      if (row.cls !== 'bd') return;
       const itemLower = (row.item||'').toLowerCase();
       if (skipItems.some(s => itemLower.includes(s))) return;
-      const areaPrefix = key.startsWith('hhe') ? '96-05 HHE' : '59-17 JB';
-      const hasAction = liveActions.some(a =>
-        a.status !== 'done' &&
-        (a.area||'').includes(areaPrefix) &&
-        (a.action||'').toLowerCase().includes(itemLower.substring(0,10))
+      // Only flag if it has a linked statusItemId action OR a keyword match
+      const hasLinkedAction = liveActions.some(a =>
+        a.status !== 'done' && a.statusKey === key && a.statusItemId === row.id
       );
-      if (!hasAction) {
-        flags.push({ type:'missing_action', area:key, item:row.item, status:row.status,
+      const hasFuzzyAction = liveActions.some(a =>
+        a.status !== 'done' &&
+        (a.area||'').includes(key.startsWith('hhe') ? 'HHE' : 'JB') &&
+        (a.action||'').toLowerCase().includes(itemLower.substring(0,12))
+      );
+      if (!hasLinkedAction && !hasFuzzyAction) {
+        flags.push({ type:'missing_action', area:key, item:row.item,
           msg:`No action item for blocker: "${row.item}" (${key})` });
       }
     });
   });
 
-  // 2. Log says done but status still red/amber — limit to high-confidence keywords
-  const doneKeywords = ['passed','approved','received','signed','complete','done','closed','issued'];
-  recentLogEntries.slice(0,6).forEach(entry => {
+  // 2. Log says done but status still blocked — only high-confidence, recent entries
+  const doneKeywords = ['passed','approved','received','signed','issued'];
+  recentLogEntries.slice(0,3).forEach(entry => {
     const detail = ((entry.headline||'') + ' ' + (entry.detail||'')).toLowerCase();
     if (!doneKeywords.some(k => detail.includes(k))) return;
     const areaKey = Object.keys(liveStatuses).find(k =>
@@ -3180,31 +3758,15 @@ function runCrossRef() {
     );
     if (!areaKey) return;
     (liveStatuses[areaKey]||[]).forEach(row => {
-      if (row.cls !== 'bd' && row.cls !== 'bw') return;
+      if (row.cls !== 'bd') return; // only hard blockers
       const itemWord = (row.item||'').toLowerCase().split(/[\s—]/)[0];
-      if (itemWord.length < 5) return;
-      if (detail.includes(itemWord)) {
+      if (itemWord.length < 6) return;
+      if (detail.includes(itemWord) && !skipItems.some(s => itemWord.includes(s))) {
         flags.push({ type:'log_status_mismatch', area:areaKey, item:row.item,
-          msg:`${areaKey}: log suggests "${row.item}" may be done — verify and update status` });
+          msg:`${areaKey}: log suggests "${row.item}" may be complete — verify and update` });
       }
     });
   });
-
-  // 3. Overdue actions with no log entry in 7 days — limit to 5 most critical
-  const sevenDaysAgo = new Date(today); sevenDaysAgo.setDate(sevenDaysAgo.getDate()-7);
-  liveActions
-    .filter(a => a.status !== 'done' && a.due && new Date(a.due) < today)
-    .slice(0, 5)
-    .forEach(a => {
-      const hasRecentLog = recentLogEntries.some(e => {
-        const logDate = new Date(e.date);
-        return logDate >= sevenDaysAgo && (e.headline||'').toLowerCase().includes((a.action||'').toLowerCase().substring(0,12));
-      });
-      if (!hasRecentLog) {
-        flags.push({ type:'overdue_no_log', actionId:a.id,
-          msg:`Overdue, no recent update: "${(a.action||'').substring(0,60)}" (due ${a.due})` });
-      }
-    });
 
   window._crossRefFlags = flags;
   updateCrossRefBadge(flags);
@@ -4407,6 +4969,7 @@ function initRender() {
   renderMeetings();
   setTimeout(() => { renderProcessOverlays(); renderMeetingOverlays(); }, 100);
   renderProcesses();
+  renderMicro();
 }
 
 initRender();

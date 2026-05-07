@@ -2604,11 +2604,9 @@ Format: Dear Donna,\n\n59-17 Junction Blvd\n• [2-3 bullet points]\n\n96-05 Hor
   }
 }
 
-
-  // Wait for Firebase to be ready
-  if (db && Object.keys(liveStatuses).every(k => liveStatuses[k] === (DEFAULT_STATUSES[k] || liveStatuses[k]))) {
-    await new Promise(r => setTimeout(r, 600));
-  }
+async function generateBriefing() {
+  // Wait briefly for Firebase to be ready
+  await new Promise(r => setTimeout(r, 400));
   const btn = document.getElementById('briefing-btn');
   btn.disabled=true; btn.textContent='Generating...';
   const container = document.getElementById('briefing-container');

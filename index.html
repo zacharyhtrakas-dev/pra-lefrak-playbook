@@ -2786,8 +2786,8 @@ async function generateBriefingUI() {
     const today = new Date();
     const todayStr = today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
     document.getElementById('briefing-date').textContent = todayStr;
-    const permitWarnings = PERMIT_EXPIRY.map(p=>{const [y,m,d]=p.expires.split('-');const exp=new Date(y,m-1,d);const days=Math.round((exp-todayMid)/86400000);return {...p,daysLeft:days};}).filter(p=>p.daysLeft<=30);
     const todayMid = new Date(); todayMid.setHours(0,0,0,0);
+    const permitWarnings = PERMIT_EXPIRY.map(p=>{const [y,m,d]=p.expires.split('-');const exp=new Date(y,m-1,d);const days=Math.round((exp-todayMid)/86400000);return {...p,daysLeft:days};}).filter(p=>p.daysLeft<=30);
     const overdueActions = liveActions.filter(a=>a.status!=='done'&&a.due&&new Date(a.due)<todayMid);
     const openActions = liveActions.filter(a=>a.status!=='done');
     const todayMeetings = WEEKLY_MEETINGS.filter(m=>m.day===today.getDay());

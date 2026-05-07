@@ -3036,8 +3036,10 @@ async function generateBriefingUI() {
     const actionsByArea = openActions.reduce((acc,a)=>{
       const area = a.area||'General';
       if(!acc[area]) acc[area]=[];
-
-// ── BRIEFING ENGINE ────────────────────────────────────────
+      acc[area].push(`${a.action}${a.owner?' ('+a.owner+')':''}${a.due?' — due '+a.due:''}`);
+      return acc;
+    },{});
+    const actionsSummary = Object.entries(actionsByArea).map(([area,items])=>`${area}:\n${items.map(i=>`  • ${i}`).join('\n')}`).join('\n\n');
 
     const recentCtx = recentLogEntries.slice(0,8).map(e=>`[${e.date}] ${e.area}: ${e.headline}${e.detail?' — '+e.detail.substring(0,120):''}`).join('\n');
 

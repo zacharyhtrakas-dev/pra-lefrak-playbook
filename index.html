@@ -2810,8 +2810,7 @@ async function generateBriefingUI() {
 
     const recentCtx = recentLogEntries.slice(0,8).map(e=>`[${e.date}] ${e.area}: ${e.headline}${e.detail?' — '+e.detail.substring(0,120):''}`).join('\n');
 
-    const resp_unused = null; const
-
+    const resp = await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const data = await resp.json();
     if (!resp.ok || !data.content) throw new Error(data.error?.message || `API error ${resp.status}: ${JSON.stringify(data).substring(0,300)}`);
     const raw = data.content.map(c=>c.text||'').join('');

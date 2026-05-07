@@ -2029,7 +2029,7 @@ function renderRelatedPanel(pageId, keywords) {
       const state = overrides[step.id] || step.state;
       if ((state === 'active' || state === 'warn' || state === 'blocked') &&
           keywords.some(k => `${step.title} ${step.detail||''}`.toLowerCase().includes(k.toLowerCase()))) {
-        relatedSteps.push({title: step.title, state, phase: def.label, key});
+        relatedSteps.push({title: step.label||step.title||'', state, phase: def.label, key});
       }
     });
   });
@@ -3857,9 +3857,9 @@ function renderSchedule() {
       </div>`;
     }).join('');
 
-    const overallStart = getTaskData(phase.key, '__overall', 'start', phase.overall.start);
-    const overallFinish = getTaskData(phase.key, '__overall', 'finish', phase.overall.finish);
-    const overallPct = getTaskData(phase.key, '__overall', 'pct', phase.overall.pct);
+    const overallStart = getTaskData(phase.key, '__overall', 'start', phase.overall?.start || phase.tasks[0]?.start || 'TBD');
+    const overallFinish = getTaskData(phase.key, '__overall', 'finish', phase.overall?.finish || phase.tasks[phase.tasks.length-1]?.finish || 'TBD');
+    const overallPct = getTaskData(phase.key, '__overall', 'pct', phase.overall?.pct || Math.round(phase.tasks.reduce((s,t)=>s+(t.pct||0),0)/Math.max(phase.tasks.length,1)));
 
     return `<div class="schedule-phase">
       <div class="schedule-phase-header" onclick="toggleSchedulePhase('sphase-${phase.key}')">
@@ -4018,8 +4018,8 @@ async function applyScheduleUpdate() {
   const parsed = pendingScheduleResult;
   parsed.phases?.forEach(phase => {
     if (!phase.key) return;
-    if (phase.overall) {
-      saveScheduleTask(phase.key, '__overall', {start:phase.overall.start, finish:phase.overall.finish, pct:phase.overall.pct});
+    if (phase.overall || phase.tasks?.length) {
+      saveScheduleTask(phase.key, '__overall', {start:phase.overall?.start||phase.tasks[0]?.start||'TBD', finish:phase.overall?.finish||phase.tasks[phase.tasks.length-1]?.finish||'TBD', pct:phase.overall?.pct||0});
     }
     (phase.tasks||[]).forEach(task => {
       if (task.id) {
@@ -4286,7 +4286,7 @@ function runSearch(query) {
       if (searchable.includes(q)) {
         results.push({
           building: def.label,
-          item: step.title,
+          item: step.label||step.title||'',
           status: `${state.charAt(0).toUpperCase()+state.slice(1)} · ${step.date||''}`,
           cls: state==='done'?'bs':state==='active'?'bi':state==='blocked'?'bd':state==='warn'?'bw':'bm',
           owner: '',

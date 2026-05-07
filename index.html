@@ -2492,7 +2492,8 @@ function normalizeActionArea(item) {
     // Flag vague openers — prepend area context if available
     const vagueOpeners = /^(upon both complete|once (both|this|done|complete|in hand|received|approved|signed)|after (this|both|completion)|when (complete|done|ready)|if (approved|passed)|then )/i;
     if (vagueOpeners.test(action) && item.area) {
-      action = `[${item.area.replace('96-05 HHE — ','').replace('59-17 JB — ','')}] ${action}`;
+      const phase = item.area.replace('96-05 HHE — ','').replace('59-17 JB — ','');
+      action = `${phase} — ${action}`;
     }
     item = {...item, action};
   }

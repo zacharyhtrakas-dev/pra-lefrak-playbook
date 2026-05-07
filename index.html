@@ -2387,7 +2387,7 @@ function renderTimelineCard(def) {
   def.steps.forEach((step, idx) => {
     const isLast = idx === def.steps.length - 1;
     const icons = {done:'✓', active:'→', blocked:'✗', warn:'!', todo:'○'};
-    const icon = icons[step.state] || '○';
+    const icon = icons[step.state||"todo"] || '○';
     const phaseKey = Object.entries(TIMELINE_DEFS).find(([k,d])=>d.label===def.label)?.[0]||'';
     const stateOptions = ['done','active','warn','blocked','todo'];
     const stateSelector = `<select class="tl-state-select" onchange="manualStepUpdate('${phaseKey}','${step.id}',this.value)" style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text2);margin-left:6px;cursor:pointer">
@@ -2407,7 +2407,7 @@ function renderTimelineCard(def) {
         ${!isLast ? '<div class="tl-step-line"></div>' : ''}
       </div>
       <div class="tl-step-right">
-        <div class="tl-step-title">${linkify(step.title)}
+        <div class="tl-step-title">${linkify(step.label||step.title||'')}
           <span class="badge" style="font-size:10px;${step.state==='done'?'background:var(--green-bg);color:var(--green);border-color:var(--green-border)':step.state==='active'?'background:var(--navy);color:#fff;border:none':step.state==='blocked'?'background:var(--red-bg);color:var(--red);border-color:var(--red-border)':step.state==='warn'?'background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)':'background:var(--gray-bg);color:var(--gray);border-color:var(--gray-border)'}">${step.state==='done'?'Done':step.state==='active'?'Active':step.state==='blocked'?'Blocked':step.state==='warn'?'At-risk':'Upcoming'}</span>
           ${stateSelector}
         </div>
@@ -2440,8 +2440,8 @@ function buildMasterTimeline() {
     return `<div class="master-row">
       <div class="master-label">${labels[key]||key}</div>
       <div class="master-track">${steps.map(step=>`
-        <div class="master-step ${stateClass[step.state]||'ms-todo'}" title="${escH(step.title)}: ${step.state}" style="cursor:pointer" onclick="goto('timeline',document.querySelectorAll('.nav-item')[1])">
-          ${escH(step.title.length>11?step.title.substring(0,10)+'…':step.title)}
+        <div class="master-step ${stateClass[step.state]||'ms-todo'}" title="${escH(step.label||step.title||"")}: ${step.state}" style="cursor:pointer" onclick="goto('timeline',document.querySelectorAll('.nav-item')[1])">
+          ${escH((step.label||step.title||"").length>11?(step.label||step.title||"").substring(0,10)+'…':step.label||step.title||'')}
         </div>`).join('')}
       </div>
     </div>`;
@@ -3765,7 +3765,7 @@ function renderProcesses() {
   const statusColors = {active:'background:var(--blue-dim);color:var(--blue)',warn:'background:var(--red-bg);color:var(--red)',done:'background:var(--green-dim);color:var(--green)',ref:'background:var(--surface2);color:var(--text2)'};
   container.innerHTML = liveProcesses.map(p => {
     const noteHtml = (p.notes||[]).map(n => `<div class="proc-note ${n.type==='danger'?'danger':n.type==='success'?'success':n.type==='info'?'info':''}">${linkify(n.text)}</div>`).join('');
-    const stepsHtml = (p.steps||[]).map(s => `<div class="proc-step"><div class="proc-step-num">${s.num}</div><div class="proc-step-body"><div class="proc-step-title">${linkify(s.title)}</div><div class="proc-step-detail">${linkify(s.detail||'')}</div>${s.owner?`<span class="proc-step-owner">👤 ${linkify(s.owner)}</span>`:''}</div></div>`).join('');
+    const stepsHtml = (p.steps||[]).map((s,i) => `<div class="proc-step"><div class="proc-step-num">${s.num||i+1}</div><div class="proc-step-body"><div class="proc-step-title">${linkify(s.title)}</div><div class="proc-step-detail">${linkify(s.detail||'')}</div>${s.owner?`<span class="proc-step-owner">👤 ${linkify(s.owner)}</span>`:''}</div></div>`).join('');
     return `<div class="proc-card" data-tags="${escH(p.tags||'')}">
       <div class="proc-header" onclick="toggleProc('pb-${p.id}')">
         <span class="proc-icon">${p.icon||'📋'}</span>
@@ -3865,7 +3865,7 @@ function renderSchedule() {
       <div class="schedule-phase-header" onclick="toggleSchedulePhase('sphase-${phase.key}')">
         <div>
           <div class="schedule-phase-title">${escH(phase.label)}</div>
-          <div class="schedule-phase-meta">${escH(phase.building)} · ${escH(overallStart)} → ${escH(overallFinish)}</div>
+          <div class="schedule-phase-meta">${escH(phase.building||phase.label)} · ${escH(overallStart)} → ${escH(overallFinish)}</div>
         </div>
         <span class="pct-badge ${overallPct===100?'pct-100':overallPct>=60?'pct-high':overallPct>=20?'pct-mid':'pct-low'}">${overallPct}%</span>
         <span class="schedule-phase-toggle" id="stoggle-sphase-${phase.key}">▼</span>

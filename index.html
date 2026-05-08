@@ -967,7 +967,7 @@ body{
   <div style="margin-top:14px" id="dynamic-metrics" class="metric-grid">
     <div class="metric m-warn"><div class="metric-lbl">Open Actions</div><div class="metric-val" id="m-open-actions">—</div><div class="metric-sub" id="m-overdue-actions">Loading...</div></div>
     <div class="metric m-red"><div class="metric-lbl">Key Blocker</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">FDNY B1/B2/A4</div><div class="metric-sub">PAA pending since 4/9</div></div>
-    <div class="metric m-green"><div class="metric-lbl">Next milestone</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">A3 SC</div><div class="metric-sub">May 15, 2026</div></div>
+    <div class="metric m-green"><div class="metric-lbl">Next milestone</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">A3 Substantial Completion</div><div class="metric-sub">May 15, 2026</div></div>
     <div class="metric m-blue"><div class="metric-lbl">GC Permit Expires</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2" id="m-permit-days">—</div><div class="metric-sub">Q00940195 · May 20</div></div>
   </div>
   <div class="sec-lbl" style="display:flex;align-items:center;justify-content:space-between">
@@ -1233,9 +1233,9 @@ body{
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 plumbing LOC</span><span class="rv">Foremost to check — plumber needs to sign off permit Q01342765-I1-PL.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 structural LOC</span><span class="rv">Pending sign-off — follow up with MBC.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — A3 DOB Arch/Mech LOCs</span><span class="rv">WIP — not yet received.</span></div>
-    <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — MEP as-builts (B1/B2/A4)</span><span class="rv">MGE still WIP for B1, B2, A4. Required before SC package.</span></div>
+    <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — MEP as-builts (B1/B2/A4)</span><span class="rv">MGE still WIP for B1, B2, A4. Required before Substantial Completion package.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — AOR punchlist signoffs</span><span class="rv">B1/B2/A4 sent 3/27 — still under review. Follow up with AJA. Punchlist walkthrough with AJA confirmed May 11.</span></div>
-    <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A3 SC</span><span class="rv">Substantial completion of A3 to be declared May 15, 2026. FDNY inspection requested 5/5/26.</span></div>
+    <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A3 Substantial Completion</span><span class="rv">Substantial completion of A3 to be declared May 15, 2026. FDNY inspection requested 5/5/26.</span></div>
     <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A1 FDNY inspection</span><span class="rv">FDNY inspection for A1 scheduled May 12, 2026.</span></div>
     <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 59-17 JB — 10th fl GC permits</span><span class="rv">DCAS &amp; DEP approved drawings 5/4/26 — but GC cannot pull permits yet. Blocked pending Lefrak/Foremost + DEP/DCAS agreement on data center access for abatement.</span></div>
     <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — Elec permit closeout</span><span class="rv">B1/B2/A4 elec inspections passed 3/19/26. Once A3 passes and Troon provides letter, DOB closes elec permit Q01300039I1EL automatically.</span></div>
@@ -1243,10 +1243,10 @@ body{
   </div>
   <div class="sec-lbl">Substantial completion — lease timing rules</div>
   <div class="card">
-    <div class="row"><span class="rl">Step 1 — SC Notice</span><span class="rv">Lefrak (Anita Jhamb) issues notice ≥10 business days before anticipated SC date.</span></div>
-    <div class="row"><span class="rl">Step 2 — Package due</span><span class="rv">5 business days after SC notice.</span></div>
+    <div class="row"><span class="rl">Step 1 — Substantial Completion Notice</span><span class="rv">Lefrak (Anita Jhamb) issues notice ≥10 business days before anticipated Substantial Completion date.</span></div>
+    <div class="row"><span class="rl">Step 2 — Package due</span><span class="rv">5 business days after Substantial Completion notice.</span></div>
     <div class="row"><span class="rl">Step 3 — DCAS walkthrough</span><span class="rv">5 business days after anticipated SC date.</span></div>
-    <div class="row"><span class="rl">As-built delivery</span><span class="rv">Within 90 days after SC — 2 hard copies + 1 AutoCAD.</span></div>
+    <div class="row"><span class="rl">As-built delivery</span><span class="rv">Within 90 days after Substantial Completion — 2 hard copies + 1 AutoCAD.</span></div>
     <div class="row"><span class="rl">Why it matters</span><span class="rv">DEP rent clock starts per phase on turnover. Every day of delay = lost rent for Lefrak.</span></div>
   </div>
 </div>
@@ -1562,7 +1562,7 @@ const DEFAULT_STATUSES = {
     {id:'lv_coord',          item:'LV / Connect-trac coordination',        status:'AJA coordinated with DFI. Melissa (DCAS) accepted updated quote. Complete.', cls:'bs', owner:'AJA / DFI'},
     {id:'glass_install',     item:'Glass partition installation',          status:'Glass arriving ~May 6. Installation follows delivery.',                  cls:'bw', owner:'Blackbull'},
     {id:'punchlist_walk',    item:'AJA Punchlist Walkthrough',             status:'Confirmed May 11 at 10:30am',                                           cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
-    {id:'sc_notice',         item:'Substantial Completion — May 15 target',status:'SC to be declared May 15, 2026. SC notice must be issued ≥10 business days prior.', cls:'bw', owner:'Anita Jhamb (Lefrak)'},
+    {id:'sc_notice',         item:'Substantial Completion — May 15 target',status:'SC to be declared May 15, 2026. Substantial Completion notice must be issued ≥10 business days prior.', cls:'bw', owner:'Anita Jhamb (Lefrak)'},
     {id:'acp21',             item:'ACP-5 / ACP-21',                       status:'Foremost to provide ACP-21 to DOB',                                     cls:'bw', owner:'ECC / D. Jenkins'},
     {id:'back_corridor',     item:'HHE back corridor — ceiling/HVAC',      status:'PAUSED 4/28 — Sheranne flagged ACM concern on ceiling grid removal. Donna had sampling done 4/28. Results pending. ECC involved.', cls:'bd', owner:'Donna Cappa / ECC'},
   ],
@@ -1642,7 +1642,7 @@ const DEFAULT_CONTACTS = [
   {id:'c8',  name:'Alejandro Orellana',      role:'Project Manager — Organizer GC Update',   org:'Foremost',        email:'AOrellana@foremostconstructionny.com',notes:''},
   {id:'c9',  name:'Kyle Josefson',           role:'Project Coordinator',                      org:'Foremost',        email:'kjosefson@foremostconstructionny.com',notes:''},
   {id:'c10', name:'Brian Hopwood',           role:'Project Manager',                          org:'Foremost',        email:'bhopwood@foremostconstructionny.com', notes:'11th floor coordination.'},
-  {id:'c11', name:'Anita Jhamb',             role:'SC Notice Issuer',                         org:'Lefrak',          email:'a.jhamb@lefrak.com',                  notes:'Issues Substantial Completion notices.'},
+  {id:'c11', name:'Anita Jhamb',             role:'Substantial Completion Notice Issuer',                         org:'Lefrak',          email:'a.jhamb@lefrak.com',                  notes:'Issues Substantial Completion notices.'},
   {id:'c12', name:'Mike Leary',              role:'Lefrak',                                   org:'Lefrak',          email:'MLeary@lefrakcommercial.com',                                    notes:''},
   {id:'c13', name:'Meredith Jackness', role:'Lefrak — Organizer DEP/PRA Biweekly', org:'Lefrak', email:'MJackness@lefrakcommercial.com',       notes:'Organizes biweekly DEP/PRA meeting.'},
   {id:'c14', name:'Donna Cappa',             role:'Building Manager — both buildings',        org:'Lefrak',          email:'DCappa@lefrakcommercial.com',                                    notes:'Weekly update recipient. On-site building manager for 96-05 HHE and 59-17 JB.'},
@@ -1722,7 +1722,7 @@ const DEFAULT_PROCESSES = [
       {id:'thirty_day_rule', title:'30-day self-cert rule (if applicable)', detail:'If FDNY gives an inspection date MORE than 30 days after the date of requesting, AND 30 days have passed since the pretest was passed → Lefrak may self-certify the fire alarm. Self-cert is sufficient for closeout. If the FDNY date is within 30 days of the request → must pass FDNY inspection (no self-cert).', owner:'Lefrak / Scutum → FDNY'},
       {id:'fdny_inspection', title:'FDNY inspection or self-certification', detail:'Either FDNY conducts the inspection and issues a Letter of Approval (LOA), or Lefrak self-certifies per the 30-day rule above.', owner:'FDNY / Lefrak'},
     ],
-    notes:[{text:'B2 FA pretest: additional devices required — must be installed before pretest can occur. Devices delivered 4/28.', type:'warn', date:'May 5, 2026'}, {text:'A3 FA pretest: same situation. Devices delivered 4/28, not yet installed. This is the critical path blocker for A3 SC on May 15.', type:'warn', date:'May 5, 2026'}, {text:'Hi Rise rebranded to Scutum. Use Scutum everywhere.', type:'info', date:'May 5, 2026'}]
+    notes:[{text:'B2 FA pretest: additional devices required — must be installed before pretest can occur. Devices delivered 4/28.', type:'warn', date:'May 5, 2026'}, {text:'A3 FA pretest: same situation. Devices delivered 4/28, not yet installed. This is the critical path blocker for A3 Substantial Completion on May 15.', type:'warn', date:'May 5, 2026'}, {text:'Hi Rise rebranded to Scutum. Use Scutum everywhere.', type:'info', date:'May 5, 2026'}]
   },
   {
     id:'proc-arts', icon:'🏗', title:'ARTS Filing + DEP Abatement Approval', status:'active', statusLabel:'Active',
@@ -1748,9 +1748,9 @@ const DEFAULT_PROCESSES = [
       {id:'sc_notice', title:'Issue SC Notice (≥10 business days before SC date)', detail:'Anita Jhamb (Lefrak) issues the Substantial Completion notice to DCAS at least 10 business days before the target SC date. This is a hard requirement — cannot waive.', owner:'Anita Jhamb (Lefrak)'},
       {id:'sc_package', title:'SC package delivered (within 5 days of notice)', detail:'SC package includes: all LOCs, as-builts, FDNY LOA, air balancing report, warranty documents, operation manuals, and any other required closeout documents.', owner:'Zach / GC / Consultants'},
       {id:'dcas_walk', title:'DCAS punchlist walkthrough (within 5 days of SC date)', detail:'DCAS and DEP walk the space with Lefrak/Foremost. Any punchlist items identified must be remediated. Foremost typically attends; PRA tracks and follows up.', owner:'DCAS / DEP / Lefrak / Foremost'},
-      {id:'asbuilts_delivery', title:'As-built delivery (within 90 days of SC date)', detail:'Full as-built package from AJA (arch) and MGE (MEP) must be delivered within 90 days of the SC date. Track this deadline carefully.', owner:'AJA / MGE'},
+      {id:'asbuilts_delivery', title:'As-built delivery (within 90 days of Substantial Completion date)', detail:'Full as-built package from AJA (arch) and MGE (MEP) must be delivered within 90 days of the SC date. Track this deadline carefully.', owner:'AJA / MGE'},
     ],
-    notes:[{text:'A3: SC target May 15, 2026. SC notice must be issued by May 1 (≥10 business days). AJA punchlist walk May 11.', type:'warn', date:'May 5, 2026'}]
+    notes:[{text:'A3: Substantial Completion target May 15, 2026. Substantial Completion notice must be issued by May 1 (≥10 business days). AJA punchlist walk May 11.', type:'warn', date:'May 5, 2026'}]
   },
   {
     id:'proc-permit', icon:'📋', title:'Permit Renewal / Extension', status:'ref', statusLabel:'Reference',
@@ -1912,7 +1912,7 @@ const TIMELINE_DEFS = {
       {id:'asbuilts',    label:'As-Builts',           processRef:null},
       {id:'fa_pretest',  label:'FA Pretest',          processRef:'proc-fdny', statusKey:'hhe-b2', statusItemId:'fa_pretest'},
       {id:'fdny',        label:'FDNY LOA',            processRef:'proc-fdny', statusKey:'hhe-b1', statusItemId:'fdny_loa'},
-      {id:'sc_notice',   label:'SC Notice',           processRef:'proc-sc',   statusKey:'hhe-b1', statusItemId:'sc_notice'},
+      {id:'sc_notice',   label:'Substantial Completion Notice',           processRef:'proc-sc',   statusKey:'hhe-b1', statusItemId:'sc_notice'},
       {id:'dcas_walk',   label:'DCAS Walkthrough',    processRef:'proc-sc'},
       {id:'turnover',    label:'Turnover',            processRef:null},
     ]
@@ -1929,7 +1929,7 @@ const TIMELINE_DEFS = {
       {id:'lv_coord',    label:'LV Coordination',    processRef:null, statusKey:'hhe-a3', statusItemId:'lv_coord'},
       {id:'dob_locs',    label:'DOB LOCs',           processRef:null},
       {id:'fdny',        label:'FDNY LOA',           processRef:'proc-fdny', statusKey:'hhe-a3', statusItemId:'fdny_loa'},
-      {id:'sc_notice',   label:'SC Notice',          processRef:'proc-sc',   statusKey:'hhe-a3', statusItemId:'sc_notice'},
+      {id:'sc_notice',   label:'Substantial Completion Notice',          processRef:'proc-sc',   statusKey:'hhe-a3', statusItemId:'sc_notice'},
     ]
   },
   'hhe-a5': {
@@ -2021,7 +2021,7 @@ const WEEKLY_MEETINGS = [
 ];
 const HHE_PHASE_ORDER = ['96-05 HHE — A1','96-05 HHE — B1','96-05 HHE — A5','96-05 HHE — B2','96-05 HHE — A3','96-05 HHE — A4'];
 const HARDCODED_BLOCKERS = [
-  {area:'96-05 HHE — A3', msg:'A3 FA devices delivered 4/28 — NOT YET INSTALLED. Critical path: install → pretest → FDNY inspection. SC target May 15 is at risk.'},
+  {area:'96-05 HHE — A3', msg:'A3 FA devices delivered 4/28 — NOT YET INSTALLED. Critical path: install → pretest → FDNY inspection. Substantial Completion target May 15 is at risk.'},
   {area:'96-05 HHE — B1', msg:'B1 PAA #2025-TMFALM-007622-PLAN awaiting FDNY approval. Cannot request inspection until approved.'},
   {area:'96-05 HHE — B2', msg:'B2 FA pretest needs additional devices installed. Re-pretest TBD.'},
   {area:'59-17 JB — 10th fl', msg:'10th fl GC permits blocked pending Lefrak/Foremost + DEP/DCAS data center access agreement.'},
@@ -3084,7 +3084,7 @@ async function generateBriefingUI() {
     const prompt = `Generate a sharp daily briefing for Zachary Trakas (PRA Consulting PMO) — ${todayStr}.
 
 HARDCODED BLOCKERS (always surface):
-- 96-05 HHE A3: FA devices delivered 4/28 NOT YET INSTALLED. Install → pretest → FDNY inspection. SC target May 15 at risk.
+- 96-05 HHE A3: FA devices delivered 4/28 NOT YET INSTALLED. Install → pretest → FDNY inspection. Substantial Completion target May 15 at risk.
 - 96-05 HHE B1: PAA #2025-TMFALM-007622-PLAN awaiting FDNY approval.
 - 59-17 JB 10th fl: GC permits blocked pending data center access agreement.
 - GC permits Q00940195 + Q00919587 expire May 20.
@@ -3414,7 +3414,7 @@ const SEED_MICRO_EVENTS = [
   {id:'me1',  title:'AJA Punchlist Walkthrough — 96-05 HHE A3', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — A3', notes:'AJA creates punchlist on walk and sends to team. Foremost confirmed.', status:'upcoming', created:'2026-05-07'},
   {id:'me3',  title:'Existing Conditions Walkthrough with DEP — B1/B2/A4', type:'walkthrough', date:'2026-05-12', time:'10:00', area:'96-05 HHE — B1/B2/A4', notes:'Existing conditions walkthrough with DEP for B1, B2, A4 spaces. 1 hour.', status:'upcoming', created:'2026-05-07'},
   // ── MILESTONES ──
-  {id:'me5',  title:'A3 Substantial Completion — declare SC', type:'milestone', date:'2026-05-15', time:'', area:'96-05 HHE — A3', notes:'SC to be declared. Notice must be issued ≥10 business days prior.', status:'upcoming', created:'2026-05-07'},
+  {id:'me5',  title:'A3 Substantial Completion', type:'milestone', date:'2026-05-15', time:'', area:'96-05 HHE — A3', notes:'SC to be declared. Notice must be issued ≥10 business days prior.', status:'upcoming', created:'2026-05-07'},
   {id:'me6',  title:'GC Permits Expiry — Q00940195 + Q00919587', type:'milestone', date:'2026-05-20', time:'', area:'96-05 HHE', notes:'B1/B2/A4 and A3 GC permits expire. Confirm renewal or closeout plan with Foremost immediately.', status:'upcoming', created:'2026-05-07'},
   {id:'me7',  title:'11th fl — Soft Demo begins', type:'milestone', date:'2026-05-18', time:'', area:'59-17 JB — 11th fl', notes:'Soft demo planned 5/18-5/20.', status:'upcoming', created:'2026-05-07'},
   {id:'me8',  title:'11th fl — ACM Abatement begins (ESG)', type:'milestone', date:'2026-05-29', time:'', area:'59-17 JB — 11th fl', notes:'Abatement planned ~5/29-6/1.', status:'upcoming', created:'2026-05-07'},
@@ -3797,36 +3797,42 @@ async function applyEventCompletion() {
 
 // ── FIREBASE SYNC ─────────────────────────────────────────────
 function listenToMicroEvents() {
-  if (!db) {
+  const buildBase = () => {
     const recurring = expandRecurringEvents();
-    microEvents = [...SEED_MICRO_EVENTS.filter(e => !e.recurring), ...recurring];
-    renderMicro(); return;
-  }
-  db.collection('micro_events').doc('events').onSnapshot(snap => {
-    // Base: non-recurring seeds + expanded recurring
-    const recurringExpanded = expandRecurringEvents();
-    const nonRecurringSeeds = SEED_MICRO_EVENTS.filter(e => !e.recurring);
-    const seedBase = [...nonRecurringSeeds, ...recurringExpanded];
-    const seedIds = new Set(seedBase.map(e => e.id));
+    // Non-recurring seeds: only keep if they don't have a recurring version (i.e. no recurring field)
+    // AND don't have a duplicate from expandRecurringEvents on the same date
+    const recurringIds = new Set(recurring.map(e => e._fromSeed + '_' + e.date));
+    const nonRecurring = SEED_MICRO_EVENTS.filter(e => {
+      if (e.recurring) return false; // has recurring field — expansion handles it
+      // Also exclude if expansion already covers this seed's date
+      const expandedKey = e.id + '_' + e.date;
+      return !recurringIds.has(expandedKey);
+    });
+    // Deduplicate: if two events share same _fromSeed + date, keep only one
+    const seen = new Set();
+    const deduped = [...nonRecurring, ...recurring].filter(e => {
+      const key = (e._fromSeed || e.id) + '|' + e.date;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    return deduped;
+  };
 
+  if (!db) { microEvents = buildBase(); renderMicro(); return; }
+  db.collection('micro_events').doc('events').onSnapshot(snap => {
+    const seedBase = buildBase();
+    const allSeedIds = new Set([...SEED_MICRO_EVENTS.map(e => e.id), ...seedBase.map(e => e.id)]);
     if (snap.exists && snap.data().items?.length) {
       const saved = snap.data().items;
-      // Keep user-added events (not seeded), merge with fresh seed base
-      const userAdded = saved.filter(e => !seedIds.has(e.id) && !e._fromSeed);
+      const userAdded = saved.filter(e => !allSeedIds.has(e.id) && !e._fromSeed);
       microEvents = [...seedBase, ...userAdded];
-      // Re-save merged set
-      db.collection('micro_events').doc('events').set({items: microEvents});
     } else {
       microEvents = seedBase;
-      db.collection('micro_events').doc('events').set({items: microEvents});
     }
-    renderMicro();
-    checkEventAlerts();
-    updateMicroBadge();
-  }, () => {
-    microEvents = [...SEED_MICRO_EVENTS.filter(e => !e.recurring), ...expandRecurringEvents()];
-    renderMicro();
-  });
+    db.collection('micro_events').doc('events').set({items: microEvents});
+    renderMicro(); checkEventAlerts(); updateMicroBadge();
+  }, () => { microEvents = buildBase(); renderMicro(); });
 }
 
 async function saveMicroEvents() {
@@ -4079,7 +4085,7 @@ You are highly context-aware. When input is brief or shorthand, infer full meani
 - First names map to known contacts (Anita=Lefrak, Melissa=DCAS, Clayton=ECC, Javier=ESG, Kyle/Alex/David=Foremost, Ary/Muhammad=Blackbull)
 - "The meeting" on a given day = known recurring meeting for that day
 - Dollar amounts = likely contract/cost updates
-- Dates without context = likely SC dates, inspection dates, or permit deadlines
+- Dates without context = likely Substantial Completion dates, inspection dates, or permit deadlines
 - "Letter" or "LOC" = Letter of Completion from DOB
 - "Passed" without subject = infer most likely pending inspection (currently FDNY for B1/B2/A4)
 
@@ -4115,7 +4121,7 @@ FA contractor: Scutum (formerly Hi Rise — always say Scutum). Elec: Troon. EOR
 FDNY process: Scutum + Troon pretest → request inspection (need Troon + MGE signatures on approved FA drawings) → if FDNY date >30 days after request AND >30 days since pretest passed → self-certify (sufficient for closeout).
 B1: PAA #2025-TMFALM-007622-PLAN filed 4/9/26 — FDNY approval pending, cannot request inspection yet
 B2: FA pretest needs additional devices (delivered 4/28). Re-pretest TBD. Plumbing LOC Q01342765-I1-PL unsigned (Foremost to check). Structural LOC pending MBC.
-A3: Scutum requested FDNY inspection 5/5/26. SC target May 15. AJA punchlist walk May 11.
+A3: Scutum requested FDNY inspection 5/5/26. Substantial Completion target May 15. AJA punchlist walk May 11.
 A1: FDNY inspection May 12.
 Elec inspections passed B1/B2/A4 3/19/26. Once A3 passes + Troon letter → DOB auto-closes Q01300039I1EL.
 

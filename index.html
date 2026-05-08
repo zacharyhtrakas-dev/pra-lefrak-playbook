@@ -467,11 +467,11 @@ body{
 .cn2{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
 
 /* ── MEETINGS ── */
-.mtg-block{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+.mtg-block{display:flex;gap:20px;padding:16px 0;border-bottom:1px solid var(--border);align-items:flex-start}
 .mtg-block:last-child{border-bottom:none;padding-bottom:0}
-.mtg-time{min-width:90px;flex-shrink:0}
-.mtg-day{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:600;font-family:'DM Mono',monospace}
-.mtg-hr{font-size:15px;font-weight:700;color:var(--navy);margin-top:2px}
+.mtg-time{min-width:110px;width:110px;flex-shrink:0;padding-top:2px}
+.mtg-day{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-weight:600;font-family:'DM Mono',monospace;white-space:nowrap}
+.mtg-hr{font-size:15px;font-weight:700;color:var(--navy);margin-top:2px;white-space:nowrap}
 .mtg-name{font-size:13.5px;font-weight:700;margin-bottom:4px;color:var(--text)}
 .mtg-detail{font-size:12.5px;color:var(--text2);line-height:1.6}
 .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
@@ -4445,7 +4445,14 @@ function renderMeetingOverlays() {
     const block = document.getElementById('mtg-'+meetingId);
     if (!block) return;
     let noteZone = block.querySelector('.mtg-ai-notes');
-    if (!noteZone) { noteZone = document.createElement('div'); noteZone.className='mtg-ai-notes'; noteZone.style.marginTop='8px'; block.querySelector('.mtg-detail')?.after(noteZone) || block.appendChild(noteZone); }
+    if (!noteZone) {
+      noteZone = document.createElement('div');
+      noteZone.className='mtg-ai-notes';
+      noteZone.style.cssText='margin-top:8px;border-top:1px solid var(--border);padding-top:8px';
+      // Append to the right-side flex child (second child), not the time column
+      const rightCol = block.children[1] || block;
+      rightCol.appendChild(noteZone);
+    }
     noteZone.innerHTML = [...(overlay.notes||[]).map(n=>`<div style="font-size:12px;color:var(--text2);padding:4px 0;border-top:1px solid var(--border);margin-top:4px"><strong>${escH(n.date||'')}:</strong> ${linkify(n.text||'')}</div>`), ...(overlay.prepItems||[]).map(p=>`<div style="font-size:12px;color:var(--blue);padding:2px 0">→ ${linkify(p.text||'')}</div>`)].join('');
     if (overlay.time) { const t = block.querySelector('.mtg-hr'); if(t) t.textContent = overlay.time; }
     if (overlay.detail) { const d = block.querySelector('.mtg-detail'); if(d) d.innerHTML = linkify(overlay.detail); }
@@ -4498,13 +4505,13 @@ function addProcessLinksToTimeline() {
 let liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS));
 
 function listenToMeetings() {
-  if (!db || window.location.protocol==='file:') { renderMeetings(); return; }
-  db.collection('meetings').doc('list').onSnapshot(snap => {
-    if (snap.exists && snap.data().items?.length) liveMeetings = snap.data().items;
-    else { liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS)); db.collection('meetings').doc('list').set({items:liveMeetings}); }
-    renderMeetings();
-    renderMeetingOverlays();
-  }, () => renderMeetings());
+  // Always use DEFAULT_MEETINGS as source of truth — Firebase only stores overlays
+  liveMeetings = JSON.parse(JSON.stringify(DEFAULT_MEETINGS));
+  renderMeetings();
+  renderMeetingOverlays();
+  if (!db || window.location.protocol==='file:') return;
+  // Sync to Firebase for consistency
+  db.collection('meetings').doc('list').set({items: liveMeetings}).catch(()=>{});
 }
 
 async function saveMeetings() {

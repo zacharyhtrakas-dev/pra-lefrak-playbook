@@ -966,7 +966,7 @@ body{
   </div>
   <div style="margin-top:14px" id="dynamic-metrics" class="metric-grid">
     <div class="metric m-warn"><div class="metric-lbl">Open Actions</div><div class="metric-val" id="m-open-actions">—</div><div class="metric-sub" id="m-overdue-actions">Loading...</div></div>
-    <div class="metric m-red"><div class="metric-lbl">Key Blocker</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">FDNY B1/B2/A4</div><div class="metric-sub">PAA pending since 4/9</div></div>
+    <div class="metric m-red"><div class="metric-lbl">Key Blocker</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">FDNY B1 / B2 / A4</div><div class="metric-sub">B1: PAA awaiting FDNY approval · B2/A4: awaiting signed as-builts (Troon + MGE) before Scutum can request inspection</div></div>
     <div class="metric m-green"><div class="metric-lbl">Next milestone</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">A3 Substantial Completion</div><div class="metric-sub">May 15, 2026</div></div>
     <div class="metric m-blue"><div class="metric-lbl">GC Permit Expires</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2" id="m-permit-days">—</div><div class="metric-sub">Q00940195 · May 20</div></div>
   </div>
@@ -1530,7 +1530,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc',      item:'DOB Arch LOC — Q00940195',              status:'Received 3/19',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc',      item:'DOB Mech LOC — Q00940285',              status:'Received 4/10',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_loc',  item:'DOB Plumbing LOC — Q01342765-I1-PL',   status:'Plumber has not signed off — Foremost to follow up',                   cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_loa',          item:'FDNY LOA — #2025-TMFALM-00516',         status:'As-builts sent to Troon 4/28 → MGE → Scutum → inspection request',    cls:'bw', owner:'MGE → Scutum'},
+    {id:'fdny_loa',          item:'FDNY LOA — #2025-TMFALM-00516',         status:'Awaiting signed as-builts — Troon must sign, then MGE stamp, then Scutum receives and requests inspection (Tues or Thurs)',    cls:'bw', owner:'Troon → MGE → Scutum'},
     {id:'elec_bec_bis',      item:'Electrical BEC BIS — Q01186589',        status:'Passed — full sign-off pending all phases done',                        cls:'bi', owner:'Ary (Blackbull)'},
     {id:'air_balance',       item:'Certified Air Balancing Report',        status:'Approved 3/27',                                                         cls:'bs', owner:'Ary (Blackbull)'},
     {id:'fa_pretest',        item:'FA Pretest',                            status:'Additional devices required — re-pretest TBD once installed',           cls:'bd', owner:'Blackbull / Scutum'},
@@ -1544,7 +1544,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc',      item:'DOB Arch LOC — Q01286541',              status:'Received 3/19',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc',      item:'DOB Mech LOC — Q01286552',              status:'Received 4/10',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_loc',  item:'DOB Plumbing LOC',                      status:'N/A',                                                                   cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_loa',          item:'FDNY LOA — #20258-TMFALM-007621',       status:'As-builts sent to Troon 4/28 → MGE → Scutum → inspection request',    cls:'bw', owner:'MGE → Scutum'},
+    {id:'fdny_loa',          item:'FDNY LOA — #20258-TMFALM-007621',       status:'Awaiting signed as-builts — Troon must sign, then MGE stamp, then Scutum receives and requests inspection (Tues or Thurs)',    cls:'bw', owner:'Troon → MGE → Scutum'},
     {id:'air_balance',       item:'Certified Air Balancing Report',        status:'Approved 3/27',                                                         cls:'bs', owner:'Ary (Blackbull)'},
     {id:'mep_asbuilts',      item:'MEP As-Builts (MGE)',                   status:'WIP',                                                                   cls:'bw', owner:'MGE'},
     {id:'arch_asbuilts',     item:'Arch As-Builts (AJA)',                  status:'Sent to AJA 3/27',                                                      cls:'bs', owner:'AJA'},
@@ -2022,7 +2022,7 @@ const WEEKLY_MEETINGS = [
 const HHE_PHASE_ORDER = ['96-05 HHE — A1','96-05 HHE — B1','96-05 HHE — A5','96-05 HHE — B2','96-05 HHE — A3','96-05 HHE — A4'];
 const HARDCODED_BLOCKERS = [
   {area:'96-05 HHE — A3', msg:'A3 FA devices delivered 4/28 — NOT YET INSTALLED. Critical path: install → pretest → FDNY inspection. Substantial Completion target May 15 is at risk.'},
-  {area:'96-05 HHE — B1', msg:'B1 PAA #2025-TMFALM-007622-PLAN awaiting FDNY approval. Cannot request inspection until approved.'},
+  {area:'96-05 HHE — B1/B2/A4', msg:'B1: PAA awaiting FDNY approval. B2/A4: Troon signature + MGE stamp on as-builts not yet received by Scutum — needed before inspection can be requested (Tues or Thurs).'},
   {area:'96-05 HHE — B2', msg:'B2 FA pretest needs additional devices installed. Re-pretest TBD.'},
   {area:'59-17 JB — 10th fl', msg:'10th fl GC permits blocked pending Lefrak/Foremost + DEP/DCAS data center access agreement.'},
   {area:'96-05 HHE', msg:'GC permits Q00940195 + Q00919587 expire May 20. Confirm renewal or closeout plan immediately.'},

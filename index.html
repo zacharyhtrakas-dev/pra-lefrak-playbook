@@ -1782,109 +1782,66 @@ const DEFAULT_MEETINGS = [
     day:'Monday', time:'12:30 PM', duration:'1 hour',
     name:'Weekly Call Sign Offs — 96-05 Ground Floor',
     recurrence:'weekly', recurrenceLabel:'Every Monday',
-    until: null,
-    microEventId:'me10',
-    organizer:'Meredith Jackness (Lefrak)',
-    platform:'Microsoft Teams',
-    area:'96-05 HHE',
+    until:null, microEventId:'me10',
+    organizer:'Meredith Jackness (Lefrak)', platform:'Microsoft Teams', area:'96-05 HHE',
     detail:'Reviews permits + closeout items across all 96-05 HHE phases. PRA leads. Foremost permit matrix reviewed — permit numbers are reliable but statuses sometimes lag.',
-    tags:['96-05 HHE only','PRA leads','Permit matrix review','Weekly'],
-    prep:[
-      'Review Foremost permit matrix — flag any status discrepancies vs DOB/BIS',
-      'FDNY status: B2/A3/A4 — has MGE signed FA drawings? B1 — has FDNY approved the PAA?',
-      'Update HHE closeout spreadsheet with anything closed since last week'
-    ]
+    tags:['96-05 HHE only','PRA leads','Permit matrix review'],
+    prep:['Review Foremost permit matrix — flag any status discrepancies vs DOB/BIS','FDNY status: B2/A3/A4 — has MGE signed FA drawings? B1 — has FDNY approved the PAA?','Update HHE closeout spreadsheet with anything closed since last week']
   },
   {
     id:'mtg-mon-130',
     day:'Monday', time:'1:30 PM', duration:'1 hour',
     name:'59-17 / 96-05 — DEP — ACM Next Steps',
     recurrence:'weekly', recurrenceLabel:'Every Monday until Dec 28, 2026',
-    until:'2026-12-28',
-    microEventId:'me13',
-    organizer:'KK Maurya (PRA)',
-    platform:'Microsoft Teams',
-    area:'Both buildings',
-    detail:'Run by ESG (Javier Catalan, covering Lisa Javier on maternity leave). ECC (Clayton Long) also attends. Covers abatement scope, drawings, phasing, filings, and strategy. PRA role: receive updates, flag concerns, ask questions.',
-    tags:['Both buildings','ESG runs it','ECC attends','KK organizes','Weekly'],
-    prep:[
-      'Review latest ECC/ESG update on 10th + 3rd ARTS filing status',
-      'Check 11th fl abatement schedule — any changes?',
-      'Prepare questions for Clayton on scope/timeline'
-    ]
+    until:'2026-12-28', microEventId:'me13',
+    organizer:'KK Maurya (PRA)', platform:'Microsoft Teams', area:'Both buildings',
+    detail:'Run by ESG (Javier Catalan, covering Lisa Javier on maternity leave). ECC (Clayton Long) also attends. Covers abatement scope, drawings, phasing, filings, and strategy.',
+    tags:['Both buildings','ESG runs it','ECC attends','KK organizes'],
+    prep:['Review latest ECC/ESG update on 10th + 3rd ARTS filing status','Check 11th fl abatement schedule — any changes?','Prepare questions for Clayton on scope/timeline']
   },
   {
     id:'mtg-tue-1000',
     day:'Tuesday', time:'10:00 AM', duration:'45 min',
     name:'96-05 HHE 1st Floor and 59-17 JB — GC Update',
     recurrence:'weekly', recurrenceLabel:'Every Tuesday until Dec 30, 2026',
-    until:'2026-12-30',
-    microEventId:'me11',
-    organizer:'Alejandro Orellana (Foremost)',
-    platform:'Microsoft Teams',
-    area:'Both buildings',
+    until:'2026-12-30', microEventId:'me11',
+    organizer:'Alejandro Orellana (Foremost)', platform:'Microsoft Teams', area:'Both buildings',
     detail:'GC updates for all active phases. Blackbull on for all phases — Astor & Stone no longer working, Blackbull assumed their scope everywhere. 31 invitees.',
-    tags:['Both buildings','GC updates','Foremost organizes','Weekly'],
-    prep:[
-      'Know 11th fl schedule status — elevator bypass confirmed? Soft demo ready?',
-      'Know A3 glass/punchlist status and any FDNY inspection updates',
-      'Any Blackbull RFIs pending response? Procore items?'
-    ]
+    tags:['Both buildings','GC updates','Foremost organizes'],
+    prep:['Know 11th fl schedule status — elevator bypass confirmed? Soft demo ready?','Know A3 glass/punchlist status and any FDNY inspection updates','Any Blackbull RFIs pending response?']
   },
   {
     id:'mtg-tue-130',
     day:'Tuesday', time:'1:30 PM', duration:'1 hour',
     name:'DEP Renovation Project Weekly Review',
     recurrence:'weekly', recurrenceLabel:'Every Tuesday until Jul 31, 2026',
-    until:'2026-07-31',
-    microEventId:'me12',
-    organizer:'KK Maurya (PRA)',
-    platform:'Microsoft Teams',
-    location:'59-17 Junction Blvd, Queens NY 11368',
-    area:'Both buildings',
+    until:'2026-07-31', microEventId:'me12',
+    organizer:'KK Maurya (PRA)', platform:'Microsoft Teams', area:'Both buildings',
     detail:'All ongoing projects and concerns. Can run 10 minutes to 3 hours. Zach sends meeting minutes per building via Stepflo after the call. 25 invitees.',
-    tags:['All parties','Zach sends minutes','Stepflo','Weekly'],
-    prep:[
-      'Open Stepflo — draft minutes for both buildings before the call',
-      'Review open action items from prior week\'s minutes',
-      'Draft Donna Cappa weekly update — finalize after the call',
-      'Anticipate Foremost needing a push — come with specific documented asks'
-    ]
-  },
-  {
-    id:'mtg-thu-biweekly',
-    day:'Thursday', time:'11:00 AM', duration:'1 hour',
-    name:'INTERNAL DEP / PRA Biweekly Meeting',
-    recurrence:'biweekly', recurrenceLabel:'Every other Thursday',
-    until: null,
-    microEventId:'me4',
-    organizer:'Meredith Jackness (Lefrak)',
-    platform:'Microsoft Teams',
-    area:'Both buildings',
-    detail:'Internal meeting between DEP/Lefrak and PRA. Biweekly Thursdays. Organizer: Meredith Jackness. Next: May 14, 2026. 16 invitees.',
-    tags:['Internal DEP/PRA','Biweekly','Microsoft Teams'],
-    prep:[
-      'Review open items from prior session',
-      'Align on priorities for the coming two weeks',
-      'Prepare any escalation items for Meredith / Lefrak team'
-    ]
+    tags:['All parties','Zach sends minutes','Stepflo'],
+    prep:['Open Stepflo — draft minutes for both buildings before the call','Review open action items from prior week\'s minutes','Draft Donna Cappa weekly update — finalize after the call','Anticipate Foremost needing a push — come with specific documented asks']
   },
   {
     id:'mtg-wed-monthly',
     day:'Wednesday (2nd of month)', time:'8:15 AM', duration:'45 min',
     name:'PRA Company Monthly Team Meeting',
     recurrence:'monthly-2nd-wed', recurrenceLabel:'2nd Wednesday of every month',
-    until: null,
-    microEventId:'me14',
-    organizer:'Maria Teresa Olmo (PRA)',
-    platform:'Microsoft Teams',
-    area:'PRA Internal',
+    until:null, microEventId:'me14',
+    organizer:'Maria Teresa Olmo (PRA)', platform:'Microsoft Teams', area:'PRA Internal',
     detail:'Internal PRA company-wide meeting. 2nd Wednesday of each month, 8:15–9:00am. 28 invitees — all PRA staff.',
-    tags:['PRA internal only','Monthly','Microsoft Teams'],
-    prep:[
-      'Review any project updates worth sharing company-wide',
-      'Prepare brief status summary for Lefrak/DEP project'
-    ]
+    tags:['PRA internal only'],
+    prep:['Review any project updates worth sharing company-wide','Prepare brief status summary for Lefrak/DEP project']
+  },
+  {
+    id:'mtg-thu-biweekly',
+    day:'Thursday', time:'11:00 AM', duration:'1 hour',
+    name:'INTERNAL DEP / PRA Biweekly Meeting',
+    recurrence:'biweekly', recurrenceLabel:'Every other Thursday',
+    until:null, microEventId:'me4',
+    organizer:'Meredith Jackness (Lefrak)', platform:'Microsoft Teams', area:'Both buildings',
+    detail:'Internal meeting between DEP/Lefrak and PRA. Biweekly Thursdays. Next: May 14, 2026. 16 invitees.',
+    tags:['Internal DEP/PRA'],
+    prep:['Review open items from prior session','Align on priorities for the coming two weeks','Prepare any escalation items for Meredith / Lefrak team']
   },
 ];
 const SCHEDULE_PHASES = [

@@ -1779,34 +1779,113 @@ const DEFAULT_PROCESSES = [
 ];
 const DEFAULT_MEETINGS = [
   {
-    id:'mtg-mon-1230', day:'Monday', time:'12:30 pm', name:'Weekly Sign-Off — 96-05 Ground Floor',
-    detail:'Run by PRA. Reviews permits + closeout items across all 96-05 HHE phases. Foremost permit matrix is reviewed — permit numbers are generally reliable but statuses sometimes lag.',
-    tags:['96-05 HHE only','PRA leads','Permit matrix review'],
-    prep:['Review Foremost permit matrix — flag any status discrepancies vs DOB/BIS','FDNY status: B2/A3/A4 — has MGE signed fire alarm drawings? B1 — has FDNY approved the PAA?','Update HHE closeout spreadsheet with anything closed since last week']
+    id:'mtg-mon-1230',
+    day:'Monday', time:'12:30 PM', duration:'1 hour',
+    name:'Weekly Call Sign Offs — 96-05 Ground Floor',
+    recurrence:'weekly', recurrenceLabel:'Every Monday',
+    until: null,
+    microEventId:'me10',
+    organizer:'Meredith Jackness (Lefrak)',
+    platform:'Microsoft Teams',
+    area:'96-05 HHE',
+    detail:'Reviews permits + closeout items across all 96-05 HHE phases. PRA leads. Foremost permit matrix reviewed — permit numbers are reliable but statuses sometimes lag.',
+    tags:['96-05 HHE only','PRA leads','Permit matrix review','Weekly'],
+    prep:[
+      'Review Foremost permit matrix — flag any status discrepancies vs DOB/BIS',
+      'FDNY status: B2/A3/A4 — has MGE signed FA drawings? B1 — has FDNY approved the PAA?',
+      'Update HHE closeout spreadsheet with anything closed since last week'
+    ]
   },
   {
-    id:'mtg-mon-130', day:'Monday', time:'1:30 pm', name:'ACM Next Steps — DEP/ESG/ECC',
-    detail:'Run by ESG (Javier Catalan, covering for Lisa Javier on maternity leave). ECC (Clayton Long) also attends. Covers abatement scope, drawings, phasing, filings, and strategy. PRA role: receive updates, flag concerns, ask questions. KK organizes from PRA side.',
-    tags:['Both buildings','ESG runs it','ECC attends','KK organizes'],
-    prep:['Review latest ECC/ESG update on 10th + 3rd ARTS filing status','Check 11th fl abatement schedule — any changes?','Prepare questions for Clayton on scope/timeline']
+    id:'mtg-mon-130',
+    day:'Monday', time:'1:30 PM', duration:'1 hour',
+    name:'59-17 / 96-05 — DEP — ACM Next Steps',
+    recurrence:'weekly', recurrenceLabel:'Every Monday until Dec 28, 2026',
+    until:'2026-12-28',
+    microEventId:'me13',
+    organizer:'KK Maurya (PRA)',
+    platform:'Microsoft Teams',
+    area:'Both buildings',
+    detail:'Run by ESG (Javier Catalan, covering Lisa Javier on maternity leave). ECC (Clayton Long) also attends. Covers abatement scope, drawings, phasing, filings, and strategy. PRA role: receive updates, flag concerns, ask questions.',
+    tags:['Both buildings','ESG runs it','ECC attends','KK organizes','Weekly'],
+    prep:[
+      'Review latest ECC/ESG update on 10th + 3rd ARTS filing status',
+      'Check 11th fl abatement schedule — any changes?',
+      'Prepare questions for Clayton on scope/timeline'
+    ]
   },
   {
-    id:'mtg-tue-1030', day:'Tuesday', time:'10:30 am', name:'GC Update — HHE + JB',
-    detail:'GC updates for all active phases. Blackbull on for all phases (Astor & Stone no longer working — Blackbull assumed their scope everywhere).',
-    tags:['Both buildings','GC updates'],
-    prep:['Know 11th fl schedule status — elevator bypass confirmed? Soft demo ready?','Know A3 glass arrival date and punchlist walk status (May 11 with AJA)','Any Blackbull RFIs in Procore pending response?']
+    id:'mtg-tue-1000',
+    day:'Tuesday', time:'10:00 AM', duration:'45 min',
+    name:'96-05 HHE 1st Floor and 59-17 JB — GC Update',
+    recurrence:'weekly', recurrenceLabel:'Every Tuesday until Dec 30, 2026',
+    until:'2026-12-30',
+    microEventId:'me11',
+    organizer:'Alejandro Orellana (Foremost)',
+    platform:'Microsoft Teams',
+    area:'Both buildings',
+    detail:'GC updates for all active phases. Blackbull on for all phases — Astor & Stone no longer working, Blackbull assumed their scope everywhere. 31 invitees.',
+    tags:['Both buildings','GC updates','Foremost organizes','Weekly'],
+    prep:[
+      'Know 11th fl schedule status — elevator bypass confirmed? Soft demo ready?',
+      'Know A3 glass/punchlist status and any FDNY inspection updates',
+      'Any Blackbull RFIs pending response? Procore items?'
+    ]
   },
   {
-    id:'mtg-tue-130', day:'Tuesday', time:'1:30 pm', name:'Main DEP / DCAS / Lefrak / Foremost Meeting',
-    detail:'All ongoing projects and concerns. Can run 10 minutes to 3 hours. Zach sends meeting minutes per building via Stepflo after the call.',
-    tags:['All parties','Zach sends minutes','Stepflo'],
-    prep:['Open Stepflo — draft minutes for both buildings before the call','Review open action items from prior week\'s minutes','Draft Donna Cappa weekly update — finalize after the call','Anticipate Foremost needing a push — come with specific documented asks']
+    id:'mtg-tue-130',
+    day:'Tuesday', time:'1:30 PM', duration:'1 hour',
+    name:'DEP Renovation Project Weekly Review',
+    recurrence:'weekly', recurrenceLabel:'Every Tuesday until Jul 31, 2026',
+    until:'2026-07-31',
+    microEventId:'me12',
+    organizer:'KK Maurya (PRA)',
+    platform:'Microsoft Teams',
+    location:'59-17 Junction Blvd, Queens NY 11368',
+    area:'Both buildings',
+    detail:'All ongoing projects and concerns. Can run 10 minutes to 3 hours. Zach sends meeting minutes per building via Stepflo after the call. 25 invitees.',
+    tags:['All parties','Zach sends minutes','Stepflo','Weekly'],
+    prep:[
+      'Open Stepflo — draft minutes for both buildings before the call',
+      'Review open action items from prior week\'s minutes',
+      'Draft Donna Cappa weekly update — finalize after the call',
+      'Anticipate Foremost needing a push — come with specific documented asks'
+    ]
   },
   {
-    id:'mtg-thu-biweekly', day:'Thursday', time:'11:00 am', name:'INTERNAL DEP / PRA Biweekly',
-    detail:'Biweekly Thursday meeting. Organizer: Meredith Jackness (Lefrak). Microsoft Teams. 1 hour. Repeats every other week. Next: May 14, 2026.',
+    id:'mtg-thu-biweekly',
+    day:'Thursday', time:'11:00 AM', duration:'1 hour',
+    name:'INTERNAL DEP / PRA Biweekly Meeting',
+    recurrence:'biweekly', recurrenceLabel:'Every other Thursday',
+    until: null,
+    microEventId:'me4',
+    organizer:'Meredith Jackness (Lefrak)',
+    platform:'Microsoft Teams',
+    area:'Both buildings',
+    detail:'Internal meeting between DEP/Lefrak and PRA. Biweekly Thursdays. Organizer: Meredith Jackness. Next: May 14, 2026. 16 invitees.',
     tags:['Internal DEP/PRA','Biweekly','Microsoft Teams'],
-    prep:['Review open items from prior session','Align on priorities for the coming two weeks']
+    prep:[
+      'Review open items from prior session',
+      'Align on priorities for the coming two weeks',
+      'Prepare any escalation items for Meredith / Lefrak team'
+    ]
+  },
+  {
+    id:'mtg-wed-monthly',
+    day:'Wednesday (2nd of month)', time:'8:15 AM', duration:'45 min',
+    name:'PRA Company Monthly Team Meeting',
+    recurrence:'monthly-2nd-wed', recurrenceLabel:'2nd Wednesday of every month',
+    until: null,
+    microEventId:'me14',
+    organizer:'Maria Teresa Olmo (PRA)',
+    platform:'Microsoft Teams',
+    area:'PRA Internal',
+    detail:'Internal PRA company-wide meeting. 2nd Wednesday of each month, 8:15–9:00am. 28 invitees — all PRA staff.',
+    tags:['PRA internal only','Monthly','Microsoft Teams'],
+    prep:[
+      'Review any project updates worth sharing company-wide',
+      'Prepare brief status summary for Lefrak/DEP project'
+    ]
   },
 ];
 const SCHEDULE_PHASES = [
@@ -1978,11 +2057,11 @@ const PERMIT_EXPIRY = [
   {permit:'Q00919587-I1-GC', label:'A3 GC Permit', expires:'2026-05-20', area:'96-05 HHE'},
 ];
 const WEEKLY_MEETINGS = [
-  {day:1, time:'12:30 PM', name:'Weekly Sign-Off — 96-05 HHE', id:'mtg-mon-1230'},
-  {day:1, time:'1:30 PM',  name:'ACM Next Steps — DEP/ESG/ECC', id:'mtg-mon-130'},
-  {day:2, time:'10:30 AM', name:'GC Update — HHE + JB', id:'mtg-tue-1030'},
-  {day:2, time:'1:30 PM',  name:'Main DEP / DCAS / Lefrak Meeting', id:'mtg-tue-130'},
-  {day:4, time:'11:00 AM', name:'INTERNAL DEP/PRA Biweekly (next: May 14)', id:'mtg-thu-biweekly'},
+  {day:1, time:'12:30 PM', name:'Weekly Sign-Off — 96-05 HHE',            id:'mtg-mon-1230'},
+  {day:1, time:'1:30 PM',  name:'ACM Next Steps — DEP/ESG/ECC',           id:'mtg-mon-130'},
+  {day:2, time:'10:00 AM', name:'GC Update — HHE + JB',                   id:'mtg-tue-1000'},
+  {day:2, time:'1:30 PM',  name:'DEP Renovation Project Weekly Review',   id:'mtg-tue-130'},
+  {day:4, time:'11:00 AM', name:'INTERNAL DEP/PRA Biweekly',              id:'mtg-thu-biweekly'},
 ];
 const HHE_PHASE_ORDER = ['96-05 HHE — A1','96-05 HHE — B1','96-05 HHE — A5','96-05 HHE — B2','96-05 HHE — A3','96-05 HHE — A4'];
 const HARDCODED_BLOCKERS = [
@@ -3395,8 +3474,94 @@ const SEED_MICRO_EVENTS = [
   {id:'me14', title:'PRA Company Monthly Team Meeting', type:'meeting', date:'2026-05-13', time:'08:15', area:'PRA Internal', notes:'Organizer: Maria Teresa Olmo. 2nd Wednesday of each month, 8:15-9:00am. 28 invitees — PRA staff only.', status:'upcoming', created:'2026-05-07', recurring:'monthly-2nd-wed'},
 ];
 
+// ── RECURRING EVENT EXPANSION ────────────────────────────────
+// Expands seed recurring meetings into individual dated events for 365 days
+function expandRecurringEvents() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const end = new Date(today); end.setDate(end.getDate() + 365);
+  const expanded = [];
+
+  // Biweekly Thursday — anchor: May 14, 2026 (first confirmed occurrence)
+  const biweeklyAnchor = new Date(2026, 4, 14); // May 14
+
+  SEED_MICRO_EVENTS.forEach(seed => {
+    if (!seed.recurring) return; // non-recurring seeds are added as-is
+
+    const seedDate = new Date(seed.date + 'T12:00:00');
+    const [sh, sm] = (seed.time || '00:00').split(':').map(Number);
+
+    if (seed.recurring === 'weekly') {
+      const dow = seedDate.getDay();
+      // Find first occurrence on or after today
+      let cur = new Date(today);
+      while (cur.getDay() !== dow) cur.setDate(cur.getDate() + 1);
+      let idx = 0;
+      while (cur <= end) {
+        const untilDate = seed.until ? new Date(seed.until + 'T23:59:00') : null;
+        if (!untilDate || cur <= untilDate) {
+          const ds = cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')+'-'+String(cur.getDate()).padStart(2,'0');
+          // Don't duplicate — check if this date+id already exists
+          expanded.push({
+            ...seed,
+            id: seed.id + '_' + ds,
+            date: ds,
+            status: ds < microKey(new Date()) ? 'done' : 'upcoming',
+            _fromSeed: seed.id,
+          });
+        }
+        cur = new Date(cur); cur.setDate(cur.getDate() + 7);
+        idx++;
+        if (idx > 60) break; // safety cap ~1yr
+      }
+    } else if (seed.recurring === 'biweekly') {
+      // Use May 14 anchor, go forward and backward to fill
+      let cur = new Date(biweeklyAnchor);
+      // Go back to find first occurrence >= today
+      while (cur > today) cur.setDate(cur.getDate() - 14);
+      cur.setDate(cur.getDate() + 14); // step forward to first >= today
+      let idx = 0;
+      while (cur <= end) {
+        const ds = cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0')+'-'+String(cur.getDate()).padStart(2,'0');
+        expanded.push({
+          ...seed,
+          id: seed.id + '_' + ds,
+          date: ds,
+          status: ds < microKey(new Date()) ? 'done' : 'upcoming',
+          _fromSeed: seed.id,
+        });
+        cur = new Date(cur); cur.setDate(cur.getDate() + 14);
+        idx++;
+        if (idx > 30) break;
+      }
+    } else if (seed.recurring === 'monthly-2nd-wed') {
+      // 2nd Wednesday of each month
+      let m = today.getMonth(), y = today.getFullYear();
+      for (let i = 0; i < 14; i++) { // ~14 months
+        const first = new Date(y, m, 1);
+        const dow = first.getDay();
+        const firstWed = dow <= 3 ? 4 - dow : 11 - dow; // first Wed of month
+        const secondWed = firstWed + 7;
+        const d = new Date(y, m, secondWed);
+        if (d >= today && d <= end) {
+          const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+          expanded.push({
+            ...seed,
+            id: seed.id + '_' + ds,
+            date: ds,
+            status: 'upcoming',
+            _fromSeed: seed.id,
+          });
+        }
+        m++; if (m > 11) { m = 0; y++; }
+      }
+    }
+  });
+
+  return expanded;
+}
+
 function microKey(d) {
-  return d.toISOString().split('T')[0];
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
 function microDateFromStr(s) {
@@ -3676,26 +3841,36 @@ async function applyEventCompletion() {
 
 // ── FIREBASE SYNC ─────────────────────────────────────────────
 function listenToMicroEvents() {
-  if (!db) { microEvents = [...SEED_MICRO_EVENTS]; renderMicro(); return; }
+  if (!db) {
+    const recurring = expandRecurringEvents();
+    microEvents = [...SEED_MICRO_EVENTS.filter(e => !e.recurring), ...recurring];
+    renderMicro(); return;
+  }
   db.collection('micro_events').doc('events').onSnapshot(snap => {
+    // Base: non-recurring seeds + expanded recurring
+    const recurringExpanded = expandRecurringEvents();
+    const nonRecurringSeeds = SEED_MICRO_EVENTS.filter(e => !e.recurring);
+    const seedBase = [...nonRecurringSeeds, ...recurringExpanded];
+    const seedIds = new Set(seedBase.map(e => e.id));
+
     if (snap.exists && snap.data().items?.length) {
       const saved = snap.data().items;
-      // Always apply seed corrections — seed overrides saved data for seeded IDs
-      const seedById = {};
-      SEED_MICRO_EVENTS.forEach(e => { seedById[e.id] = e; });
-      // Start with seed events as base, then layer in non-seed saved events
-      const savedNonSeed = saved.filter(e => !seedById[e.id]);
-      microEvents = [...SEED_MICRO_EVENTS, ...savedNonSeed];
-      // Re-save to Firebase to fix stale data
+      // Keep user-added events (not seeded), merge with fresh seed base
+      const userAdded = saved.filter(e => !seedIds.has(e.id) && !e._fromSeed);
+      microEvents = [...seedBase, ...userAdded];
+      // Re-save merged set
       db.collection('micro_events').doc('events').set({items: microEvents});
     } else {
-      microEvents = [...SEED_MICRO_EVENTS];
-      db.collection('micro_events').doc('events').set({items: SEED_MICRO_EVENTS});
+      microEvents = seedBase;
+      db.collection('micro_events').doc('events').set({items: microEvents});
     }
     renderMicro();
     checkEventAlerts();
     updateMicroBadge();
-  }, () => { microEvents = [...SEED_MICRO_EVENTS]; renderMicro(); });
+  }, () => {
+    microEvents = [...SEED_MICRO_EVENTS.filter(e => !e.recurring), ...expandRecurringEvents()];
+    renderMicro();
+  });
 }
 
 async function saveMicroEvents() {
@@ -4343,17 +4518,45 @@ async function saveMeetings() {
 function renderMeetings() {
   const container = document.getElementById('meetings-container');
   if (!container) return;
+
+  const recurrenceIcon = {
+    'weekly':'🔁', 'biweekly':'🔁', 'monthly-2nd-wed':'📆', 'once':'1️⃣'
+  };
+  const recurrenceColor = {
+    'weekly':'background:var(--blue-dim);color:var(--blue)',
+    'biweekly':'background:var(--teal-bg);color:var(--teal)',
+    'monthly-2nd-wed':'background:var(--amber-dim);color:var(--amber)',
+    'once':'background:var(--surface2);color:var(--text2)'
+  };
+
   let html = '<div class="card" id="mtg-list">';
   liveMeetings.forEach(m => {
-    html += `<div class="mtg-block" id="mtg-${escH(m.id||m.name.replace(/\s+/g,'-').toLowerCase())}">
-      <div class="mtg-time"><div class="mtg-day">${escH(m.day)}</div><div class="mtg-hr">${escH(m.time)}</div></div>
-      <div style="flex:1">
-        <div class="mtg-name">${linkify(m.name)}</div>
+    const recStyle = recurrenceColor[m.recurrence||'once'] || recurrenceColor.once;
+    const recIcon = recurrenceIcon[m.recurrence||'once'] || '📌';
+    const microEvt = m.microEventId ? microEvents?.find(e => e.id === m.microEventId) : null;
+
+    html += `<div class="mtg-block" id="mtg-${escH(m.id||'x')}">
+      <div class="mtg-time">
+        <div class="mtg-day">${escH(m.day)}</div>
+        <div class="mtg-hr">${escH(m.time)}</div>
+        ${m.duration?`<div style="font-size:10px;color:var(--text4);margin-top:2px">${escH(m.duration)}</div>`:''}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+          <div class="mtg-name">${linkify(m.name)}</div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;white-space:nowrap;${recStyle}">${recIcon} ${escH(m.recurrenceLabel||'One-time')}</span>
+        </div>
+        ${m.organizer?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px">👤 Organizer: <strong>${escH(m.organizer)}</strong>${m.platform?' · '+escH(m.platform):''}</div>`:''}
+        ${m.area?`<div style="font-size:10px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace">${escH(m.area)}</div>`:''}
         <div class="mtg-detail">${linkify(m.detail||'')}</div>
-        ${m.tags?.length?`<div class="tags">${m.tags.map(t=>`<span class="tag">${escH(t)}</span>`).join('')}</div>`:''}
+        ${m.tags?.length?`<div class="tags" style="margin-top:6px">${m.tags.map(t=>`<span class="tag">${escH(t)}</span>`).join('')}</div>`:''}
         ${m.prep?.length?`<div style="margin-top:8px;padding:8px 10px;background:var(--surface2);border-radius:6px">
-          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Prep</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">📋 Meeting prep</div>
           ${m.prep.map(p=>`<div style="font-size:12px;color:var(--text2);padding:2px 0;display:flex;gap:6px"><span style="color:var(--text4)">→</span><span class="brief-lk">${escH(p)}</span></div>`).join('')}
+        </div>`:''}
+        ${microEvt?`<div style="margin-top:8px;padding:6px 10px;background:var(--navy);border-radius:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="goto('micro',document.querySelector('.nav-item'));microDate=new Date();microSetView('month',document.querySelector('.micro-view-tab'))">
+          <span style="font-size:11px;color:rgba(255,255,255,.7)">🗓 Linked to Micro Schedule</span>
+          <span style="font-size:10px;color:rgba(255,255,255,.5)">View →</span>
         </div>`:''}
       </div>
     </div>`;
@@ -4361,7 +4564,6 @@ function renderMeetings() {
   html += '</div>';
   container.innerHTML = html;
   container.querySelectorAll('.brief-lk').forEach(el => { el.innerHTML = linkify(el.textContent); });
-  // Apply Firebase overlays on top
   renderMeetingOverlays();
 }
 

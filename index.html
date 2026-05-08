@@ -956,19 +956,12 @@ body{
 <!-- OVERVIEW -->
 <div id="page-overview" class="page active">
   <div class="ph"><div class="ph-title">Project Overview</div><div class="ph-sub">96-05 Horace Harding Exwy · 59-17 Junction Blvd · Queens, NY</div></div>
-  <div id="alerts-container">
-    <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — A1:</strong> FDNY inspection May 12.</div></div>
-    <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — A3:</strong> AJA punchlist walkthrough May 11. Substantial Completion target: May 15.</div></div>
-    <div class="alert alert-w" style="border-color:var(--red-border);background:var(--red-bg);color:var(--red)"><span class="alert-icon">🔴</span><div><strong>96-05 HHE — A3 FA pretest BLOCKER:</strong> FA devices delivered 4/28 but not yet installed. Must be installed → pretest passed → FDNY inspection. Confirm installation schedule with Blackbull/Scutum.</div></div>
-    <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — B1/B2/A4:</strong> FDNY inspection pending. PAA #2025-TMFALM-007622-PLAN filed 4/9/26. No date yet. Main blocker for turnover. FA contractor: <strong>Scutum</strong> (formerly Hi Rise).</div></div>
-    <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>96-05 HHE — B2:</strong> FA pretest incomplete. Additional devices required. Re-pretest TBD. GC: <strong>Blackbull</strong> (Astor &amp; Stone no longer working).</div></div>
-    <div class="alert alert-w"><span class="alert-icon">⚠</span><div><strong>59-17 JB — 10th fl:</strong> GC permits blocked. DCAS &amp; DEP approved drawings 5/4/26, but GC cannot pull permits until Lefrak/Foremost and DEP/DCAS reach agreement on data center access for abatement.</div></div>
-  </div>
+  <div id="alerts-container"></div>
   <div style="margin-top:14px" id="dynamic-metrics" class="metric-grid">
     <div class="metric m-warn"><div class="metric-lbl">Open Actions</div><div class="metric-val" id="m-open-actions">—</div><div class="metric-sub" id="m-overdue-actions">Loading...</div></div>
-    <div class="metric m-red"><div class="metric-lbl">Key Blocker</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">FDNY B1 / B2 / A4</div><div class="metric-sub">B1: PAA awaiting FDNY approval · B2/A4: awaiting signed as-builts (Troon + MGE) before Scutum can request inspection</div></div>
-    <div class="metric m-green"><div class="metric-lbl">Next milestone</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2">A3 Substantial Completion</div><div class="metric-sub">May 15, 2026</div></div>
-    <div class="metric m-blue"><div class="metric-lbl">GC Permit Expires</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2" id="m-permit-days">—</div><div class="metric-sub">Q00940195 · May 20</div></div>
+    <div class="metric m-red" id="metric-key-blocker"><div class="metric-lbl">Key Blocker</div><div class="metric-val" id="m-blocker-val" style="font-size:13px;margin-top:3px;line-height:1.2">—</div><div class="metric-sub" id="m-blocker-sub">Loading...</div></div>
+    <div class="metric m-green" id="metric-next-milestone"><div class="metric-lbl">Next Milestone</div><div class="metric-val" id="m-milestone-val" style="font-size:13px;margin-top:3px;line-height:1.2">—</div><div class="metric-sub" id="m-milestone-sub"></div></div>
+    <div class="metric m-blue"><div class="metric-lbl">GC Permit Expires</div><div class="metric-val" style="font-size:13px;margin-top:3px;line-height:1.2" id="m-permit-days">—</div><div class="metric-sub" id="m-permit-sub">Loading...</div></div>
   </div>
   <div class="sec-lbl" style="display:flex;align-items:center;justify-content:space-between">
     <span>Current status by space</span>
@@ -1155,7 +1148,7 @@ body{
     <div class="row"><span class="rl">GC — A5</span><span class="rv">Blackbull (MBC) — formerly Astor &amp; Stone</span></div>
     <div class="row"><span class="rl">GC permit (B1/B2/A4)</span><span class="rv">Q00940195-L1-GC — expires 05/20/2026</span></div>
     <div class="row"><span class="rl">GC permit (A3)</span><span class="rv">Q00919587-I1-GC — expires 05/20/2026</span></div>
-    <div class="row"><span class="rl">Key blocker</span><span class="rv">FDNY inspection B1/B2/A4 — PAA filed 4/9/26, no date yet</span></div>
+    <div class="row"><span class="rl">Key blocker</span><span class="rv">B1: PAA awaiting FDNY approval · B2/A4: awaiting Troon + MGE signed as-builts before Scutum can request inspection</span></div>
     <div class="row"><span class="rl">Rent logic</span><span class="rv">Each phase separate lease treatment. DEP rent starts on turnover per phase.</span></div>
   </div>
   <div class="sec-lbl">Phase closeout detail</div>
@@ -1228,7 +1221,7 @@ body{
   <div class="sec-lbl">Critical blockers — ranked by urgency</div>
   <div class="card">
     <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 96-05 HHE — A3 FA pretest</span><span class="rv">FA devices delivered 4/28 but need to be installed before pretest. Pretest must pass before FDNY inspection can proceed. Confirm with Blackbull/Scutum that installation is scheduled.</span></div>
-    <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 96-05 HHE — FDNY B1/B2/A4</span><span class="rv">B2/A3/A4: Drawings signed by Troon 4/28, now at MGE for EOR signature. B1: PAA filed 4/9/26 awaiting FDNY approval. Current action: push MGE to sign and send as-builts to Scutum.</span></div>
+    <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 96-05 HHE — FDNY B1/B2/A4</span><span class="rv">B1: PAA #2025-TMFALM-007622-PLAN awaiting FDNY approval — once approved Scutum requests inspection. B2/A4: Troon signature + MGE stamp required on as-builts before Scutum can request inspection (Tues/Thurs only).</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 FA pretest</span><span class="rv">Extra devices needed. Schedule re-pretest once in hand. 30-day clock restarts from passing pretest — if FDNY then gives inspection date &gt;30 days after request, Lefrak can self-certify.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 plumbing LOC</span><span class="rv">Foremost to check — plumber needs to sign off permit Q01342765-I1-PL.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — B2 structural LOC</span><span class="rv">Pending sign-off — follow up with MBC.</span></div>
@@ -1514,7 +1507,7 @@ const DEFAULT_STATUSES = {
     {id:'dob_arch_loc',      item:'DOB Arch LOC — Q01225051',              status:'Received 3/19',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc',      item:'DOB Mech LOC — Q01286750',              status:'Received 4/10',                                                         cls:'bs', owner:'Muhammad (MBC)'},
     {id:'dob_plumbing_loc',  item:'DOB Plumbing LOC',                      status:'N/A',                                                                   cls:'bm', owner:'Muhammad (MBC)'},
-    {id:'fdny_loa',          item:'FDNY LOA — #2025-TMFALM-007622-PLAN',   status:'PAA filed 4/9/26 — awaiting FDNY approval before inspection can be requested', cls:'bd', owner:'Scutum / Ary'},
+    {id:'fdny_loa',          item:'FDNY LOA — #2025-TMFALM-007622-PLAN',   status:'PAA #2025-TMFALM-007622-PLAN filed 4/9/26 — awaiting FDNY approval. Once approved, Scutum requests inspection date.', cls:'bd', owner:'Scutum / Ary'},
     {id:'elec_bec_bis',      item:'Electrical BEC BIS sign-off',           status:'Passed — full sign-off pending all phases done',                        cls:'bi', owner:'Ary (Blackbull)'},
     {id:'air_balance',       item:'Certified Air Balancing Report',        status:'Approved 3/27',                                                         cls:'bs', owner:'Ary (Blackbull)'},
     {id:'mep_asbuilts',      item:'MEP As-Builts (MGE)',                   status:'WIP',                                                                   cls:'bw', owner:'MGE'},
@@ -2199,7 +2192,84 @@ function listenToStatuses() {
   db.collection('updates').orderBy('timestamp','desc').limit(10).onSnapshot(snap=>{recentLogEntries=snap.docs.map(d=>d.data());});
 }
 
+function renderOverview() {
+  // ── ALERTS — computed from live status rows (bd=blocked, bw=pending) ──
+  const alertsEl = document.getElementById('alerts-container');
+  if (alertsEl) {
+    const alerts = [];
+    Object.entries(liveStatuses).forEach(([key, rows]) => {
+      rows.forEach(row => {
+        if (row.cls !== 'bd' && row.cls !== 'bw') return;
+        const skip = ['new arts','arts filing','construction','dep review','dep 4-week','scope revision','full floor re-occupancy','dep occupancy','prior arts','phase 1','phase 2','elevator crossover','lv shutdown','abatement','air clearance','reconstruction'];
+        if (skip.some(s => (row.item||'').toLowerCase().includes(s))) return;
+        const areaLabel = key.replace('hhe-','96-05 HHE — ').replace('jb-','59-17 JB — ').replace('b1','B1').replace('b2','B2').replace('a3','A3').replace('a4','A4').replace('a5','A5').replace('jb-12','59-17 JB — 12th fl').replace('jb-11','59-17 JB — 11th fl').replace('jb-10','59-17 JB — 10th fl').replace('jb-3','59-17 JB — 3rd fl');
+        const isRed = row.cls === 'bd';
+        alerts.push({isRed, area: areaLabel, item: row.item, status: row.status, key});
+      });
+    });
+    // Red blockers first, then amber
+    alerts.sort((a,b) => (b.isRed?1:0)-(a.isRed?1:0));
+    alertsEl.innerHTML = alerts.slice(0,8).map(a => {
+      const style = a.isRed ? 'border-color:var(--red-border);background:var(--red-bg);color:var(--red)' : '';
+      const icon = a.isRed ? '🔴' : '⚠';
+      return `<div class="alert alert-w" style="${style}"><span class="alert-icon">${icon}</span><div><strong>${escH(a.area)} — ${escH(a.item)}:</strong> ${escH((a.status||'').substring(0,160))}</div></div>`;
+    }).join('');
+  }
+
+  // ── KEY BLOCKER — first red status row ──
+  const blockerVal = document.getElementById('m-blocker-val');
+  const blockerSub = document.getElementById('m-blocker-sub');
+  if (blockerVal && blockerSub) {
+    let topBlocker = null;
+    for (const [key, rows] of Object.entries(liveStatuses)) {
+      const found = rows.find(r => r.cls === 'bd');
+      if (found) { topBlocker = {key, row: found}; break; }
+    }
+    if (topBlocker) {
+      const area = topBlocker.key.replace('hhe-','HHE ').replace('jb-','JB ').toUpperCase();
+      blockerVal.textContent = area + ' — ' + topBlocker.row.item;
+      blockerSub.textContent = (topBlocker.row.status||'').substring(0,80);
+    } else {
+      blockerVal.textContent = 'None';
+      blockerSub.textContent = 'All items on track';
+      document.getElementById('metric-key-blocker')?.classList.replace('m-red','m-green');
+    }
+  }
+
+  // ── NEXT MILESTONE — first upcoming milestone micro event ──
+  const msVal = document.getElementById('m-milestone-val');
+  const msSub = document.getElementById('m-milestone-sub');
+  if (msVal && msSub) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const next = (microEvents||[])
+      .filter(e => e.type==='milestone' && e.status==='upcoming' && new Date(e.date+'T00:00:00') >= today)
+      .sort((a,b) => a.date.localeCompare(b.date))[0];
+    if (next) {
+      msVal.textContent = next.title;
+      const d = new Date(next.date+'T00:00:00');
+      msSub.textContent = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    } else {
+      msVal.textContent = 'None upcoming';
+      msSub.textContent = '';
+    }
+  }
+
+  // ── PERMIT EXPIRY — computed from PERMIT_EXPIRY ──
+  const permitSub = document.getElementById('m-permit-sub');
+  if (permitSub && PERMIT_EXPIRY?.length) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const soonest = PERMIT_EXPIRY.map(p => {
+      const [y,m,d] = p.expires.split('-');
+      return {...p, daysLeft: Math.ceil((new Date(y,m-1,d)-today)/86400000)};
+    }).sort((a,b)=>a.daysLeft-b.daysLeft)[0];
+    if (soonest) {
+      permitSub.textContent = soonest.permit + ' · ' + new Date(...soonest.expires.split('-').map((v,i)=>i===1?v-1:+v)).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    }
+  }
+}
+
 function renderAllTables() {
+  renderOverview();
   const tableMap = {
     'hhe-b1':'tbl-hhe-b1','hhe-b2':'tbl-hhe-b2','hhe-a4':'tbl-hhe-a4',
     'hhe-a3':'tbl-hhe-a3','hhe-a5':'tbl-hhe-a5',

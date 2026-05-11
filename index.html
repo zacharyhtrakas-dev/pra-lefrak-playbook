@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PRA Playbook v5.2 - 2026-05-06 -->
+<!-- PRA Playbook v5.3 - 2026-05-11 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1228,12 +1228,105 @@ body{
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — A3 DOB Arch/Mech LOCs</span><span class="rv">WIP — not yet received.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — MEP as-builts (B1/B2/A4)</span><span class="rv">MGE still WIP for B1, B2, A4. Required before Substantial Completion package.</span></div>
     <div class="row"><span class="rl" style="color:#ba7517;font-weight:600">🟡 96-05 HHE — AOR punchlist signoffs</span><span class="rv">B1/B2/A4 sent 3/27 — still under review. Follow up with AJA. Punchlist walkthrough with AJA confirmed May 11.</span></div>
-    <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A3 Substantial Completion</span><span class="rv">Substantial completion of A3 to be declared May 15, 2026. FDNY inspection requested 5/5/26.</span></div>
+    <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A3 FDNY inspection</span><span class="rv">FDNY inspection scheduled June 10, 6pm (#2023-TMFALM-007841). FA pretest must pass before inspection can proceed. Air balancing approved by MGE 4/27.</span></div>
     <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — A1 FDNY inspection</span><span class="rv">FDNY inspection for A1 scheduled May 12, 2026.</span></div>
     <div class="row"><span class="rl" style="color:#a32d2d;font-weight:600">🔴 59-17 JB — 10th fl GC permits</span><span class="rv">DCAS &amp; DEP approved drawings 5/4/26 — but GC cannot pull permits yet. Blocked pending Lefrak/Foremost + DEP/DCAS agreement on data center access for abatement.</span></div>
     <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 96-05 HHE — Elec permit closeout</span><span class="rv">B1/B2/A4 elec inspections passed 3/19/26. Once A3 passes and Troon provides letter, DOB closes elec permit Q01300039I1EL automatically.</span></div>
     <div class="row"><span class="rl" style="color:#185fa5;font-weight:600">🔵 59-17 JB — 11th fl employee notice</span><span class="rv">V5 approved 4/23. Pre-construction notice workflow initiated. 4-week DEP notice triggers abatement.</span></div>
   </div>
+  <div class="sec-lbl">SC Delivery Checklist — per phase</div>
+  <div class="card">
+    <div class="tab-row">
+      <button class="tab on" onclick="subShow('sc','b1',this)">B1</button>
+      <button class="tab" onclick="subShow('sc','b2',this)">B2</button>
+      <button class="tab" onclick="subShow('sc','a4',this)">A4</button>
+      <button class="tab" onclick="subShow('sc','a3',this)">A3</button>
+    </div>
+
+    <!-- B1 -->
+    <div id="sc-b1" class="sub on">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace">96-05 HHE — B1 Lobby · Draft 04/20/26</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+        <tr><td>C of O / TCO</td><td><span class="badge bm">Existing TCO — no change</span></td><td>A. Camacho (Lefrak)</td></tr>
+        <tr><td>Notice of Substantial Completion</td><td><span class="badge bd">Not yet issued — pending FDNY LOA</span></td><td>A. Jhamb (Lefrak)</td></tr>
+        <tr><td>Architect Letter of Substantial Completion</td><td><span class="badge bw">AJA to provide via AIA Form</span></td><td>Janki (AJA)</td></tr>
+        <tr><td>ACP-5 / ACP-21</td><td><span class="badge bw">Existing ACP-5. Foremost to provide ACP-21</span></td><td>ECC / D. Jenkins (Lefrak)</td></tr>
+        <tr><td>DOB Arch LOC — Q01225051</td><td><span class="badge bs">Received 3/19/2026</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Mech LOC — Q01286750</td><td><span class="badge bs">Received 4/10/2026</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Plumbing LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Sprinkler LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Structural LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>FDNY Letter of Approval</td><td><span class="badge bd">PAA filed 4/9/2026 — pending FDNY approval &amp; inspection date</span></td><td>Hi Rise / FDNY</td></tr>
+        <tr><td>Electrical BEC BIS sign-off</td><td><span class="badge bi">Passed 3/19 — final sign-off pending A3 close</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>Certified Air Balancing Report</td><td><span class="badge bs">Approved by MGE 3/27</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>DOB Post Permit TR-1</td><td><span class="badge bw">In progress</span></td><td>Muhammad (MBC)</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <!-- B2 -->
+    <div id="sc-b2" class="sub">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace">96-05 HHE — B2 Lobby · Draft 04/20/26</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+        <tr><td>C of O / TCO</td><td><span class="badge bm">Existing TCO — no change</span></td><td>A. Camacho (Lefrak)</td></tr>
+        <tr><td>Notice of Substantial Completion</td><td><span class="badge bd">Not yet issued — pending FDNY + plumbing + pretest</span></td><td>A. Jhamb (Lefrak)</td></tr>
+        <tr><td>Architect Letter of Substantial Completion</td><td><span class="badge bw">AJA to provide via AIA Form</span></td><td>Janki (AJA)</td></tr>
+        <tr><td>ACP-5 / ACP-21</td><td><span class="badge bw">Existing ACP-5. Foremost to provide ACP-21</span></td><td>ECC / D. Jenkins (Lefrak)</td></tr>
+        <tr><td>DOB Arch LOC — Q00940195</td><td><span class="badge bs">Received 3/19/2026</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Mech LOC — Q00940285</td><td><span class="badge bs">Received 4/10/2026</span></td><td>Trolydia / Muhammad (MBC)</td></tr>
+        <tr><td>DOB Plumbing LOC — Q01342765-I1-PL</td><td><span class="badge bd">Awaiting signoff — plumber to initiate closeout</span></td><td>Foremost / Blackbull</td></tr>
+        <tr><td>DOB Sprinkler LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Structural LOC — Q01105171-I1</td><td><span class="badge bd">Pending close out — Severud to request LOC</span></td><td>Muhammad (MBC) / Severud</td></tr>
+        <tr><td>DOB Structural — Q00949772</td><td><span class="badge bd">Pending withdrawal with DOB</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>FDNY LOA — #2025-TMFALM-00516</td><td><span class="badge bw">Hi Rise to request FDNY inspection</span></td><td>Hi Rise</td></tr>
+        <tr><td>Electrical BEC BIS — Q01186589</td><td><span class="badge bi">Passed 3/19 — final sign-off pending A3 close</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>Certified Air Balancing Report</td><td><span class="badge bs">Approved by MGE 3/27</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>DOB Post Permit TR-1</td><td><span class="badge bi">Fire penetrations ✓ · Mech systems ✓ · HVAC controls ✓ · Others N/A</span></td><td>Muhammad (MBC)</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <!-- A4 -->
+    <div id="sc-a4" class="sub">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace">96-05 HHE — A4 Lobby · Draft 04/20/26</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+        <tr><td>C of O / TCO</td><td><span class="badge bm">Existing TCO — no change</span></td><td>A. Camacho (Lefrak)</td></tr>
+        <tr><td>Notice of Substantial Completion</td><td><span class="badge bd">Not yet issued — pending FDNY LOA</span></td><td>A. Jhamb (Lefrak)</td></tr>
+        <tr><td>Architect Letter of Substantial Completion</td><td><span class="badge bw">AJA to provide via AIA Form</span></td><td>Janki (AJA)</td></tr>
+        <tr><td>ACP-5 / ACP-21</td><td><span class="badge bw">Existing ACP-5. Foremost to provide ACP-21</span></td><td>ECC / D. Jenkins (Lefrak)</td></tr>
+        <tr><td>DOB Arch LOC — Q01286541</td><td><span class="badge bs">Received 3/19/2026</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Mech LOC — Q01286552</td><td><span class="badge bs">Received 4/10/2026</span></td><td>Trolydia / Muhammad (MBC)</td></tr>
+        <tr><td>DOB Plumbing LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Sprinkler LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Structural LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>FDNY LOA — #20258-TMFALM-007621</td><td><span class="badge bw">Hi Rise to request FDNY inspection</span></td><td>Hi Rise / Ary (Blackbull)</td></tr>
+        <tr><td>Electrical BEC BIS — Q01186589</td><td><span class="badge bi">Passed 3/19 — final sign-off pending A3 close</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>Certificate of Compliance (formerly EUP)</td><td><span class="badge bm">N/A</span></td><td>Trolydia / Muhammad (MBC)</td></tr>
+        <tr><td>Certified Air Balancing Report</td><td><span class="badge bs">Approved by MGE 3/27</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>EOR Certification of electric submeter</td><td><span class="badge bm">N/A</span></td><td></td></tr>
+        <tr><td>DOB Post Permit TR-1</td><td><span class="badge bm">All items N/A</span></td><td>Muhammad (MBC)</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <!-- A3 -->
+    <div id="sc-a3" class="sub">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace">96-05 HHE — A3 Lobby · Draft 04/20/26 · Mech as-builts missing</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+        <tr><td>C of O / TCO</td><td><span class="badge bm">Existing TCO — no change</span></td><td>A. Camacho (Lefrak)</td></tr>
+        <tr><td>Notice of Substantial Completion</td><td><span class="badge bd">Not yet issued — pending construction + FDNY LOA</span></td><td>A. Jhamb (Lefrak)</td></tr>
+        <tr><td>Architect Letter of Substantial Completion</td><td><span class="badge bw">AJA to provide via AIA Form</span></td><td>Janki (AJA)</td></tr>
+        <tr><td>ACP-5 / ACP-21</td><td><span class="badge bw">Existing ACP-5. Foremost/ECC to provide ACP-21</span></td><td>ECC / D. Jenkins (Lefrak)</td></tr>
+        <tr><td>DOB Arch LOC — Q00919587</td><td><span class="badge bd">Pending construction completion</span></td><td>Foremost / Blackbull</td></tr>
+        <tr><td>DOB Mech LOC — Q00919605</td><td><span class="badge bd">Pending construction completion</span></td><td>Foremost / Blackbull</td></tr>
+        <tr><td>DOB Plumbing LOC</td><td><span class="badge bd">Pending construction completion</span></td><td>Foremost / Blackbull</td></tr>
+        <tr><td>DOB Sprinkler LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>DOB Structural LOC</td><td><span class="badge bm">N/A</span></td><td>Muhammad (MBC)</td></tr>
+        <tr><td>FDNY LOA — #2023-TMFALM-007841</td><td><span class="badge bi">Inspection scheduled June 10, 6pm</span></td><td>Hi Rise / Ary (Blackbull) / Foremost</td></tr>
+        <tr><td>Electrical BEC BIS — Q01186589</td><td><span class="badge bd">Pending construction completion</span></td><td>Foremost / Blackbull</td></tr>
+        <tr><td>Certified Air Balancing Report (A3 only)</td><td><span class="badge bs">Approved by MGE 4/27</span></td><td>Ary (Blackbull)</td></tr>
+        <tr><td>DOB Post Permit TR-1</td><td><span class="badge bw">Final inspection required · Fire resistance ✓ · Energy code ✓ · Mech ✓ · Lighting controls ✓ · Metering ✓ · Interior lighting ✓</span></td><td>Muhammad (MBC)</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+
   <div class="sec-lbl">Substantial completion — lease timing rules</div>
   <div class="card">
     <div class="row"><span class="rl">Step 1 — Substantial Completion Notice</span><span class="rv">Lefrak (Anita Jhamb) issues notice ≥10 business days before anticipated Substantial Completion date.</span></div>
@@ -1550,7 +1643,8 @@ const DEFAULT_STATUSES = {
     {id:'fa_pretest',        item:'FA Pretest — ⚠ BLOCKER',               status:'Devices delivered 4/28 but NOT YET INSTALLED. Must install → pretest → FDNY inspection. Confirm install schedule with Blackbull/Scutum.', cls:'bd', owner:'Blackbull / Scutum'},
     {id:'dob_arch_loc',      item:'DOB Arch LOC — Q00919587',              status:'WIP — not yet received',                                                cls:'bd', owner:'Muhammad (MBC)'},
     {id:'dob_mech_loc',      item:'DOB Mech LOC — Q00919605',              status:'WIP — not yet received',                                                cls:'bd', owner:'Muhammad (MBC)'},
-    {id:'fdny_loa',          item:'FDNY LOA — #2023-TMFALM-007841',        status:'Inspection requested 5/5/26 — cannot proceed until FA pretest passes', cls:'bd', owner:'Scutum'},
+    {id:'fdny_loa',          item:'FDNY LOA — #2023-TMFALM-007841',        status:'Inspection scheduled June 10, 6pm — FA pretest must pass first', cls:'bi', owner:'Scutum'},
+    {id:'air_balance',       item:'Certified Air Balancing Report (A3 only)', status:'Approved by MGE 4/27',                                          cls:'bs', owner:'Ary (Blackbull)'},
     {id:'furniture_layout',  item:'Furniture layout',                      status:'Accepted by DCAS 4/21/26',                                              cls:'bs', owner:'DEP / DCAS'},
     {id:'lv_coord',          item:'LV / Connect-trac coordination',        status:'AJA coordinated with DFI. Melissa (DCAS) accepted updated quote. Complete.', cls:'bs', owner:'AJA / DFI'},
     {id:'glass_install',     item:'Glass partition installation',          status:'Glass arriving ~May 6. Installation follows delivery.',                  cls:'bw', owner:'Blackbull'},
@@ -1768,6 +1862,26 @@ const DEFAULT_PROCESSES = [
     ],
     notes:[]
   },
+  {
+    id:'proc-dob-closeout', icon:'📄', title:'DOB Permit Closeout', status:'ref', statusLabel:'Reference',
+    subtitle:'Applies to: all open permits — 96-05 HHE and 59-17 JB', tags:'dob permit closeout loc loa letter of completion letter of acceptance expeditor mbc muhammad dobnow sia',
+    desc:'Each trade permit (general construction, plumbing, structural, mechanical, fire alarm, etc.) is its own independent application in DOBNow. All must be individually closed out before Substantial Completion can be declared. The expeditor on this project is Muhammad (MBC/Blackbull), who handles all pre-requests and formal filings.',
+    steps:[
+      {id:'app_filing', title:'Application filing in DOBNow', detail:'PREREQUISITE: Scope review must confirm which trades require permits before any application is filed.\n\nThe licensed professional for each trade submits in DOBNow:\n• Architectural → AOR (AJA)\n• MEP/mechanical/structural → EOR (MGE)\n• Plumbing → licensed plumber\n• Fire Alarm → FA contractor (Scutum)\n\nEach trade is a separate independent application. They are CO-REQUISITES of each other — all must be filed, but not in any particular order. Applications can be Alt-1 (full DOB review) or Alt-2 (self-cert, faster but licensed professional assumes liability). Muhammad (MBC) expeditor coordinates all filings.', owner:'AJA / MGE / Plumber / Scutum → Muhammad (MBC)'},
+      {id:'app_approval', title:'DOB application approval', detail:'PREREQUISITE: Application filed (Step 1) before DOB can review.\n\nDOB reviews and either approves or issues objections. Each trade is reviewed independently. Objections require written response, resubmission, re-review — can repeat multiple times. Muhammad (MBC) tracks objections and coordinates responses.\n\nCO-REQUISITE: Multiple trade approvals run in parallel — arch approval does not wait for MEP and vice versa. Track each trade independently.', owner:'DOB ↔ Muhammad (MBC) / AJA / MGE'},
+      {id:'permit_pulled', title:'Permit pulled by contractor', detail:'PREREQUISITE: DOB application approved (Step 2) before permit can be pulled.\n\nLicensed contractor pulls permit against approved application. Must be posted on site. Permits expire — renewal does not reset closeout, only extends active work period. Tracking expiry is a PRA responsibility.\n\nCurrently active: Q00940195-L1-GC (B1/B2/A4) and Q00919587-I1-GC (A3) both expire May 20, 2026.', owner:'GC / Trade contractor → Muhammad (MBC)'},
+      {id:'work_inspected', title:'Work completed, inspected, and trade sign-off', detail:'PREREQUISITE: Permit pulled (Step 3) before work can begin.\n\nAll of the following are CO-REQUISITES — all required, can happen concurrently where applicable, but ALL must be done before pre-request (Step 5):\n• Trade work physically complete\n• TR-1 reports filed by Special Inspector throughout construction (ongoing during work — not deferred to closeout)\n• CFI (Commissioner Final Inspection) passed where required\n• DOB inspections passed\n• For Fire Alarm: FDNY inspection passed (hard prerequisite for LOA — cannot be issued without it)\n• Trade contractor formally confirms completion in DOBNow\n\nTrade sign-off in DOBNow is the hard gate for MBC to file pre-request. Foremost must notify MBC in writing when each trade is done. B2 plumbing (Q01342765-I1-PL) is currently blocked here.', owner:'GC / Trade contractor / FDNY / Special Inspector'},
+      {id:'prerequest', title:'Pre-request filed by expeditor', detail:'PREREQUISITE: All items in Step 4 complete for that trade — hard gate. MBC cannot file without explicit written notification from Foremost.\n\nMuhammad (MBC) files the pre-request in DOBNow, signaling work is complete and initiating the closeout review queue. Each trade has its own pre-request. They are CO-REQUISITES — filed as each trade completes, independently of other trades.', owner:'Muhammad (MBC) ← Foremost (notification)'},
+      {id:'sia_signoff', title:'SIA sign-off', detail:'PREREQUISITE: Pre-request filed (Step 5). Also prerequisite: all TR-1 reports compiled and complete. If TR-1s were not filed consistently during construction this step stalls while missing reports are reconstructed.\n\nSIA reviews all TR-1 reports and special inspection records and signs off in DOBNow confirming every required inspection was completed and documented.\n\nNOTE: TR-1 filing (Step 4) is a CO-REQUISITE of the work itself — it must happen throughout construction. Deferring it causes SIA sign-off delays.', owner:'SIA / Special Inspector'},
+      {id:'formal_submission', title:'Formal closeout submission', detail:'PREREQUISITE: SIA sign-off (Step 6) complete before formal submission.\n\nCO-REQUISITES at this step — both must be submitted together but can be prepared in parallel:\n• Signed and sealed arch as-builts (AJA)\n• Signed and sealed MEP as-builts (MGE)\n\nLicensed professional who filed the application submits closeout in DOBNow:\n• Architectural → AJA\n• MEP/mechanical/structural → MGE\n• Plumbing → licensed plumber\n• Fire Alarm → Scutum\n\nMuhammad (MBC) coordinates. Confirm with MBC that each submission has been made — do not assume it happens without follow-up.', owner:'AJA / MGE / Plumber / Scutum → Muhammad (MBC)'},
+      {id:'closeout_issued', title:'Closeout document issued', detail:'PREREQUISITE: Formal closeout submission (Step 7) complete before DOB issues closeout.\n\nDOB issues per permit:\n• LOC (Letter of Completion) — Architectural and MEP (plumbing, mechanical, structural) trades\n• LOA (Letter of Acceptance) — Fire Alarm only, 15–30 days after FDNY inspection\n\nLOCs and LOAs are issued per permit — all are CO-REQUISITES for the Substantial Completion package. None can be omitted.\n\nCRITICAL: The 15–30 day LOA window means FDNY inspection must be passed early enough that the LOA arrives before the Substantial Completion target date. Plan backwards from the SC date — the inspection is not the finish line, the LOA is.', owner:'DOB / FDNY'},
+    ],
+    notes:[
+      {text:'Each trade is independent — a plumbing LOC and a mechanical LOC are separate. All must be received before the Substantial Completion package is complete.', type:'info', date:'May 8, 2026'},
+      {text:'B2 plumbing LOC (Q01342765-I1-PL) is currently blocked — plumber has not signed off. Foremost to follow up.', type:'warn', date:'May 8, 2026'},
+      {text:'LOA for Fire Alarm (B1, B2, A3, A4) cannot be issued until FDNY inspection is passed. FDNY inspection requires: passing FA pretest + signed as-builts (Troon + MGE) received by Scutum.', type:'warn', date:'May 8, 2026'},
+    ]
+  },
 ];
 const DEFAULT_MEETINGS = [
   {
@@ -1897,12 +2011,12 @@ const TIMELINE_DEFS = {
     phases: ['B1','B2','A4'],
     steps:[
       {id:'demo',        label:'Demo',               processRef:null},
-      {id:'filings',     label:'DOB Filings',         processRef:'proc-permit'},
+      {id:'filings',     label:'DOB Filings',         processRef:'proc-dob-closeout'},
       {id:'abatement',   label:'Abatement',           processRef:'proc-arts'},
       {id:'slab',        label:'Slab Work',           processRef:null},
       {id:'reconstruction', label:'Reconstruction',   processRef:null},
-      {id:'doc_locs',    label:'DOB LOCs',            processRef:null},
-      {id:'asbuilts',    label:'As-Builts',           processRef:null},
+      {id:'doc_locs',    label:'DOB LOCs',            processRef:'proc-dob-closeout'},
+      {id:'asbuilts',    label:'As-Builts',           processRef:'proc-dob-closeout'},
       {id:'fa_pretest',  label:'FA Pretest',          processRef:'proc-fdny', statusKey:'hhe-b2', statusItemId:'fa_pretest'},
       {id:'fdny',        label:'FDNY LOA',            processRef:'proc-fdny', statusKey:'hhe-b1', statusItemId:'fdny_loa'},
       {id:'sc_notice',   label:'Substantial Completion Notice',           processRef:'proc-sc',   statusKey:'hhe-b1', statusItemId:'sc_notice'},
@@ -4244,7 +4358,17 @@ jb-10: walkthrough,arts_drawings,dep_review,arts_file,arts_approval,notice,demo,
 jb-3: acm_test,arts_drawings,arts_file,arts_approval,phase1_demo,phase1_abate,phase1_build,phase2_demo,phase2_abate,phase2_build,occupied
 States: done,active,warn,blocked,todo
 
-PROCESS IDs: proc-fdny, proc-arts, proc-design-change, proc-design, proc-permit, proc-sc
+PROCESS IDs: proc-fdny, proc-arts, proc-design-change, proc-design, proc-permit, proc-sc, proc-dob-closeout
+
+DOB CLOSEOUT PROCESS (proc-dob-closeout) — 8 steps:
+1. Application filing — licensed professional files in DOBNow per trade (AJA=arch, MGE=MEP, plumber=plumbing, Scutum=FA). Muhammad (MBC) is expeditor.
+2. DOB approval — objections common, each requires written response + resubmission. Track with MBC.
+3. Permit pulled — contractor pulls against approved application. Must be posted on site. Expires if not renewed.
+4. Work + inspections + trade sign-off — TR-1s filed throughout, CFI where required, trade contractor signs off in DOBNow. Hard gate before Step 5.
+5. Pre-request — MBC files after Foremost notifies that trade is complete.
+6. SIA sign-off — reviews all TR-1 reports. Stalls if TR-1s weren't filed consistently during construction.
+7. Formal submission — same licensed professional who filed submits closeout. As-builts (AJA arch + MGE MEP, signed/sealed) required.
+8. Closeout issued — LOC (arch/MEP trades) or LOA (FA, 15-30 days after FDNY inspection). Issued per permit. All must be collected for Substantial Completion package.
 MEETING IDs: mtg-mon-1230, mtg-mon-130, mtg-tue-1030, mtg-tue-130, mtg-thu-biweekly
 Schedule task IDs floor 11: t_11_vacate,t_11_boxes,t_11_condition,t_11_furniture,t_11_3notice,t_11_arts_scope,t_11_arts_file,t_11_demo_lobby,t_11_demo_carpet,t_11_demo_restroom,t_11_recon_lobby,t_11_recon_restroom,t_11_recon_ceiling1,t_11_recon_ceiling2,t_11_carpet,t_11_inspect,t_11_punchlist,t_11_sc,t_11_reinstall,t_11_occupy
 Schedule task IDs floor 3: t_3_corridor_demo,t_3_corridor_acm,t_3_corridor_build,t_3_lobby_demo,t_3_lobby_acm,t_3_lobby_build,t_3_men_build,t_3_women_build,t_3_lobby_complete,t_3_restroom_open,t_3_sc

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PRA Playbook v5.3 - 2026-05-11 -->
+<!-- PRA Playbook v5.4 - 2026-05-13 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1311,7 +1311,7 @@ body{
       <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace">96-05 HHE — A3 Lobby · Draft 04/20/26 · Mech as-builts missing</div>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Status</th><th>Owner</th></tr></thead><tbody>
         <tr><td>C of O / TCO</td><td><span class="badge bm">Existing TCO — no change</span></td><td>A. Camacho (Lefrak)</td></tr>
-        <tr><td>Notice of Substantial Completion</td><td><span class="badge bd">Not yet issued — pending construction + FDNY LOA</span></td><td>A. Jhamb (Lefrak)</td></tr>
+        <tr><td>Notice of Substantial Completion</td><td><span class="badge bw">Target 5/20/26 (permit expiry) — notice must go out ≥10 business days prior</span></td><td>A. Jhamb (Lefrak)</td></tr>
         <tr><td>Architect Letter of Substantial Completion</td><td><span class="badge bw">AJA to provide via AIA Form</span></td><td>Janki (AJA)</td></tr>
         <tr><td>ACP-5 / ACP-21</td><td><span class="badge bw">Existing ACP-5. Foremost/ECC to provide ACP-21</span></td><td>ECC / D. Jenkins (Lefrak)</td></tr>
         <tr><td>DOB Arch LOC — Q00919587</td><td><span class="badge bd">Pending construction completion</span></td><td>Foremost / Blackbull</td></tr>
@@ -1647,15 +1647,17 @@ const DEFAULT_STATUSES = {
     {id:'air_balance',       item:'Certified Air Balancing Report (A3 only)', status:'Approved by MGE 4/27',                                          cls:'bs', owner:'Ary (Blackbull)'},
     {id:'furniture_layout',  item:'Furniture layout',                      status:'Accepted by DCAS 4/21/26',                                              cls:'bs', owner:'DEP / DCAS'},
     {id:'lv_coord',          item:'LV / Connect-trac coordination',        status:'AJA coordinated with DFI. Melissa (DCAS) accepted updated quote. Complete.', cls:'bs', owner:'AJA / DFI'},
-    {id:'glass_install',     item:'Glass partition installation',          status:'Glass arriving ~May 6. Installation follows delivery.',                  cls:'bw', owner:'Blackbull'},
-    {id:'punchlist_walk',    item:'AJA Punchlist Walkthrough',             status:'Confirmed May 11 at 10:30am',                                           cls:'bw', owner:'AJA (Anthony Johnson / Janki Patel)'},
-    {id:'sc_notice',         item:'Substantial Completion — May 15 target',status:'SC to be declared May 15, 2026. Substantial Completion notice must be issued ≥10 business days prior.', cls:'bw', owner:'Anita Jhamb (Lefrak)'},
+    {id:'glass_install',     item:'Glass partition installation',          status:'Service desk glass install by 5/18. Glass/millwork coordination issue resolved.',  cls:'bi', owner:'Blackbull'},
+    {id:'punchlist_walk',    item:'AJA Punchlist',                         status:'Walkthrough done — punchlist to be issued by 5/15',                    cls:'bi', owner:'AJA (Anthony Johnson / Janki Patel)'},
+    {id:'sc_notice',         item:'Substantial Completion target',         status:'Target 5/20/26 (permit expiry). SC notice must be issued ≥10 business days prior.', cls:'bw', owner:'Anita Jhamb (Lefrak)'},
     {id:'acp21',             item:'ACP-5 / ACP-21',                       status:'Foremost to provide ACP-21 to DOB',                                     cls:'bw', owner:'ECC / D. Jenkins'},
     {id:'back_corridor',     item:'HHE back corridor — ceiling/HVAC',      status:'PAUSED 4/28 — Sheranne flagged ACM concern on ceiling grid removal. Donna had sampling done 4/28. Results pending. ECC involved.', cls:'bd', owner:'Donna Cappa / ECC'},
   ],
   'hhe-a5': [
     {id:'lobby_open',        item:'New lobby open + active',               status:'Open since 1/24/26',                                                    cls:'bs', owner:'Blackbull (MBC)'},
     {id:'lobby_desk',        item:'New lobby desk + plexiglass',           status:'Complete 4/21/26',                                                      cls:'bs', owner:'Lefrak'},
+    {id:'fdny_inspection',   item:'FDNY inspection',                       status:'Inspection occurred 5/12/26 — result pending',                          cls:'bw', owner:'Scutum / Hi Rise'},
+    {id:'elevator_wall',     item:'Elevator lobby wall installation',      status:'Scheduled 5/15/26 starting 6pm',                                        cls:'bi', owner:'Blackbull (MBC)'},
     {id:'under_counter',     item:'Under-counter storage',                 status:'Pending — date TBD',                                                    cls:'bw', owner:'Lefrak'},
     {id:'green_wall',        item:'Green wall + DEP signage',              status:'Donna Cappa asked Foremost about timeline 4/27 — no response yet',      cls:'bw', owner:'Foremost / Lefrak'},
   ],
@@ -4398,7 +4400,7 @@ async function submitToAI() {
     }
     userContent.push({type:'text',text:input||'Analyze the attached file and determine what project information it contains.'});
     const resp = await fetch('https://pra-lefrak-playbook.vercel.app/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4000,system:SYSTEM_PROMPT + buildRecentContext(),messages:[{role:'user',content:userContent}]})
     });
     if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'API error '+resp.status);}
     const data=await resp.json();
